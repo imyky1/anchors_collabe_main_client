@@ -74,12 +74,12 @@ const App: React.FC = () => {
                 <Route
                   path="/influencer/*"
                   element={
-                    <ProtectedRoute
-                      navigateCondition={!localStorage.getItem("jwtToken") || !authState?.loggedUser?.activePlan}
-                      toUrl={authState?.loggedUser?.activePlan ? "/"  : "/influencer/activate"}
-                    >
+                    // <ProtectedRoute
+                    //   navigateCondition={!localStorage.getItem("jwtToken") || !authState?.loggedUser?.activePlan}
+                    //   toUrl={authState?.loggedUser?.activePlan ? "/"  : "/influencer/activate"}
+                    // >
                       <Home />
-                    </ProtectedRoute>
+                    // </ProtectedRoute>
                   }
                 />
                 <Route path="/logout" element={<ProtectedRoute

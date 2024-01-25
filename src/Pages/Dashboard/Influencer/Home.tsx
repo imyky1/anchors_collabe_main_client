@@ -2,6 +2,10 @@ import React from "react";
 import Sidebar from "../../../Components/Sidebar/Sidebar";
 import { Navbar3 } from "../../../Components/Navbar/Navbar";
 import Profile from "./Profile";
+import { Dashboard } from "./Dashboard";
+import { ShareProfile } from "./ShareProfile";
+import { Company_list } from "./CompanyList";
+import { Show_Company_List } from "./ShowCompanyList";
 import { Route, Routes } from "react-router-dom";
 import { useAuth } from "../../../Providers/Auth";
 
@@ -18,7 +22,11 @@ const Home: React.FC = () => {
 
           <div className="bg-[#F5F5F5] w-full h-screen overflow-x-hidden overflow-y-auto">
             <Routes>
-              <Route path="*" element={<Profile />} />
+              {/* <Route path="*" element={<Profile />} /> */}
+              {<Route path="/share_profile" element={<ShareProfile />} />}
+              {<Route path="/Dashboard" element={<Dashboard />} />}
+              {<Route path="/Preferred_Companies_List_edit" element={<Company_list />} />}
+              {<Route path="/Preferred_Companies_List_view" element={<Show_Company_List />} />}
             </Routes>
           </div>
         </section>
