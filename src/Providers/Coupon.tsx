@@ -7,11 +7,7 @@ interface CouponProviderProps {
 }
 
 interface CouponContextProps {
-  checkAndVerifyCouponCode: (couponCode: string) => {
-    success?: boolean;
-    error?: string;
-    netToPay?: number;
-  };
+  checkAndVerifyCouponCode: (couponCode: string) => Promise<any>;
 }
 
 const CouponContext = createContext<CouponContextProps | null>(null);
@@ -27,9 +23,13 @@ export const CouponProvider: React.FC<CouponProviderProps> = (props) => {
     const result = await axios.post(
       `${host}/coupons/checkAndVerify?code=${couponCode}`,
       {
-        userID: "659fbed0658615fa3dd6c5af",
         type: "Influencers",
         amount: 999,
+      },
+      {
+        headers: {
+          jwtToken: localStorage.getItem("jwtToken"),
+        },
       }
     );
 

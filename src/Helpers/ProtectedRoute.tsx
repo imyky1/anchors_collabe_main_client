@@ -12,7 +12,9 @@ const ProtectedRoute:React.FC<protectedrouteprops> = ({ children, navigateCondit
     return <Navigate to={toUrl} />;
   }
 
-  return <>{children}</>;
+  else{
+    return <>{children}</>;
+  }
 };
 
 export default ProtectedRoute;

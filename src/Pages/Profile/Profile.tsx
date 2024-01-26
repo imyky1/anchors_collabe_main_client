@@ -164,9 +164,9 @@ const Profile: React.FC = () => {
               </h3>
 
               <section className="w-full flex flex-col gap-2">
+                {/* <BrandCard />
                 <BrandCard />
-                <BrandCard />
-                <BrandCard />
+                <BrandCard /> */}
               </section>
             </div>
 
@@ -181,9 +181,9 @@ const Profile: React.FC = () => {
               </h3>
 
               <section className="w-full flex flex-col gap-5">
+                {/* <PlatformCard />
                 <PlatformCard />
-                <PlatformCard />
-                <PlatformCard />
+                <PlatformCard /> */}
               </section>
             </div>
 

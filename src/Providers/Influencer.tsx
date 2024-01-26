@@ -7,26 +7,61 @@ interface InfluencerProviderProps {
 }
 
 interface InfluencerContextProps {
-    updatePersonalInfo:(data:{any})=>Promise<{any}>,
-    getPersonalInfo:()=>Promise<{success:boolean,data?:{}}>
+  updatePersonalInfo: (data: {}) => Promise<{ any }>;
+  updateCollabInfo: (data: []) => Promise<{ any }>;
+  updateMonetizationInfo: (data: []) => Promise<{ any }>;
+  updateContentInfo: (data: {}) => Promise<{ any }>;
+  updateAudienceInfo: (data: {}) => Promise<{ any }>;
+  updateWishlist: (data: {}) => Promise<{ any }>;
+  uploadInfluencerImages: (data: {}) => Promise<{ any }>;
+  uploadCompanyImages: (data: {}) => Promise<{ any }>;
+  SaveUserInfo: (data: {}) => Promise<{ any }>;
+  SentMessageFromSNS: (number: string) => Promise<{ any }>;
+  getPersonalInfo: () => Promise<{ success: boolean; data?: {} }>;
+  getBrandWishlist: () => Promise<{ success: boolean; data?: {} }>;
 }
 
 const InfluencerContext = createContext<InfluencerContextProps | null>(null);
 const host: string = import.meta.env.VITE_BACKEND_SERVER_URL;
 
 export const useInfluencer = () => {
-    return useContext(InfluencerContext);
-  };
-
+  return useContext(InfluencerContext);
+};
 
 export const InfluencerProvider: React.FC<InfluencerProviderProps> = (
   props
 ) => {
-  // open linkedin login page -----------------------
-  const updatePersonalInfo = async (data:{any}) => {
+
+
+  // update personal info -----------------------
+  const updatePersonalInfo = async (data: {}) => {
     try {
       const response = await axios.post(
         `${host}/influencer/updatePersonalData`,
+        { ...data },
+        {
+          headers: {
+            jwtToken: localStorage.getItem("jwtToken"),
+          },
+        }
+      );
+
+      // Check if the response contains the LinkedIn authorization URL
+      if (response.status !== 200) {
+        throw new Error("Error in saving the data");
+      } else {
+        return response.data;
+      }
+    } catch (error) {
+      alert(error);
+    }
+  };
+
+  // update personal info -----------------------
+  const updateCollabInfo = async (data: []) => {
+    try {
+      const response = await axios.post(
+        `${host}/influencer/updateCollabHistory`,
         { data },
         {
           headers: {
@@ -46,11 +81,13 @@ export const InfluencerProvider: React.FC<InfluencerProviderProps> = (
     }
   };
 
-  // open linkedin login page -----------------------
-  const getPersonalInfo = async () => {
+  // update personal info -----------------------
+  const updateMonetizationInfo = async (data: []) => {
     try {
-      const response = await axios.get(
-        `${host}/influencer/getPersonalData`,
+      console.log(data);
+      const response = await axios.post(
+        `${host}/influencer/updateMonetizationHistory`,
+        { data: data },
         {
           headers: {
             jwtToken: localStorage.getItem("jwtToken"),
@@ -69,8 +106,210 @@ export const InfluencerProvider: React.FC<InfluencerProviderProps> = (
     }
   };
 
+  // update personal info -----------------------
+  const updateContentInfo = async (data: {}) => {
+    try {
+      const response = await axios.post(
+        `${host}/influencer/updateContentInfo`,
+        { ...data },
+        {
+          headers: {
+            jwtToken: localStorage.getItem("jwtToken"),
+          },
+        }
+      );
+
+      // Check if the response contains the LinkedIn authorization URL
+      if (response.status !== 200) {
+        throw new Error("Error in saving the data");
+      } else {
+        return response.data;
+      }
+    } catch (error) {
+      alert(error);
+    }
+  };
+
+  // update personal info -----------------------
+  const updateAudienceInfo = async (data: {}) => {
+    try {
+      const response = await axios.post(
+        `${host}/influencer/updateAudienceInfo`,
+        { ...data },
+        {
+          headers: {
+            jwtToken: localStorage.getItem("jwtToken"),
+          },
+        }
+      );
+
+      // Check if the response contains the LinkedIn authorization URL
+      if (response.status !== 200) {
+        throw new Error("Error in saving the data");
+      } else {
+        return response.data;
+      }
+    } catch (error) {
+      alert(error);
+    }
+  };
+
+  // update personal info -----------------------
+  const updateWishlist = async (data: {}) => {
+    try {
+      const response = await axios.post(
+        `${host}/influencer/updateWishlist`,
+        { data },
+        {
+          headers: {
+            jwtToken: localStorage.getItem("jwtToken"),
+          },
+        }
+      );
+
+      // Check if the response contains the LinkedIn authorization URL
+      if (response.status !== 200) {
+        throw new Error("Error in saving the data");
+      } else {
+        return response.data;
+      }
+    } catch (error) {
+      alert(error);
+    }
+  };
+
+  // get personal info -----------------------
+  const getPersonalInfo = async () => {
+    try {
+      const response = await axios.get(`${host}/influencer/getPersonalData`, {
+        headers: {
+          jwtToken: localStorage.getItem("jwtToken"),
+        },
+      });
+
+      // Check if the response contains the LinkedIn authorization URL
+      if (response.status !== 200) {
+        throw new Error("Error in saving the data");
+      } else {
+        return response.data;
+      }
+    } catch (error) {
+      alert(error);
+    }
+  };
+
+  // get personal info -----------------------
+  const getBrandWishlist = async () => {
+    try {
+      const response = await axios.get(`${host}/influencer/getBrandWishlist`, {
+        headers: {
+          jwtToken: localStorage.getItem("jwtToken"),
+        },
+      });
+
+      // Check if the response contains the LinkedIn authorization URL
+      if (response.status !== 200) {
+        throw new Error("Error in saving the data");
+      } else {
+        return response.data;
+      }
+    } catch (error) {
+      alert(error);
+    }
+  };
+
+  // get personal info -----------------------
+  const uploadInfluencerImages = async (data) => {
+    try {
+      const response = await axios.post(`${host}/upload/influencerdata`, data, {
+        headers: {
+          jwtToken: localStorage.getItem("jwtToken"),
+        },
+      });
+
+      // Check if the response contains the LinkedIn authorization URL
+      if (response.status !== 200) {
+        throw new Error("Error in saving the data");
+      } else {
+        return response.data;
+      }
+    } catch (error) {
+      alert(error);
+    }
+  };
+
+  // get personal info -----------------------
+  const uploadCompanyImages = async (data) => {
+    try {
+      const response = await axios.post(`${host}/upload/companydata`, data, {
+        headers: {
+          jwtToken: localStorage.getItem("jwtToken"),
+        },
+      });
+
+      // Check if the response contains the LinkedIn authorization URL
+      if (response.status !== 200) {
+        throw new Error("Error in saving the data");
+      } else {
+        return response.data;
+      }
+    } catch (error) {
+      alert(error);
+    }
+  };
+
+  // Update the user info --------------------------
+  const SaveUserInfo = async (data) => {
+    try {
+      const response = await axios.post(`${host}/influencer/saveinfo`, data, {
+        headers: {
+          jwtToken: localStorage.getItem("jwtToken"),
+        },
+      });
+
+      // Check if the response contains the LinkedIn authorization URL
+      if (response.status !== 200) {
+        throw new Error("Error in saving the data");
+      } else {
+        return response.data;
+      }
+    } catch (error) {
+      alert(error);
+    }
+  };
+
+  const SentMessageFromSNS = async (number) => {
+    try {
+      const response = await axios.get(`${host}/influencer/sendMsg?message=Mobile Number&number=${number}&subject=Anchors`);
+
+      // Check if the response contains the LinkedIn authorization URL
+      if (response.status !== 200) {
+        throw new Error("Error in saving the data");
+      } else {
+        return response.data;
+      }
+    } catch (error) {
+      alert(error);
+    }
+  };
+
   return (
-    <InfluencerContext.Provider value={{updatePersonalInfo,getPersonalInfo}}>
+    <InfluencerContext.Provider
+      value={{
+        updatePersonalInfo,
+        getPersonalInfo,
+        updateCollabInfo,
+        updateMonetizationInfo,
+        updateAudienceInfo,
+        updateContentInfo,
+        uploadInfluencerImages,
+        uploadCompanyImages,
+        updateWishlist,
+        getBrandWishlist,
+        SaveUserInfo,
+        SentMessageFromSNS
+      }}
+    >
       {props?.children}
     </InfluencerContext.Provider>
   );

@@ -1,0 +1,100 @@
+.infulencr_shareprofile_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+  }
+  .influencer_shareprofile_wrapper {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    margin: auto 0;
+  }
+  .influencer_left_shareprofile_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+  }
+  .influencer_left_shareprofile_container h1 {
+    width: 268px;
+    font-family: Inter;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 24px;
+    letter-spacing: 0em;
+    text-align: center;
+    color: #424242;
+  }
+  .influencer_left_shareprofile_container h2 {
+    color: var(--Natural-800, #424242);
+    text-align: center;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    width: 329px;
+  }
+  .influencer_left_container_link_container {
+    width: 329px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    gap: 20px;
+    background: var(--Primary-50, #ffe5e5);
+  }
+  .left_container_link_div {
+    display: flex;
+    display: flex;
+    width: 280px;
+    padding: 8px 12px;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 1000px;
+    border: 1px solid var(--Natural-600, #757575);
+  }
+  .left_container_link_div h3 {
+    color: var(--Natural-800, #424242);
+    font-family: "Public Sans";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
+  .influencer_left_container_link_container h1 {
+    color: var(--Natural-800, #424242);
+    text-align: center;
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+  }
+  .influencer_right_shareprofile_container {
+    position: relative;
+  }
+  .right_link_direction_vector {
+    position: absolute;
+    top: 333px;
+    left: -160px;
+  }
+  .influencer_right_shareprofile_container h3 {
+    position: absolute;
+    top: 463px;
+    left: -180px;
+    color: var(--Natural-900, #212121);
+    text-align: center;
+    font-family: "Public Sans";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    width: 130px;
+  }

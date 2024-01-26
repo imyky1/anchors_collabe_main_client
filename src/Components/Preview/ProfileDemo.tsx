@@ -1,10 +1,9 @@
 import React from "react";
-import screen from "../../assets/Images/screen.png";
+import screen from "/screen.png";
 import logo from "/collabLogo.png";
 
-import { FaLinkedinIn, FaTelegram } from "react-icons/fa";
+import { FaFacebook, FaGlobe, FaInstagram, FaLinkedinIn, FaTelegram } from "react-icons/fa";
 import { IoLogoWhatsapp } from "react-icons/io";
-import { AiFillInstagram } from "react-icons/ai";
 import { CgLockUnlock } from "react-icons/cg";
 import {
   BrandCard,
@@ -12,6 +11,7 @@ import {
   PlatformCard,
   SocialCard,
 } from "../../Pages/Profile/Component";
+import { FaXTwitter } from "react-icons/fa6";
 
 const NavArray = [
   {
@@ -32,10 +32,29 @@ const NavArray = [
   },
 ];
 
-const ProfileDemo: React.FC = () => {
+
+interface ProfileDemoProps {
+  data:{
+    coverPhoto:string,
+    profile:string,
+    name:string,
+    tagline:string,
+    collab:[],
+    money:[],
+    categories:[],
+    types:[],
+    formats:[],
+    platforms:[]
+  },
+  uploadedImages:["",""],
+  uploadedImages2:["",""]
+}
+
+
+const ProfileDemo: React.FC<ProfileDemoProps> = ({data,uploadedImages,uploadedImages2}) => {
   return (
-    <div className="mt-5 w-full relative">
-      <img src={screen} alt="" className="w-full" />
+    <div className="mt-5 w-full relative h-full">
+      <img src={screen} alt="" className="w-full h-full" />
 
       <section className="absolute w-[305px] top-2 left-3 rounded-3xl overflow-auto h-full">
         {/* header ------------ */}
@@ -46,23 +65,28 @@ const ProfileDemo: React.FC = () => {
         {/* rest page */}
         <div className="w-full box-border bg-white h-max relative font-inter">
           <img
-            src="https://media.licdn.com/dms/image/D4D16AQFNr-3cglU5Bg/profile-displaybackgroundimage-shrink_350_1400/0/1688457033608?e=1710979200&v=beta&t=ITGsfR-omOFUxGBp7h0CQAoUygvxpSi-3ofvntvfTyA"
+            src={(uploadedImages && uploadedImages[0]) ?? data?.coverPhoto ?? "https://cdn.pixabay.com/photo/2018/01/24/18/05/background-3104413_960_720.jpg"}
             alt=""
             className="w-full"
+            onError={({ currentTarget }) => {
+              currentTarget.onerror = null; // prevents looping
+              currentTarget.src =
+              "https://cdn.pixabay.com/photo/2018/01/24/18/05/background-3104413_960_720.jpg";
+            }}
           />
 
           <section className="flex items-center flex-col w-full -mt-[60px] gap-8">
             <div className="flex flex-col items-center gap-4">
               <img
-                src="https://media.licdn.com/dms/image/D4D03AQH8pvAJxs3kEQ/profile-displayphoto-shrink_400_400/0/1700772247045?e=1710979200&v=beta&t=tR3Qd9RfPV80B9GaxgZdWpQKe8mxDb2tXErmH-jOYH8"
+                src={(uploadedImages && uploadedImages[1]) ?? data?.profile ?? "https://t3.ftcdn.net/jpg/04/85/67/08/360_F_485670840_Ai4Rz09r0DmHlJycECZk23LVaocea4ZI.jpg"}
                 alt=""
                 className="w-28 h-28 rounded-full"
               />
               <h1 className=" text-xl font-bold text-[#424242]">
-                YUVRAJ SINGH
+                {data.name}
               </h1>
               <p className=" text-[16px] text-[#757575] -mt-4">
-                Full Stack Developer
+                {data.tagline}
               </p>
             </div>
 
@@ -72,27 +96,27 @@ const ProfileDemo: React.FC = () => {
               </h3>
 
               <section className="grid grid-cols-2 w-full gap-4">
-                <button className="px-5 py-3 text-[14px] text-[#424242] bg-[#F5F5F5] rounded-[250px] flex items-center gap-2 justify-center">
+                {data?.linkedinLink?.length > 0 && <button className="px-5 py-3 text-[14px] text-[#424242] bg-[#F5F5F5] rounded-[250px] flex items-center gap-2 justify-center">
                   <FaLinkedinIn /> LinkedIn
-                </button>
-                <button className="px-5 py-3 text-[14px] text-[#424242] bg-[#F5F5F5] rounded-[250px] flex items-center gap-2 justify-center">
-                  <FaLinkedinIn /> Instagram
-                </button>
-                <button className="px-5 py-3 text-[14px] text-[#424242] bg-[#F5F5F5] rounded-[250px] flex items-center gap-2 justify-center">
+                </button>}
+                {data?.instaLink?.length > 0 &&<button className="px-5 py-3 text-[14px] text-[#424242] bg-[#F5F5F5] rounded-[250px] flex items-center gap-2 justify-center">
+                <FaInstagram /> Instagram
+                </button>}
+                {/* <button className="px-5 py-3 text-[14px] text-[#424242] bg-[#F5F5F5] rounded-[250px] flex items-center gap-2 justify-center">
                   <FaLinkedinIn /> YouTube
-                </button>
-                <button className="px-5 py-3 text-[14px] text-[#424242] bg-[#F5F5F5] rounded-[250px] flex items-center gap-2 justify-center">
-                  <FaLinkedinIn /> Telegram
-                </button>
-                <button className="px-5 py-3 text-[14px] text-[#424242] bg-[#F5F5F5] rounded-[250px] flex items-center gap-2 justify-center">
-                  <FaLinkedinIn /> WhatsApp
-                </button>
-                <button className="px-5 py-3 text-[14px] text-[#424242] bg-[#F5F5F5] rounded-[250px] flex items-center gap-2 justify-center">
-                  <FaLinkedinIn /> Facebook
-                </button>
-                <button className="px-5 py-3 text-[14px] text-[#424242] bg-[#F5F5F5] rounded-[250px] flex items-center gap-2 justify-center">
-                  <FaLinkedinIn /> Website
-                </button>
+                </button> */}
+                {data?.teleLink?.length > 0 &&<button className="px-5 py-3 text-[14px] text-[#424242] bg-[#F5F5F5] rounded-[250px] flex items-center gap-2 justify-center">
+                <FaTelegram /> Telegram
+                </button>}
+                {data?.twitterLink?.length > 0 &&<button className="px-5 py-3 text-[14px] text-[#424242] bg-[#F5F5F5] rounded-[250px] flex items-center gap-2 justify-center">
+                <FaXTwitter /> Twitter
+                </button>}
+                {data?.fbLink?.length > 0 &&<button className="px-5 py-3 text-[14px] text-[#424242] bg-[#F5F5F5] rounded-[250px] flex items-center gap-2 justify-center">
+                 <FaFacebook /> Facebook
+                </button>}
+                {data?.websiteLink?.length > 0 &&<button className="px-5 py-3 text-[14px] text-[#424242] bg-[#F5F5F5] rounded-[250px] flex items-center gap-2 justify-center">
+                <FaGlobe /> Website
+                </button>}
               </section>
             </div>
 
@@ -121,9 +145,9 @@ const ProfileDemo: React.FC = () => {
                 </h3>
 
                 <section className="w-full flex flex-col gap-2">
-                  <BrandCard />
-                  <BrandCard />
-                  <BrandCard />
+                  {data?.collab?.map((e,index)=>{
+                    return <BrandCard key={`brandCard${index}`} newImg={uploadedImages2[index]} {...e}/>
+                  })}
                 </section>
               </div>
 
@@ -138,40 +162,25 @@ const ProfileDemo: React.FC = () => {
                 </h3>
 
                 <section className="w-full flex flex-col gap-5">
-                  <PlatformCard />
-                  <PlatformCard />
-                  <PlatformCard />
+                {data?.money?.map((e,index)=>{
+                  return <PlatformCard key={`platformCard${index}`} {...e}/>
+                })}
                 </section>
               </div>
 
               {/* Other cards ----------- */}
               <GeneralCard
                 title="Category"
-                tags={[
-                  "Finance",
-                  "Jobs & Internship",
-                  "Product Man.",
-                  "Product Man.",
-                ]}
+                tags={data?.categories ?? []}
                 id="contentInfo"
               />
               <GeneralCard
                 title="Type of Audience"
-                tags={[
-                  "Finance",
-                  "Jobs & Internship",
-                  "Product Man.",
-                  "Product Man.",
-                ]}
+                tags={data?.types ?? []}
               />
               <GeneralCard
                 title="Type of Content Post"
-                tags={[
-                  "Finance",
-                  "Jobs & Internship",
-                  "Product Man.",
-                  "Product Man.",
-                ]}
+                tags={data?.formats ?? []}
               />
 
               {/* Where is your audience */}
@@ -184,30 +193,28 @@ const ProfileDemo: React.FC = () => {
                   Where is your audience
                 </h3>
 
-                <SocialCard
-                  icon={<IoLogoWhatsapp size={24} color="#fff" />}
-                  bg="bg-[#10B981]"
-                />
-                <SocialCard
-                  icon={<FaTelegram size={24} color="#fff" />}
-                  bg="bg-[#0088CC]"
-                />
-                <SocialCard
-                  icon={<AiFillInstagram size={24} color="#fff" />}
-                  bg="bg-gradient-to-r from-purple-500 to-pink-500"
-                />
+                {
+                  data?.platforms?.map((e)=>{
+                    const myarr = ["bg-[#10B981]","bg-[#0088CC]","bg-gradient-to-r from-purple-500 to-pink-500"]
+                    return <SocialCard
+                    icon={<IoLogoWhatsapp size={24} color="#fff" />}
+                    bg={myarr[Math.floor(Math.random() * myarr?.length)]}
+                    {...e}
+                  />
+                  })
+                }
               </div>
 
               {/* How do you create content? */}
-              <GeneralCard
+              {/* <GeneralCard
                 title="How do you create content?"
                 tags={["Create Content", "Create Content"]}
                 id="howcontent"
                 textSize="text-sm"
-              />
+              /> */}
 
               <div className="p-5 rounded-lg bg-[#FF8A8A] flex items-center gap-3 justify-center flex-col font-inter mb-32">
-                <p className="text-[16px] font-medium">
+                <p className="text-[16px] font-medium text-center">
                   Are you looking for to collaborate with me?
                 </p>
                 <button className="text-[#FF5C5C] py-3 px-5 rounded-[250px] bg-white flex items-center gap-2">

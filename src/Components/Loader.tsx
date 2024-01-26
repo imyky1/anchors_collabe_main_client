@@ -1,11 +1,11 @@
 import React from 'react'
-import logo from "../assets/Images/logo.png"
+import logo from "/logo.png"
 
 // For user side pages
 const LoaderOne:React.FC = () => {
   
     return (
-      <div className="fixed w-screen h-screen flex items-center justify-center">
+      <div className="fixed w-screen h-screen flex items-center justify-center left-0 top-0 z-30">
         <img
           src={logo}
           alt="..Loading"
@@ -14,6 +14,6 @@ const LoaderOne:React.FC = () => {
       </div>
     );
   }
-  
+
 
 export default LoaderOne

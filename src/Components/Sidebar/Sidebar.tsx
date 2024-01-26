@@ -3,14 +3,15 @@ import logo from "/collabLogo.png";
 import { PiSquaresFourLight } from "react-icons/pi";
 import { CgProfile } from "react-icons/cg";
 import { useAuth } from "../../Providers/Auth";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   MdOutlineKeyboardArrowDown,
   MdOutlineKeyboardArrowUp,
 } from "react-icons/md";
 
-const Sidebar:React.FC = () => {
+const Sidebar: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation()
 
   const [openProfileOptions, setOpenProfileOptions] = useState(true);
 
@@ -47,45 +48,64 @@ const Sidebar:React.FC = () => {
         </section>
       </div>
 
-      {authState?.loggedUser?.slug && <span className="w-full py-2 px-3 text-[#3460DC] text-xs border border-[#3460DC] rounded-[100px] cursor-pointer">
-        collab.anchors.in/{authState?.loggedUser?.slug}
-      </span>}
+      {authState?.loggedUser?.slug && (
+        <span className="w-full py-2 px-3 text-[#3460DC] text-xs border border-[#3460DC] rounded-[100px] cursor-pointer"
+          onClick={()=>{window.open(`https://collab.anchors.in/${authState?.loggedUser?.slug}`)}}
+        >
+          collab.anchors.in/{authState?.loggedUser?.slug}
+        </span>
+      )}
 
       <section className="flex flex-col items-start gap-2">
-        <span className="text-sm font-medium text-[#424242] w-full py-[6px] px-3 hover:bg-[#FF5C5C] hover:text-[#FAFAFA] rounded-md cursor-pointer flex items-center gap-2">
+        <span className={`text-sm font-medium ${location.pathname === "/influencer/dashboard" || location.pathname === "/influencer" ? "text-[#FAFAFA] bg-[#FF5C5C]" : "text-[#424242] bg-transparent" }  w-full py-[6px] px-3 hover:bg-[#FF5C5C] hover:text-[#FAFAFA] rounded-md cursor-pointer flex items-center gap-2`} onClick={()=>{navigate("/influencer/dashboard")}}>
           <PiSquaresFourLight size={18} /> Dashboard
         </span>
-        <span className="text-sm font-medium text-[#424242] w-full py-[6px] relative px-3 hover:bg-[#FF5C5C] hover:text-[#FAFAFA] rounded-md cursor-pointer flex items-center gap-2">
+        <span className={`text-sm font-medium ${location.pathname === "/influencer/build_profile" ? "text-[#FAFAFA] bg-[#FF5C5C]" : "text-[#424242] bg-transparent" } w-full py-[6px] relative px-3 hover:bg-[#FF5C5C] hover:text-[#FAFAFA] rounded-md cursor-pointer flex items-center gap-2`} onClick={()=>{navigate("/influencer/build_profile")}}>
           <CgProfile size={18} /> Profile Building
           {!openProfileOptions ? (
-            <MdOutlineKeyboardArrowDown className="absolute right-3" onClick={()=>{setOpenProfileOptions(!openProfileOptions)}}/>
+            <MdOutlineKeyboardArrowDown
+              className="absolute right-3"
+              onClick={() => {
+                setOpenProfileOptions(!openProfileOptions);
+              }}
+            />
           ) : (
-            <MdOutlineKeyboardArrowUp className="absolute right-3" onClick={()=>{setOpenProfileOptions(!openProfileOptions)}}/>
+            <MdOutlineKeyboardArrowUp
+              className="absolute right-3"
+              onClick={() => {
+                setOpenProfileOptions(!openProfileOptions);
+              }}
+            />
           )}
         </span>
 
         {openProfileOptions && (
           <section className="flex flex-col items-center gap-4 text-sm w-full px-3 box-border mb-3 mt-1">
             <span className="cursor-pointer hover:text-[#FF5C5C] flex items-center justify-between w-full">
-              Personal Information <span className="text-[#10B981]">80%</span>
+              Personal Information 
+              {/* <span className="text-[#10B981]">80%</span> */}
             </span>
             <span className="cursor-pointer hover:text-[#FF5C5C] flex items-center justify-between w-full">
-              Collab Portfolio <span>60%</span>
+              Collab Portfolio 
+              {/* <span>60%</span> */}
             </span>
             <span className="cursor-pointer hover:text-[#FF5C5C] flex items-center justify-between w-full">
-              Monetization Expertise <span>30%</span>
+              Monetization Expertise 
+              {/* <span>30%</span> */}
             </span>
             <span className="cursor-pointer hover:text-[#FF5C5C] flex items-center justify-between w-full">
-              Content Info <span>30%</span>
+              Content Info 
+              {/* <span>30%</span> */}
             </span>
             <span className="cursor-pointer hover:text-[#FF5C5C] flex items-center justify-between w-full">
-              Audience info <span>30%</span>
+              Audience info 
+              {/* <span>30%</span> */}
             </span>
           </section>
         )}
 
-        <span className="text-sm font-medium text-[#424242] w-full py-[6px] px-3 hover:bg-[#FF5C5C] hover:text-[#FAFAFA] rounded-md cursor-pointer flex items-center gap-2">
-          <PiSquaresFourLight size={18} /> Brand Reviews
+        <span className={`text-sm font-medium ${location.pathname === "/influencer/brands_wishlist" || location.pathname === "/influencer/view_brands_list" ? "text-[#FAFAFA] bg-[#FF5C5C]" : "text-[#424242] bg-transparent" } w-full py-[6px] px-3 hover:bg-[#FF5C5C] hover:text-[#FAFAFA] rounded-md cursor-pointer flex items-center gap-2`} onClick={()=>{navigate("/influencer/brands_wishlist")}}>
+          <PiSquaresFourLight size={18} /> Brand List
         </span>
       </section>
     </div>
