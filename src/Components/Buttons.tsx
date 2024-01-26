@@ -1,7 +1,4 @@
 import React from "react";
-import { FaLinkedinIn } from "react-icons/fa";
-import { GoPlus } from "react-icons/go";
-import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 
 interface ButtonProps {
   text:string,

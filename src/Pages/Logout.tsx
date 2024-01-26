@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "./Logout.css"
 
 const Logout:React.FC = () => {
   const navigate = useNavigate();

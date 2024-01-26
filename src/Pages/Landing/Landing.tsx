@@ -3,6 +3,7 @@ import Navbar from "../../Components/Navbar/Navbar";
 import { IoMdArrowForward } from "react-icons/io";
 import { useCoupon } from "../../Providers/Coupon";
 import { usePayment } from "../../Providers/Payment";
+import { useGeneralSettings } from "../../Providers/General";
 
 type benefitProp = {
   onClose: () => void;
@@ -56,8 +57,8 @@ const Landing: React.FC = () => {
   const [amountToPay, setAmountToPay] = useState(999);
   const couponState = useCoupon();
   const paymentState = usePayment();
+  const generalState = useGeneralSettings()
   const [paymentProcessing, setPaymentProcessing] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   const handleCouponCodeSubmit = async () => {
     const result = await couponState?.checkAndVerifyCouponCode(
@@ -65,89 +66,100 @@ const Landing: React.FC = () => {
     );
     if (result?.success) {
       setAppliedCoup(true);
-      if (result.netToPay) {
-        setAmountToPay(result.netToPay);
-      }
+      setAmountToPay(result?.netToPay);
     } else {
       alert(result?.error);
     }
   };
 
   // Handling the payment responses
-  const handlePaymentResponse = async (response:{any}, orderId:string) => {
+  const handlePaymentResponse = async (response: { any }, orderId: string) => {
     setPaymentProcessing(true);
-    setLoading(false);
+    generalState?.setLoading(false);
 
-    switch (response.status) {
-      // 1. user cancelled the payment mode
-      case "userCancelled":
-        setPaymentProcessing(false);
-        setLoading(false);
-        alert(
-          "It is a paid service, for using it you have to pay the one time payment"
-        );
-        break;
+    try {
+      switch (response.status) {
+        // 1. user cancelled the payment mode
+        case "userCancelled":
+          setPaymentProcessing(false);
+          generalState?.setLoading(false);
+          alert(
+            "It is a paid service, for using it you have to pay the one time payment"
+          );
+          break;
 
-      //2. payment dropping by user --- dropped the payment by the user
-      case "dropped":
-        setPaymentProcessing(false);
-        setLoading(false);
-        alert(
-          "It is a paid service, for using it you have to pay the one time payment"
-        );
-        break;
+        //2. payment dropping by user --- dropped the payment by the user
+        case "dropped":
+          setPaymentProcessing(false);
+          generalState?.setLoading(false);
+          alert(
+            "It is a paid service, for using it you have to pay the one time payment"
+          );
+          break;
 
-      //  2. payment failed due to any reasone
-      case "failure":
-        setPaymentProcessing(false);
-        setLoading(false);
+        //  2. payment failed due to any reasone
+        case "failure":
+          setPaymentProcessing(false);
+          generalState?.setLoading(false);
 
-        alert(
-          "Payment Failed, if amount got deducted inform us at info@anchors.in"
-        );
+          alert(
+            "Payment Failed, if amount got deducted inform us at info@anchors.in"
+          );
 
-        break;
+          break;
 
-      //  3. Payment pending due to any reason
-      case "pending":
-        // Inform lark bot about the failure
-        setPaymentProcessing(false);
-        setLoading(false);
+        //  3. Payment pending due to any reason
+        case "pending":
+          // Inform lark bot about the failure
+          setPaymentProcessing(false);
+          generalState?.setLoading(false);
 
-        alert(
-          "Payment is still pending, complete the payment to proceed,for issues inform us at info@anchors.in"
-        );
-        break;
+          alert(
+            "Payment is still pending, complete the payment to proceed,for issues inform us at info@anchors.in"
+          );
+          break;
 
-      // 4. success payment
-      case "success":
-        setPaymentProcessing(false);
-        setLoading(false);
+        // 4. success payment
+        case "success":
+          setPaymentProcessing(false);
+          generalState?.setLoading(false);
 
-        await paymentState?.updateInfluencerOrder(orderId,response)
+          let result = await paymentState?.updateInfluencerOrder(
+            orderId,
+            response
+          );
+          if (result?.success) {
+            window.open("/influencer/activation_page", "_self");
+          } else {
+            throw new Error("Some error occured");
+          }
+          break;
 
-        break;
+        // Else all cases  -----------------
+        default:
+          setPaymentProcessing(false);
+          generalState?.setLoading(false);
 
-      // Else all cases  -----------------
-      default:
-        setPaymentProcessing(false);
-        setLoading(false);
-
-        alert(
-          "The order is not placed. Try again!!! ,in case of issues inform us at info@anchors.in "
-        );
-        break;
+          alert(
+            "The order is not placed. Try again!!! ,in case of issues inform us at info@anchors.in "
+          );
+          break;
+      }
+    } catch (error) {
+      alert(
+        "The order is not placed. Try again!!! ,in case of issues inform us at info@anchors.in "
+      );
     }
   };
-  
+
   const handlePaymentClick = async () => {
-    if(coupon !== "" && !appliedCoup){
-      alert("Verify the coupon first")
+    if (coupon !== "" && !appliedCoup) {
+      alert("Verify the coupon first");
       return;
     }
 
     setPaymentProcessing(true);
-    setLoading(true);
+    generalState?.setLoading(true);
 
     try {
       const order = await paymentState?.createInfluencerEasebuzzOrder(
@@ -156,29 +168,33 @@ const Landing: React.FC = () => {
         "Yuvraj Singh",
         "singhyuvraj0506@gmail.com",
         "Joining Fees",
-        Date.now() + 365*24*60*60*1000,
+        Date.now() + 365 * 24 * 60 * 60 * 1000,
         "6267941318",
         appliedCoup ? coupon : undefined
       );
 
-      const key = await paymentState?.getEaseBuzz();
+      if (amountToPay > 0) {
+        const key = await paymentState?.getEaseBuzz();
 
-      const easebuzzCheckout = new window.EasebuzzCheckout(key, "test");
+        const easebuzzCheckout = new window.EasebuzzCheckout(key, "prod");
 
-      const options = {
-        access_key: order?.paymentData.data,
-        onResponse: (response) => {
-          // handling the edge cases of the response
-          handlePaymentResponse(response, order?.order ?? "");
-        },
-        theme: "#000000", // color hex
-      };
+        const options = {
+          access_key: order?.paymentData.data,
+          onResponse: (response) => {
+            // handling the edge cases of the response
+            handlePaymentResponse(response, order?.order ?? "");
+          },
+          theme: "#000000", // color hex
+        };
 
-      easebuzzCheckout.initiatePayment(options);
+        easebuzzCheckout.initiatePayment(options);
+      } else {
+        window.open("/influencer/activation_page", "_self");
+      }
     } catch (error) {
       alert("Error in proccessing the payment");
-      setPaymentProcessing(false)
-      setLoading(false)
+      setPaymentProcessing(false);
+      generalState?.setLoading(false);
     }
   };
 
@@ -195,13 +211,13 @@ const Landing: React.FC = () => {
       <div className="flex items-center w-screen justify-center min-h-screen">
         <Navbar />
 
-        <section className="flex flex-col gap-7 text-center w-[550px] font-public items-center">
-          <h1 className="font-bold text-[50px] text-black leading-tight">
+        <section className="flex flex-col md:gap-7 gap-4 text-center w-[550px] font-public items-center">
+          <h1 className="font-bold text-[30px] md:text-[50px] text-black leading-tight">
             Get Noticed!
             <br /> Let Brands Find YOU
           </h1>
 
-          <p className="text-xl text-[#616161]">
+          <p className="md:text-xl text-sm w-[90%] md:w-full text-[#616161]">
             Join anchors | Collab & create your profile so that brands can reach
             out to you for collaboration and pay you for the work you love to
             do, which is content creation.
@@ -225,11 +241,14 @@ const Landing: React.FC = () => {
             Have a coupon code? Enter it below
           </span>
 
-          <section className="flex items-center gap-5 w-fit">
+          <section className="flex md:flex-row flex-col items-center md:gap-5 gap-3 w-fit">
             <input
               type="text"
               placeholder="Apply Coupon Code"
-              className="border-[#424242] border py-[10px] px-5 rounded-lg focus:outline-none text-[16px] uppercase"
+              className="py-[10px] px-5 rounded-lg text-[16px] uppercase"
+              style={{
+                border: "1px solid #424242",
+              }}
               value={coupon}
               onChange={(e) => {
                 setCoupon(e.target.value);
@@ -239,21 +258,24 @@ const Landing: React.FC = () => {
             />
             <button
               disabled={appliedCoup}
-              className="text-[16px] bg-[#121212] text-[#BDBDBD] py-[10px] px-5 rounded-lg"
+              className="md:text-[16px] text-xs bg-[#121212] text-[#BDBDBD] py-[10px] px-5 rounded-lg"
               onClick={handleCouponCodeSubmit}
             >
               {appliedCoup ? "Applied" : "Apply Code"}
             </button>
           </section>
           <span
-            className={`text-[#059669] text-[16px] -mt-5 ${
+            className={`text-[#059669] text-[16px] md:-mt-5 mt-2 ${
               appliedCoup ? "visible" : "hidden"
             }`}
           >
             Coupon Code applied Successfully
           </span>
 
-          <button className="text-[16px] bg-[#121212] text-white py-4 px-12 rounded-lg flex items-center gap-5" onClick={handlePaymentClick}>
+          <button
+            className="md:text-[16px] text-xs bg-[#121212] text-white py-4 px-12 rounded-lg flex items-center gap-5 mt-3 md:mt-0"
+            onClick={handlePaymentClick}
+          >
             Continue To Pay {amountToPay} <IoMdArrowForward />
           </button>
         </section>

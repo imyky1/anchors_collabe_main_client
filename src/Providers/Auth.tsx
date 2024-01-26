@@ -1,5 +1,5 @@
 import axios from "axios";
-import { createContext, useContext, useEffect, useState } from "react";
+import { SetStateAction, createContext, useContext, useEffect, useState } from "react";
 
 // interfaces ---------------------------
 interface AuthProviderProps {
@@ -11,6 +11,7 @@ interface AuthContextProps {
   getLinkedinDatatoLogin: (token: string) => Promise<void>;
   getUserData: () => Promise<void>;
   loggedUser: loggedUser | null;
+  setReFetchUserData:React.Dispatch<SetStateAction<boolean>>
 }
 
 interface loggedUser{
@@ -20,7 +21,11 @@ interface loggedUser{
   status:number,
   profile:string,
   is_verified:boolean,
-  slug:string
+  slug:string,
+  referralCode:string,
+  earlyAccess?:boolean,
+  mobile:string,
+  linkedinLink:string
 }
 
 const AuthContext = createContext<AuthContextProps | null>(null);
@@ -37,7 +42,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = (props) => {
   const [reFetchUserData, setReFetchUserData] = useState(false);
 
   useEffect(() => {
-    // GetUserData();
+    if(localStorage.getItem("jwtToken")){
+      getUserData();
+    }
   }, [reFetchUserData]);
 
   // open linkedin login page -----------------------
@@ -61,8 +68,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = (props) => {
     const response = await axios.get(
       `${host}/auth/linkedin/success?token=${token}`
     );
-
-    console.log(response);
 
     if (response.status === 200) {
       LoginInfluncer(
@@ -133,7 +138,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = (props) => {
       }
     } catch (error) {
       alert("Error in fetching user data");
-      localStorage.removeItem("jwtToken");
       window.open("/", "_self");
     }
   };
@@ -145,6 +149,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = (props) => {
         getLinkedinDatatoLogin,
         getUserData,
         loggedUser,
+        setReFetchUserData
       }}
     >
       {props?.children}

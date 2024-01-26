@@ -102,12 +102,7 @@ export const PaymentProvider: React.FC<paymentProviderProps> = (props) => {
         "Some Error occured in placing order, Please try again !!!"
       );
     } else {
-      console.log(result.data);
-      if (result.data.success) {
-        return result.data;
-      } else {
-        throw new Error(result.data?.error);
-      }
+      return result.data;
     }
   };
 
@@ -123,7 +118,7 @@ export const PaymentProvider: React.FC<paymentProviderProps> = (props) => {
       value={{
         createInfluencerEasebuzzOrder,
         getEaseBuzz,
-        updateInfluencerOrder
+        updateInfluencerOrder,
       }}
     >
       {props?.children}
