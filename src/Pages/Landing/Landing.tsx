@@ -4,6 +4,7 @@ import { IoMdArrowForward } from "react-icons/io";
 import { useCoupon } from "../../Providers/Coupon";
 import { usePayment } from "../../Providers/Payment";
 import { useGeneralSettings } from "../../Providers/General";
+import { useAuth } from "../../Providers/Auth";
 
 type benefitProp = {
   onClose: () => void;
@@ -58,6 +59,7 @@ const Landing: React.FC = () => {
   const couponState = useCoupon();
   const paymentState = usePayment();
   const generalState = useGeneralSettings()
+  const authState = useAuth()
   const [paymentProcessing, setPaymentProcessing] = useState(false);
 
   const handleCouponCodeSubmit = async () => {
@@ -165,8 +167,8 @@ const Landing: React.FC = () => {
       const order = await paymentState?.createInfluencerEasebuzzOrder(
         "InfluencerFirstPay",
         "999",
-        "Yuvraj Singh",
-        "singhyuvraj0506@gmail.com",
+        authState?.loggedUser?.name,
+        authState?.loggedUser?.email,
         "Joining Fees",
         Date.now() + 365 * 24 * 60 * 60 * 1000,
         "6267941318",

@@ -1,6 +1,7 @@
 import React from "react";
 import { BsTag } from "react-icons/bs";
 import { IoArrowForwardCircleOutline } from "react-icons/io5";
+import mixpanel from "mixpanel-browser"
 
 interface GeneralCardProps {
   title: string;
@@ -23,6 +24,7 @@ interface BrandCardProps {
   companyProfile: string;
   goals: [];
   newImg?:string
+  postLink:string
 }
 
 interface PlatformCardProps {
@@ -36,6 +38,7 @@ export const BrandCard: React.FC<BrandCardProps> = ({
   companyUrl,
   companyProfile,
   goals,
+  postLink,
   newImg
 }) => {
   return (
@@ -70,6 +73,7 @@ export const BrandCard: React.FC<BrandCardProps> = ({
         size={20}
         className="cursor-pointer absolute right-5"
         color="#616161"
+        onClick={()=>{window.open(postLink);mixpanel.track("Clicked on brand postlink arrow")}}
       />
     </div>
   );
@@ -119,6 +123,7 @@ export const PlatformCard: React.FC<PlatformCardProps> = ({
           size={16}
           color="#757575"
           className="cursor-pointer absolute right-5"
+          onClick={()=>{window.open(profileLink);mixpanel.track("Clicked on Platform profilelink arrow")}}
         />
       </div>
     </div>

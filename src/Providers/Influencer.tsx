@@ -18,6 +18,7 @@ interface InfluencerContextProps {
   SaveUserInfo: (data: {}) => Promise<{ any }>;
   SentMessageFromSNS: (number: string) => Promise<{ any }>;
   getPersonalInfo: () => Promise<{ success: boolean; data?: {} }>;
+  getInfluencerInfoFromSlug: (slug:string) => Promise<{ success: boolean; data?: {}}>;
   getBrandWishlist: () => Promise<{ success: boolean; data?: {} }>;
 }
 
@@ -199,6 +200,22 @@ export const InfluencerProvider: React.FC<InfluencerProviderProps> = (
   };
 
   // get personal info -----------------------
+  const getInfluencerInfoFromSlug = async (slug:string) => {
+    try {
+      const response = await axios.get(`${host}/influencer/getPersonalDataFromSlug?slug=${slug}`);
+
+      // Check if the response contains the LinkedIn authorization URL
+      if (response.status !== 200) {
+        throw new Error("Error in fetching the Page");
+      } else {
+        return response.data;
+      }
+    } catch (error) {
+      alert(error);
+    }
+  };
+
+  // get personal info -----------------------
   const getBrandWishlist = async () => {
     try {
       const response = await axios.get(`${host}/influencer/getBrandWishlist`, {
@@ -307,7 +324,8 @@ export const InfluencerProvider: React.FC<InfluencerProviderProps> = (
         updateWishlist,
         getBrandWishlist,
         SaveUserInfo,
-        SentMessageFromSNS
+        SentMessageFromSNS,
+        getInfluencerInfoFromSlug
       }}
     >
       {props?.children}
