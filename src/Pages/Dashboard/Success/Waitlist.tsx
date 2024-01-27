@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { FaWhatsapp } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import "./success.css";
 import axios from "axios";
@@ -28,21 +29,22 @@ const Waitlist = () => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const host = import.meta.env.VITE_SERVER_HOST;
-        const response = await axios.get(`${host}/user/getall`, {
+        const host = import.meta.env.VITE_BACKEND_SERVER_URL;
+        const response = await axios.get(`${host}/influencer/getAll`,{
           headers: {
             jwtToken: localStorage.getItem("jwtToken"),
           },
         });
+        console.log(response)
 
         if (response.data) {
           // const list = response.data.all_users.map((item) => ({
           //   name: item.name,
           //   count: item.refered_to?.length,
           // }));
-          // console.log(list);
+          console.log(response.data);
           setLeaderboard({
-            // data: response.data.sortedLeaderboard,
+            data: response.data.sortedLeaderboard,
             currentUserRank: response.data.currentUserIndex,
             userIndex: response.data?.userIndex,
           });
@@ -54,27 +56,7 @@ const Waitlist = () => {
     getData();
   }, []);
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const host = import.meta.env.VITE_BACKEND_SERVER_URL;
-        const response = await axios.get(`${host}/influencer/getAll`,{
-          headers:{
-            "jwtToken":localStorage.getItem("jwtToken")
-          }
-        });
-        const usersToFilter = response.data
-        console.log(usersToFilter)
-        setLeaderboard({
-          ...leaderboard,data:usersToFilter
-        })
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
-    };
-
-    fetchUsers();
-  },[]);
+ 
 
   const WA_content = [
     {
@@ -131,7 +113,7 @@ Let's be in the loop together using ${window.location.origin}?refer=${code} !`,
       });
   };
 
-
+  console.log(leaderboard)
   return (
     <div className="success_container">
         <Navbar/>
@@ -153,34 +135,34 @@ Let's be in the loop together using ${window.location.origin}?refer=${code} !`,
         </span>
 
         <div>
-          <div className="text">
+          <div className="text ">
             {leaderboard?.currentUserRank !== -1 ? (
-              <section style={{display:'flex',gap:'10px'}}>
+              <section style={{display:'flex',gap:'10px',marginBottom:'10px'}}>
                 <img src="/medals.svg" alt="" />
                 Your Rank : <b>{leaderboard?.currentUserRank + 1}</b>
               </section>
             ) : (
-              <section>
+              <section style={{marginBottom:'10px',display:'flex',gap:'10px'}}>
+                <img src="/medals.svg" alt="" />
                 Waitlist Number : <b>{leaderboard?.userIndex}</b>
               </section>
             )}
             <h1>
               {leaderboard?.currentUserRank + 1 > 0 &&
-              leaderboard?.currentUserRank + 1 < 250
+              leaderboard?.currentUserRank + 1 < 50 
                 ? "Congratulations! "
                 : "Almost there!"}
             </h1>
             <span>
               {leaderboard?.currentUserRank + 1 > 0 &&
-              leaderboard?.currentUserRank + 1 < 250 ? (
+              leaderboard?.currentUserRank + 1 < 50 ? (
                 <>
                   You're Top 50!
-                  <br /> Share more & secure your VIP collab spot!
+                  <br /> Share more & secure your spot for Extra perks!
                 </>
               ) : (
                 <>
-                  Share now for Min. 1 Referral to Crack the
-                  <br /> Top 200 for FREE & Early Access!
+                  Share now !<br /> Minimum 1 referral required to be in the Top 50!
                 </>
               )}
             </span>
@@ -196,7 +178,7 @@ Let's be in the loop together using ${window.location.origin}?refer=${code} !`,
             </div>
             {/* <p>Share this link with your network to climb the leaderboard and <b>EARN Referral Rewards.</b> </p> */}
             <button onClick={handleSendMessage} className="WhatsApp">
-              <img src="/WhatsApp.svg" alt="" />
+            <FaWhatsapp />
               Share on WhatsApp
             </button>
           </div>
@@ -236,7 +218,7 @@ Let's be in the loop together using ${window.location.origin}?refer=${code} !`,
                     </tr>
                   ) : (
                     <tr className="current">
-                      <td className="index">--</td>
+                      <td className="index">NA</td>
                       <td className="name">You</td>
                       <td className="count">0</td>
                     </tr>
