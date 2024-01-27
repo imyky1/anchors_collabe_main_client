@@ -14,17 +14,16 @@ const OtpVerify = () => {
   const navigate = useNavigate();
   const authState = useAuth();
   const [otp, setotp] = useState("");
-  const influencerState = useInfluencer()
+  const influencerState = useInfluencer();
   const [number, setNumber] = useState(null);
   const [cookies, setCookie] = useCookies();
-
 
   useEffect(() => {
     if (authState?.loggedUser?.is_verified) {
       navigate("/dashboard");
     }
   }, [authState?.loggedUser]);
-  
+
   useEffect(() => {
     if (params.get("number")) {
       setNumber(params.get("number"));
@@ -33,7 +32,7 @@ const OtpVerify = () => {
   }, []);
 
   const verfiyOTP = async () => {
-    mixpanel.track("Verify otp anchors collab")
+    mixpanel.track("Verify otp anchors collab");
     if (otp?.length !== 6) {
       toast.info("Enter a proper code", {
         position: "top-center",
@@ -78,28 +77,47 @@ const OtpVerify = () => {
 
   return (
     <div className="info_container">
-      <Navbar/>
+      <Navbar />
       <div className="content">
-      <span                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+        <span
           style={{
             display: "flex",
             gap: "10px",
             borderRadius: "1000px",
-            color:"#059669",
-            borderColor:"#059669",
-            marginBottom:"40px",
-            cursor:"default"
+            color: "#059669",
+            borderColor: "#059669",
+            marginBottom: "40px",
+            cursor: "default",
           }}
           className="button_type_01"
         >
-           <MdCelebration size={24}/> Doors Open Feb 3rd...
+          <MdCelebration size={24} /> Doors Open Feb 3rd...
         </span>
 
-          <div className="text">
-            <h1>Welcome, {authState?.loggedUser?.name?.split(" ")[0]}</h1>
-            <p> Fill the Details to Unlock your Referral Code<br/>
-Be a <b>Top Referrer</b>: Get Early & Free Access</p>
-          </div>
+        <div className="text">
+          <h1>Welcome, {authState?.loggedUser?.name?.split(" ")[0]}</h1>
+          <p>
+            {" "}
+            Fill the Details to Unlock your Referral Code
+            <br />
+            Be a <b>Top Referrer</b>: Avail perks!
+          </p>
+        </div>
+        <p
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            fontFamily: "Public sans",
+            textAlign: "center",
+            fontWeight: "400",
+            color: "#757575",
+            marginTop: "20px",
+          }}
+        >
+          OTP sent to this number <b>{`+${number}`}</b>{" "}
+          <img style={{cursor:'pointer'}} onClick={()=>{navigate('/influencer/userinfo')}} src="/edit.svg" alt="" />{" "}
+        </p>
         <p
           style={{
             fontFamily: "Public sans",
@@ -108,8 +126,7 @@ Be a <b>Top Referrer</b>: Get Early & Free Access</p>
             color: "#757575",
           }}
         >
-          OTP sent to this number <b>{`+${number}`}</b> <img src="edit.svg" alt="" />{" "}
-          <br /> Please enter OTP to continue
+          Please enter OTP to continue
         </p>
         <form className="userform" action="">
           <div className="input_field">

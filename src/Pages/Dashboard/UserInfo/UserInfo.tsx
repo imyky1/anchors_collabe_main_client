@@ -11,14 +11,19 @@ import { useAuth } from "../../../Providers/Auth";
 import Navbar from "../../../Components/Navbar/Navbar";
 import { useInfluencer } from "../../../Providers/Influencer";
 import { useGeneralSettings } from "../../../Providers/General";
+import { FaLinkedinIn } from "react-icons/fa";
+import { IoCall } from "react-icons/io5";
+import { MdOutlineOpenInNew } from "react-icons/md";
+import { HiUsers } from "react-icons/hi";
+
 
 const UserInfo = () => {
   const navigate = useNavigate();
   const [cookies, setCookie] = useCookies();
 
   const authState = useAuth();
-  const influencerState = useInfluencer()
-  const generalState = useGeneralSettings()
+  const influencerState = useInfluencer();
+  const generalState = useGeneralSettings();
 
   const referCode = localStorage.getItem("anchors_collab_refer");
   const [value, setValue] = useState(authState?.loggedUser?.mobile);
@@ -93,7 +98,9 @@ const UserInfo = () => {
 
   const sendOTP = async () => {
     if (data?.mobile > 4) {
-      const json = await influencerState?.SentMessageFromSNS(data?.mobile ?? "");
+      const json = await influencerState?.SentMessageFromSNS(
+        data?.mobile ?? ""
+      );
 
       if (json?.MessageID) {
         toast.success("OTP sent successfully", {
@@ -132,18 +139,19 @@ const UserInfo = () => {
             <MdCelebration size={24} /> Doors Open Feb 3rd...
           </span>
 
-          <div className="text">
+          <div className="text mb-10">
             <h1>Welcome, {authState?.loggedUser?.name?.split(" ")[0]}</h1>
             <p>
               {" "}
               Fill the Details to Unlock your Referral Code
               <br />
-              Be a <b>Top Referrer</b>: Get Early & Free Access
+              Be a <b>Top Referrer</b>: Avail perks!
             </p>
           </div>
           <form className="userform" action="">
+            <div>
             <div className="input_field">
-              <img src="/linkedinSmall.svg" alt="" />
+              <div style={{marginLeft:'10px'}}><FaLinkedinIn size={16} color="#757575"/></div>
               <input
                 type="text"
                 name="linkedinLink"
@@ -152,8 +160,20 @@ const UserInfo = () => {
                 placeholder="https://www.linkedin.com/in/ravi-ahirwar/"
               />
             </div>
+            <div style={{
+              cursor:'pointer',
+              display:'flex',
+              alignItems:'center',
+              gap:'5px',
+              fontFamily:'Public Sans',
+              fontWeight:'400',
+              fontSize:'12px',
+              color:'#FF5C5C'
+            }} onClick={()=>{window.open("https://www.linkedin.com/in/")}}>Get LinkedIn Profile link <MdOutlineOpenInNew /></div>
+            </div>
             <div className="input_field">
               {/* <img src="/call.svg" alt="" /> */}
+              <div style={{marginLeft:'10px'}}><IoCall size={16} color="#757575"/></div>
               <PhoneInput
                 style={{ width: "100%" }}
                 name="mobile"
@@ -164,7 +184,8 @@ const UserInfo = () => {
               />
             </div>
             <div className="input_field">
-              <img src="/referal.svg" alt="" />
+              {/* <img src="/referal.svg" alt="" /> */}
+              <div style={{marginLeft:'10px'}}><HiUsers size={16} color="#757575"/></div>
               <input
                 type="text"
                 name="refered_code"

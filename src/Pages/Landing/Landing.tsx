@@ -17,30 +17,33 @@ const BenefitsPopup: React.FC<benefitProp> = ({ onClose }) => {
         className="flex flex-col items-center gap-3 bg-white w-[400px] p-5 box-border font-public rounded-xl"
         onClick={onClose}
       >
-        <h2 className="text-lg font-bold leading-7">
-          anchors | Collab Membership Highlights
-        </h2>
+        <h2 className="text-lg font-bold leading-7">Membership Highlights</h2>
+        <h3>
+          <b>Public Profile</b>: Showcase your creativity for brands to
+          discover.
+        </h3>
 
         <ul className="flex flex-col gap-3 list-disc w-10/12 text-[16px]">
           <li>
-            <b>Public Profile</b>: Showcase your creativity for brands to
-            discover.
+            <b>Exclusive Benefits</b>: Enjoy 1 year of awesome perks,
+            including...
           </li>
-          <li>
-            <b>1-Year Validity</b>: Enjoy exclusive benefits for an entire year.
-          </li>
-          <li>
-            <b>LinkedIn Creators Community</b>: Connect with a vibrant community
-            of fellow LinkedIn creators.
-          </li>
-          <li>
-            <b>Zero Commission</b>: Keep 100% of your earnings from brand
-            collaborations.
-          </li>
-          <li>
-            <b>Tailored Opportunities</b>: Access collaborations personalized
-            for your unique skills.
-          </li>
+          
+            <ul className="flex flex-col ml-10 gap-3 list-disc w-10/12 text-[16px]">
+              <li>
+                <b>(Coming Soon!) LinkedIn Creators Community</b>:  Network and learn from fellow creators.
+              </li>
+              
+              <li>
+                <b>Zero Commission</b>: Keep 100% of your earnings from brand
+                collaborations.
+              </li>
+              <li>
+                <b>Tailored Opportunities</b>: Get matched with projects perfectly suited to your skills.
+
+              </li>
+            </ul>
+          
         </ul>
 
         <button className="text-[16px] bg-[#121212] text-[#BDBDBD] py-[10px] px-10 rounded-lg mt-10 mb-6">
@@ -220,9 +223,8 @@ const Landing: React.FC = () => {
           </h1>
 
           <p className="md:text-xl text-sm w-[90%] md:w-full text-[#616161]">
-            Join anchors | Collab & create your profile so that brands can reach
-            out to you for collaboration and pay you for the work you love to
-            do, which is content creation.
+            Get paid for your passion. <br /> Build your profile and connect
+            with awesome brands!
           </p>
 
           <section className="flex flex-col items-center">
@@ -239,14 +241,12 @@ const Landing: React.FC = () => {
             </span>
           </section>
 
-          <span className="text-sm text-[#616161] ">
-            Have a coupon code? Enter it below
-          </span>
+          <span className="text-sm text-[#616161] ">Have a coupon code?</span>
 
           <section className="flex md:flex-row flex-col items-center md:gap-5 gap-3 w-fit">
             <input
               type="text"
-              placeholder="Apply Coupon Code"
+              placeholder="Enter Coupon Code"
               className="py-[10px] px-5 rounded-lg text-[16px] uppercase"
               style={{
                 border: "1px solid #424242",
@@ -271,14 +271,14 @@ const Landing: React.FC = () => {
               appliedCoup ? "visible" : "hidden"
             }`}
           >
-            Coupon Code applied Successfully
+            Coupon for 100% off applied successfully
           </span>
 
           <button
-            className="md:text-[16px] text-xs bg-[#121212] text-white py-4 px-12 rounded-lg flex items-center gap-5 mt-3 md:mt-0"
+            className="md:text-[16px] text-xs bg-[#121212] text-white py-4 px-24 rounded-lg flex items-center gap-5 mt-3 md:mt-0"
             onClick={handlePaymentClick}
           >
-            Continue To Pay {amountToPay} <IoMdArrowForward />
+            Pay Rs. {amountToPay}/- <IoMdArrowForward />
           </button>
         </section>
       </div>
