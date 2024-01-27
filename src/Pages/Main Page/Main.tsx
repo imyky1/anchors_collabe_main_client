@@ -78,7 +78,7 @@ const Main = () => {
 
   return (
     <>
-      <div className="container">
+      <div style={{maxWidth:'100%'}} className="container">
         <header className="header">
           <div className="logo">
             <img
@@ -148,7 +148,7 @@ const Main = () => {
         </div>
         <footer className="footer">
           <img src="/airplane.svg" alt="" />
-          <p className="mb-6">Join the waitlist</p>
+          <p className="mb-6">Welcome !</p>
           <button
             onClick={() => {
               handleLinkedInLogin();

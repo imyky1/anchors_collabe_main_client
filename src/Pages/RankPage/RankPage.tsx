@@ -7,12 +7,13 @@ import Navbar from "../../Components/Navbar/Navbar";
 export const RankPage = () => {
   const navigate = useNavigate();
   const authState = useAuth();
+  console.log(authState)
 
   return (
     <>
       {/* {isLoading && <LoaderOne />} */}
 
-      <div className="container">
+      <div style={{maxWidth:'100%'}} className="container">
         <Navbar />
 
         <div className="backgroundImage"></div>

@@ -8,6 +8,7 @@ import { MdCelebration } from "react-icons/md";
 import { SlLockOpen } from "react-icons/sl";
 import { useAuth } from "../../../Providers/Auth";
 import Navbar from "../../../Components/Navbar/Navbar";
+import { IoCopyOutline } from "react-icons/io5";
 
 
 const Waitlist = () => {
@@ -154,7 +155,8 @@ Let's be in the loop together using ${window.location.origin}?refer=${code} !`,
         <div>
           <div className="text">
             {leaderboard?.currentUserRank !== -1 ? (
-              <section>
+              <section style={{display:'flex',gap:'10px'}}>
+                <img src="/medals.svg" alt="" />
                 Your Rank : <b>{leaderboard?.currentUserRank + 1}</b>
               </section>
             ) : (

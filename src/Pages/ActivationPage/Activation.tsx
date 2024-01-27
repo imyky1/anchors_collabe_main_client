@@ -42,8 +42,8 @@ const AcitvationPage = () => {
           <div >
             {/* <EventCountDown /> */}
             <div  className="activation_page_leaderboard">
-              <h1>3 Things to Remember</h1>
-              <ol>
+              <h1 className="mb-3">3 Things to Remember</h1>
+              <ol className="flex flex-col gap-3 list-decimal w-10/12 text-[16px]">
                 <li>
                   {" "}
                   <b>Build Your Profile:</b> Showcase your skills & passion. The
