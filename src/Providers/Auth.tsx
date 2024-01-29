@@ -25,7 +25,8 @@ interface loggedUser{
   referralCode:string,
   earlyAccess?:boolean,
   mobile:string,
-  linkedinLink:string
+  linkedinLink:string,
+  eaRank?:string
 }
 
 const AuthContext = createContext<AuthContextProps | null>(null);

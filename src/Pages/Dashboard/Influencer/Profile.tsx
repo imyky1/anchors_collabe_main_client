@@ -592,6 +592,7 @@ const FormFour: React.FC<FormThreeProps> = ({ data, setData }) => {
               <DropDown01
                 placeholder="Select Platform"
                 values={platformData ?? []}
+                defaultValue={e.platformName}
                 selectedValue={(value) => {
                   setData((prevData) => {
                     const newArray = [...prevData];
@@ -839,6 +840,7 @@ const FormEight: React.FC<FormFiveProps> = ({ data, setData }) => {
               <DropDown01
                 placeholder="Select Platform"
                 values={platformData ?? []}
+                defaultValue={e.platform}
                 selectedValue={(value) => {
                   setData((prevData) => {
                     const newArray = [...prevData.platforms];
@@ -1141,9 +1143,15 @@ const Profile: React.FC = () => {
   };
 
   useEffect(() => {
+    generalState.setLoading(true)
     influencerState?.getPersonalInfo().then((e) => {
+      generalState.setLoading(false)
       if (e?.success) {
         setdataOne({ ...dataOne, ...e?.data });
+        setdataTwo(e?.data2?.data);
+        setdataThree(e?.data3?.data);
+        setdataFour(e.data4)
+        setdataFive(e.data5)
       }
     });
   }, []);

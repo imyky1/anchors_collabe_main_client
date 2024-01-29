@@ -37,11 +37,11 @@ export const Navbar2: React.FC = () => {
     <div className="w-screen box-border px-4 py-3 flex items-center justify-between bg-white">
       <img src={logo} alt="" className="w-20 md:w-32 cursor-pointer" />
 
-      <img
+      {/* <img
         src="https://i.pinimg.com/736x/ab/b8/8f/abb88fe4cc8e13fe7d49f1c56be8eccd.jpg"
         alt=""
         className="rounded-full w-10 h-10"
-      />
+      /> */}
     </div>
   );
 };

@@ -4,8 +4,11 @@ import { CiGlobe } from "react-icons/ci";
 import { MdContentCopy } from "react-icons/md";
 import { ToastContainer } from "react-toastify";
 import { toast } from "react-toastify";
+import { useAuth } from "../../../../Providers/Auth";
 
 export const ShareProfile = () => {
+
+  const authState = useAuth()
 
     const handleCopy = ()=>{
         let textToCopy = "You Copied me!"
@@ -36,7 +39,7 @@ export const ShareProfile = () => {
             <h1>Your Public for collab</h1>
             <div className="left_container_link_div">
               <CiGlobe />
-              <h3>collab.anchors.in/raviahirwar</h3>
+              <h3>collab.anchors.in/{authState?.loggedUser?.slug}</h3>
               <div onClick={handleCopy} style={{cursor:'pointer'}}><MdContentCopy color="#424242"/></div>
               
             </div>

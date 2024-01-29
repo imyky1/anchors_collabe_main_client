@@ -19,7 +19,7 @@ export const RankPage = () => {
         <div className="backgroundImage"></div>
         <div className="rank_page_content">
           <h1>{`Congrats ${authState?.loggedUser?.name}!`}</h1>
-          <h2>{`You ranked #${23}`}</h2>
+          <h2>{`You ranked #${authState?.loggedUser?.eaRank}`}</h2>
           <h3>
             As promised, 100% off & Early Access awaits... <br /> Don't miss
             out! Grab this golden opportunity.
