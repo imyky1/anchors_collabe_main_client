@@ -18,6 +18,8 @@ import { useGeneralSettings } from "./Providers/General";
 import { RankPage } from "./Pages/RankPage/RankPage";
 import AcitvationPage from "./Pages/ActivationPage/Activation";
 import mixpanel from "mixpanel-browser"
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 // Declare the EasebuzzCheckout property on the window object
 declare global {
@@ -118,6 +120,9 @@ const App: React.FC = () => {
           </CouponProvider>
         </PaymentProvider>
       </ThemeProvider>
+
+
+      <ToastContainer position="top-center" limit={1}/>
     </>
   );
 };

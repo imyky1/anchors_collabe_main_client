@@ -35,14 +35,12 @@ const Waitlist = () => {
             jwtToken: localStorage.getItem("jwtToken"),
           },
         });
-        console.log(response)
 
         if (response.data) {
           // const list = response.data.all_users.map((item) => ({
           //   name: item.name,
           //   count: item.refered_to?.length,
           // }));
-          console.log(response.data);
           setLeaderboard({
             data: response.data.sortedLeaderboard,
             currentUserRank: response.data.currentUserIndex,
@@ -113,7 +111,6 @@ Let's be in the loop together using ${window.location.origin}?refer=${code} !`,
       });
   };
 
-  console.log(leaderboard)
   return (
     <div className="success_container">
         <Navbar/>

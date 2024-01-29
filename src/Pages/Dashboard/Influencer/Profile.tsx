@@ -3,7 +3,7 @@ import {
   DropDown01,
   InputField1,
   SocialField1,
-  TagsField1
+  TagsField1,
 } from "../../../Components/Fields";
 import { Button1 } from "../../../Components/Buttons";
 import { Slider } from "@material-tailwind/react";
@@ -24,7 +24,8 @@ import { Cropper, ReactCropperElement } from "react-cropper";
 import { TbEdit } from "react-icons/tb";
 import LoaderOne from "../../../Components/Loader";
 import { useGeneralSettings } from "../../../Providers/General";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 interface dataOneProps {
   name: string;
@@ -37,14 +38,14 @@ interface dataOneProps {
   coverPhoto: string;
   profile: string;
   websiteLink: string;
-  followers:{
-    linkedin:number | null,
-    twitter:number | null,
-    fb:number | null,
-    telegram:number | null,
-    insta:number | null,
-    website:number | null
-  }
+  followers: {
+    linkedin: number | null;
+    twitter: number | null;
+    fb: number | null;
+    telegram: number | null;
+    insta: number | null;
+    website: number | null;
+  };
 }
 
 interface dataTwoProps {
@@ -52,14 +53,14 @@ interface dataTwoProps {
   companyUrl: string;
   companyProfile: string;
   goals: [];
-  postLink:string
+  postLink: string;
 }
 
 interface dataThreeProps {
   platformName: string;
   profileLink: string;
   methods: [];
-  paidAudience:number | null
+  paidAudience: number | null;
 }
 
 interface dataFourProps {
@@ -160,13 +161,17 @@ const FormOne: React.FC<FormOneProps> = ({
       <div className="w-full p-5 box-border bg-white rounded-lg flex flex-col gap-5">
         <div className="w-full bg-[#212121] h-0 pb-[33%] relative rounded overflow-hidden">
           <img
-            src={formOneImages[0] ?? data.coverPhoto ?? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8jr51IO_5Aq3md1lzpvSr_UFrmrjeGhlTjQ&usqp=CAU"}
+            src={
+              formOneImages[0] ??
+              data?.coverPhoto ??
+              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8jr51IO_5Aq3md1lzpvSr_UFrmrjeGhlTjQ&usqp=CAU"
+            }
             alt=""
             className="absolute top-0 left-0 w-full h-full"
             onError={({ currentTarget }) => {
               currentTarget.onerror = null; // prevents looping
               currentTarget.src =
-              "https://cdn.pixabay.com/photo/2018/01/24/18/05/background-3104413_960_720.jpg";
+                "https://cdn.pixabay.com/photo/2018/01/24/18/05/background-3104413_960_720.jpg";
             }}
           />
           <button
@@ -182,7 +187,7 @@ const FormOne: React.FC<FormOneProps> = ({
           <img
             src={
               formOneImages[1] ??
-              data.profile ??
+              data?.profile ??
               "https://t3.ftcdn.net/jpg/04/85/67/08/360_F_485670840_Ai4Rz09r0DmHlJycECZk23LVaocea4ZI.jpg"
             }
             alt=""
@@ -198,14 +203,14 @@ const FormOne: React.FC<FormOneProps> = ({
 
         <InputField1
           placeholder="Your Full Name"
-          value={data.name}
+          value={data?.name}
           onChange={handleChange}
           name="name"
           id="name"
         />
         <InputField1
           placeholder="Your Tagline"
-          value={data.tagline}
+          value={data?.tagline}
           onChange={handleChange}
           name="tagline"
           id="tagline"
@@ -250,70 +255,70 @@ const FormTwo: React.FC<FormOneProps> = ({ data, setData }) => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
 
-  const handleChange2 = (e,field) => {
-    let newObj = data.followers
-    newObj[field] = e.target.value
-    setData({ ...data, followers : newObj });
+  const handleChange2 = (e, field) => {
+    let newObj = data?.followers;
+    newObj[field] = e.target.value;
+    setData({ ...data, followers: newObj });
   };
 
   return (
     <div className="w-full p-5 box-border bg-white rounded-lg flex flex-col gap-5">
-      <h1>Add Your Social link </h1>
+      <h1>Social Media Presence </h1>
 
       <SocialField1
-        placeholder1="Paste Your LinkedIn Link"
+        placeholder1="Paste your LinkedIn Profile’s link"
         placeholder2="No of followers"
         icon={<FaLinkedinIn />}
         name="linkedinLink"
         id="linkedinLink"
-        value={data.linkedinLink}
+        value={data?.linkedinLink}
         onChange={handleChange}
-        value2={data.followers.linkedin}
-        onChange2={(e)=>handleChange2(e,"linkedin")}
+        value2={data.followers?.linkedin}
+        onChange2={(e) => handleChange2(e, "linkedin")}
       />
       <SocialField1
-        placeholder1="Paste Your Instagram Link"
+        placeholder1="Paste your Instagram Profile’s link"
         placeholder2="No of followers"
         icon={<FaInstagram />}
         name="instaLink"
         id="instaLink"
-        value={data.instaLink}
+        value={data?.instaLink}
         onChange={handleChange}
-        value2={data.followers.insta}
-        onChange2={(e)=>handleChange2(e,"insta")}
+        value2={data?.followers?.insta}
+        onChange2={(e) => handleChange2(e, "insta")}
       />
       <SocialField1
-        placeholder1="Paste Your Telegram Link"
+        placeholder1="Paste Your Telegram Profile’s Link"
         placeholder2="No of followers"
         icon={<FaTelegram />}
         name="telegramLink"
         id="telegramLink"
-        value={data.telegramLink}
+        value={data?.telegramLink}
         onChange={handleChange}
-        value2={data.followers.telegram}
-        onChange2={(e)=>handleChange2(e,"telegram")}
+        value2={data?.followers?.telegram}
+        onChange2={(e) => handleChange2(e, "telegram")}
       />
       <SocialField1
-        placeholder1="Paste Your Facebook Link"
+        placeholder1="Paste Your Facebook Profile’s Link"
         placeholder2="No of followers"
         icon={<FaFacebook />}
         name="fbLink"
         id="fbLink"
-        value={data.fbLink}
+        value={data?.fbLink}
         onChange={handleChange}
-        value2={data.followers.fb}
-        onChange2={(e)=>handleChange2(e,"fb")}
+        value2={data?.followers.fb}
+        onChange2={(e) => handleChange2(e, "fb")}
       />
       <SocialField1
-        placeholder1="Paste Your Twitter Link"
+        placeholder1="Paste Your Twitter Profile’s Link"
         placeholder2="No of followers"
         icon={<FaXTwitter />}
         name="twitterLink"
         id="twitterLink"
-        value={data.twitterLink}
+        value={data?.twitterLink}
         onChange={handleChange}
-        value2={data.followers.twitter}
-        onChange2={(e)=>handleChange2(e,"twitter")}
+        value2={data?.followers?.twitter}
+        onChange2={(e) => handleChange2(e, "twitter")}
       />
       <SocialField1
         placeholder1="Paste Your Website Link"
@@ -321,10 +326,10 @@ const FormTwo: React.FC<FormOneProps> = ({ data, setData }) => {
         icon={<FaGlobe />}
         name="websiteLink"
         id="websiteLink"
-        value={data.websiteLink}
+        value={data?.websiteLink}
         onChange={handleChange}
-        value2={data.followers.website}
-        onChange2={(e)=>handleChange2(e,"website")}
+        value2={data?.followers?.website}
+        onChange2={(e) => handleChange2(e, "website")}
       />
     </div>
   );
@@ -685,7 +690,7 @@ const FormFive: React.FC<FormFourProps> = ({ data, setData }) => {
       <div className="w-full rounded border border-[#E0E0E0] p-5 box-border flex flex-col gap-5">
         <TagsField1
           data={tagsData ?? []}
-          values={data.categories}
+          values={data?.categories}
           setValues={(value: []) => {
             setData({ ...data, categories: value });
           }}
@@ -724,7 +729,7 @@ const FormSix: React.FC<FormFourProps> = ({ data, setData }) => {
       <div className="w-full rounded border border-[#E0E0E0] p-5 box-border flex flex-col gap-5">
         <TagsField1
           data={tagsData ?? []}
-          values={data.formats}
+          values={data?.formats}
           setValues={(value: []) => {
             setData({ ...data, formats: value });
           }}
@@ -752,14 +757,15 @@ const FormSeven: React.FC<FormFiveProps> = ({ data, setData }) => {
     >
       <div>
         <h3 className="text-[16px] text-[#424242] font-medium">
-          Who is your audiences/followers?
+        Your Audience Types:
         </h3>
+        <p className="text-xs text-[#757575]">(Tell us what kind of people follow you, select up to 6)</p>
       </div>
 
       <div className="w-full rounded border border-[#E0E0E0] p-5 box-border flex flex-col gap-5">
         <TagsField1
           data={tagsData ?? []}
-          values={data.types}
+          values={data?.types}
           setValues={(value: []) => {
             setData({ ...data, types: value });
           }}
@@ -786,19 +792,33 @@ const FormEight: React.FC<FormFiveProps> = ({ data, setData }) => {
       const updatedObj = newArray[index];
       updatedObj[field] = value;
       newArray[index] = updatedObj;
-      return { types: data.types, platforms: newArray };
+      return { types: data?.types, platforms: newArray };
     });
   };
 
   const handleAddGroup = () => {
-    const newArr = [
-      ...data.platforms,
-      {
-        platform: "",
-        audience: "",
-        link: "",
-      },
-    ];
+    let newArr;
+
+    if(data?.platforms){
+      newArr = [
+        ...data.platforms,
+        {
+          platform: "",
+          audience: "",
+          link: "",
+        },
+      ];
+    }
+
+    else{
+      newArr = [
+        {
+          platform: "",
+          audience: "",
+          link: "",
+        }
+      ]
+    }
 
     setData((prev) => ({
       ...prev,
@@ -812,8 +832,12 @@ const FormEight: React.FC<FormFiveProps> = ({ data, setData }) => {
       style={{ boxShadow: "0px 0px 8px 0px rgba(33, 33, 33, 0.08)" }}
     >
       <h3 className="text-[16px] text-[#424242] font-medium">
-        Where is your audience?
+      Where can brands find your audience?
       </h3>
+      <p className="text-xs text-[#757575] -mt-2">
+          Add all the platforms you're on
+        </p>
+      
 
       <div className="bg-[#FEE2E2] rounded w-full p-5 flex flex-col gap-5 font-inter text-[#424242]">
         <h4 className="text-sm  font-medium">Sample Information</h4>
@@ -833,21 +857,21 @@ const FormEight: React.FC<FormFiveProps> = ({ data, setData }) => {
         </section>
       </div>
 
-      {data.platforms.map((e, index) => {
+      {data?.platforms?.map((e, index) => {
         return (
           <div className="w-full rounded border border-[#E0E0E0] p-5 box-border flex flex-col gap-5">
             <section className="w-full grid grid-cols-2 gap-5">
               <DropDown01
                 placeholder="Select Platform"
                 values={platformData ?? []}
-                defaultValue={e.platform}
+                defaultValue={e?.platform}
                 selectedValue={(value) => {
                   setData((prevData) => {
                     const newArray = [...prevData.platforms];
                     const updatedObj = newArray[index];
                     updatedObj.platform = value;
                     newArray[index] = updatedObj;
-                    return { types: data.types, platforms: newArray };
+                    return { types: data?.types, platforms: newArray };
                   });
                 }}
                 id={`dorpdownplatfromaudience${index}`}
@@ -880,7 +904,7 @@ const FormEight: React.FC<FormFiveProps> = ({ data, setData }) => {
         className="text-[#757575] text-sm flex items-center gap-1"
         onClick={handleAddGroup}
       >
-        <GoPlus /> Add more
+        <GoPlus /> Add More Platform
       </button>
     </div>
   );
@@ -927,8 +951,19 @@ function generateRandomName() {
 const Profile: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const influencerState = useInfluencer();
-  const generalState = useGeneralSettings()
-  const navigate = useNavigate()
+  const generalState = useGeneralSettings();
+  const navigate = useNavigate();
+
+  // for checking the type of service we need to create --------------------------------------
+  const { search } = useLocation();
+  const query = new URLSearchParams(search);
+
+  useEffect(() => {
+      if(query.get("page")){
+        setCurrentPage(parseInt(query.get("page")))
+      }
+  }, [query])
+  
 
   // images states --------
   const [formOneImages, setFormOneImages] = useState([]);
@@ -945,14 +980,14 @@ const Profile: React.FC = () => {
     coverPhoto: "",
     profile: "",
     websiteLink: "",
-    followers:{
-      linkedin:null,
-      twitter:null,
-      fb:null,
-      telegram:null,
-      insta:null,
-      website:null
-    }
+    followers: {
+      linkedin: null,
+      twitter: null,
+      fb: null,
+      telegram: null,
+      insta: null,
+      website: null,
+    },
   });
 
   const [dataTwo, setdataTwo] = useState<[dataTwoProps]>([
@@ -960,7 +995,7 @@ const Profile: React.FC = () => {
       companyName: "",
       companyUrl: "",
       companyProfile: "",
-      postLink:"",
+      postLink: "",
       goals: [],
     },
   ]);
@@ -970,7 +1005,7 @@ const Profile: React.FC = () => {
       platformName: "",
       profileLink: "",
       methods: [],
-      paidAudience:null
+      paidAudience: null,
     },
   ]);
 
@@ -991,22 +1026,22 @@ const Profile: React.FC = () => {
   });
 
   const handleSubmit = async () => {
-    generalState?.setLoading(true)
+    generalState?.setLoading(true);
     if (currentPage === 1) {
       await handleSubmitFormOne();
-      generalState?.setLoading(false)
+      generalState?.setLoading(false);
     } else if (currentPage === 2) {
       await handleSubmitFormTwo();
-      generalState?.setLoading(false)
+      generalState?.setLoading(false);
     } else if (currentPage === 3) {
       await handleSubmitFormThree();
-      generalState?.setLoading(false)
+      generalState?.setLoading(false);
     } else if (currentPage === 4) {
       await handleSubmitFormFour();
-      generalState?.setLoading(false)
+      generalState?.setLoading(false);
     } else if (currentPage === 5) {
       await handleSubmitFormFive();
-      generalState?.setLoading(false)
+      generalState?.setLoading(false);
     }
   };
 
@@ -1014,7 +1049,9 @@ const Profile: React.FC = () => {
   const handleSubmitFormOne = async () => {
     try {
       if (dataOne?.name?.length < 1 || dataOne?.tagline?.length < 1) {
-        alert("Fill the form completely");
+        toast.error("Fill the form completely",{
+          autoClose:1500
+        });
         return;
       } else {
         let coverPhoto = dataOne.coverPhoto;
@@ -1046,12 +1083,15 @@ const Profile: React.FC = () => {
           profile,
         });
         if (response?.success) {
-          setCurrentPage(2);
+          // setCurrentPage(2);
+          navigate("/influencer/build_profile?page=2")
         }
       }
     } catch (error) {
       console.log(error);
-      alert("Some error occured while saving the data");
+      toast.error("Some error occured while saving the data",{
+        autoClose:2000
+      });
     }
   };
 
@@ -1084,11 +1124,14 @@ const Profile: React.FC = () => {
       const data = await saveLogosCompany();
       const response = await influencerState?.updateCollabInfo(data);
       if (response?.success) {
-        setCurrentPage(3);
+        // setCurrentPage(3);
+        navigate("/influencer/build_profile?page=3")
       }
       // }
     } catch (error) {
-      alert("Some error occured while saving the data");
+      toast.error("Some error occured while saving the data",{
+        autoClose:2000
+      });
     }
   };
 
@@ -1100,11 +1143,14 @@ const Profile: React.FC = () => {
       // } else {
       const response = await influencerState?.updateMonetizationInfo(dataThree);
       if (response?.success) {
-        setCurrentPage(4);
+        // setCurrentPage(4);
+        navigate("/influencer/build_profile?page=4")
       }
       // }
     } catch (error) {
-      alert("Some error occured while saving the data");
+      toast.error("Some error occured while saving the data",{
+        autoClose:2000
+      });
     }
   };
 
@@ -1116,11 +1162,14 @@ const Profile: React.FC = () => {
       // } else {
       const response = await influencerState?.updateContentInfo(dataFour);
       if (response?.success) {
-        setCurrentPage(5);
+        // setCurrentPage(5);
+        navigate("/influencer/build_profile?page=5")
       }
       // }
     } catch (error) {
-      alert("Some error occured while saving the data");
+      toast.error("Some error occured while saving the data",{
+        autoClose:2000
+      });
     }
   };
 
@@ -1133,129 +1182,155 @@ const Profile: React.FC = () => {
       const response = await influencerState?.updateAudienceInfo(dataFive);
       if (response?.success) {
         // setCurrentPage(5);
-        alert("form Saved");
-        navigate("/influencer/share_profile")
+        // alert("form Saved");
+        // toast.("Some error occured while saving the data",{
+        //   autoClose:2000
+        // });
+        navigate("/influencer/share_profile");
       }
       // }
     } catch (error) {
-      alert("Some error occured while saving the data");
+      toast.error("Some error occured while saving the data",{
+        autoClose:2000
+      });
     }
   };
 
   useEffect(() => {
-    generalState.setLoading(true)
+    generalState.setLoading(true);
     influencerState?.getPersonalInfo().then((e) => {
-      generalState.setLoading(false)
+      generalState.setLoading(false);
+      console.log(e)
       if (e?.success) {
         setdataOne({ ...dataOne, ...e?.data });
-        setdataTwo(e?.data2?.data);
-        setdataThree(e?.data3?.data);
-        setdataFour(e.data4)
-        setdataFive(e.data5)
+        setdataTwo(e?.data2?.data ?? [ {
+          companyName: "",
+          companyUrl: "",
+          companyProfile: "",
+          postLink: "",
+          goals: [],
+        }]);
+        setdataThree(e?.data3?.data ?? [
+          {
+            platformName: "",
+            profileLink: "",
+            methods: [],
+            paidAudience: null,
+          },
+        ]);
+        setdataFour(e.data4 ?? {
+          categories: [],
+          formats: [],
+        });
+        setdataFive(e.data5 ?? {...dataFive,platforms: [
+          {
+            platform: "",
+            audience: 0,
+            link: "",
+          },
+        ]});
       }
     });
   }, []);
 
   return (
     <>
-    <div className="w-full px-10 py-5 box-border flex items-center justify-between  ">
-      <section
-        className="flex flex-col gap-5 w-[40vw] relative"
-        id="profileData"
-      >
-        {currentPage === 1 && (
-          <>
-            <h1 className="text-[16px] font-inter font-medium">
-              Add Personal Information
-            </h1>
-            <FormOne
-              data={dataOne}
-              setData={setdataOne}
-              formOneImages={formOneImages}
-              setFormOneImages={setFormOneImages}
-            />
-            <FormTwo data={dataOne} setData={setdataOne} />
-          </>
-        )}
-
-        {currentPage === 2 && (
-          <>
-            <div>
+      <div className="w-full px-10 py-5 box-border flex items-center justify-between  ">
+        <section
+          className="flex flex-col gap-5 w-[40vw] relative"
+          id="profileData"
+        >
+          {currentPage === 1 && (
+            <>
               <h1 className="text-[16px] font-inter font-medium">
+              Build Your Profile
+              </h1>
+              <FormOne
+                data={dataOne}
+                setData={setdataOne}
+                formOneImages={formOneImages}
+                setFormOneImages={setFormOneImages}
+              />
+              <FormTwo data={dataOne} setData={setdataOne} />
+            </>
+          )}
+
+          {currentPage === 2 && (
+            <>
+              <div>
+                <h1 className="text-[16px] font-inter font-medium">
                 Collab Portfolio
-              </h1>
-              <span className="text-[#757575] font-inter text-xs -mt-1">
-                Very Important Section, Add all the collab to get more collab
-              </span>
-            </div>
-            <FormThree
-              data={dataTwo}
-              setData={setdataTwo}
-              formTwoImages={formTwoImages}
-              setFormTwoImages={setFormTwoImages}
-            />
-          </>
-        )}
+                </h1>
+                <span className="text-[#757575] font-inter text-xs -mt-1">
+                Showcase your past collaborations and impress brands with your versatility and expertise
+                </span>
+              </div>
+              <FormThree
+                data={dataTwo}
+                setData={setdataTwo}
+                formTwoImages={formTwoImages}
+                setFormTwoImages={setFormTwoImages}
+              />
+            </>
+          )}
 
-        {currentPage === 3 && (
-          <>
-            <div>
-              <h1 className="text-[16px] font-inter font-medium">
+          {currentPage === 3 && (
+            <>
+              <div>
+                <h1 className="text-[16px] font-inter font-medium">
                 Showcase your Monetization Expertise
-              </h1>
-              <span className="text-[#757575] font-inter text-xs -mt-1">
-                Demonstrate your ability to connect with and convert your
-                followers, making you a valuable brand partner
-              </span>
-            </div>
-            <FormFour data={dataThree} setData={setdataThree} />
-          </>
-        )}
+                </h1>
+                <span className="text-[#757575] font-inter text-xs -mt-1">
+                Demonstrate your ability to connect with and convert your followers, making you a valuable brand partner
+                </span>
+              </div>
+              <FormFour data={dataThree} setData={setdataThree} />
+            </>
+          )}
 
-        {currentPage === 4 && (
-          <>
-            <div>
-              <h1 className="text-[16px] font-inter font-medium">
-                Showcase Your Content Expertise and Style
-              </h1>
-              <span className="text-[#757575] font-inter text-xs -mt-1">
-                Help us understand your voice, format, and niche to match you
-                with ideal collaborations
-              </span>
-            </div>
-            <FormFive data={dataFour} setData={setdataFour} />
-            <FormSix data={dataFour} setData={setdataFour} />
-          </>
-        )}
+          {currentPage === 4 && (
+            <>
+              <div>
+                <h1 className="text-[16px] font-inter font-medium">
+                Showcase Your Content Expertise & Style
+                </h1>
+                <span className="text-[#757575] font-inter text-xs -mt-1">
+                Help us understand your voice, format, and niche to match you with ideal collaborations
+                </span>
+              </div>
+              <FormFive data={dataFour} setData={setdataFour} />
+              <FormSix data={dataFour} setData={setdataFour} />
+            </>
+          )}
 
-        {currentPage === 5 && (
-          <>
-            <div>
-              <h1 className="text-[16px] font-inter font-medium">
-                About your Audiences
-              </h1>
-              <span className="text-[#757575] font-inter text-xs -mt-1">
-                We want to know more about your audiences & Platform, which will
-                be shown to brands to choose
-              </span>
-            </div>
-            <FormSeven data={dataFive} setData={setdataFive} />
-            <FormEight data={dataFive} setData={setdataFive} />
-          </>
-        )}
+          {currentPage === 5 && (
+            <>
+              <div>
+                <h1 className="text-[16px] font-inter font-medium">
+                Your Audience & Community
+                </h1>
+                <span className="text-[#757575] font-inter text-xs -mt-1">
+                Brands are looking for creators who resonate with their target audience. 
+Share your community's demographics & platforms to attract the perfect collab matches!
+                </span>
+              </div>
+              <FormSeven data={dataFive} setData={setdataFive} />
+              <FormEight data={dataFive} setData={setdataFive} />
+            </>
+          )}
 
-        <div className="w-full flex flex-row-reverse">
-          <Button1
-            text="Continue"
-            onClick={() => {
-              handleSubmit();
-            }}
-          />
-        </div>
-      </section>
+          <div className="w-full flex flex-row-reverse">
+            <Button1
+              text="Continue"
+              onClick={() => {
+                handleSubmit();
+              }}
+            />
+          </div>
+        </section>
 
-      <section className="flex flex-col gap-3 h-screen items-start fixed top-[82px] right-20 w-[329px] h-full overflow-hidden">
-        {/* <h1 className="text-[16px] font-inter font-medium">
+        <section className="flex flex-col gap-3 h-screen items-start fixed top-[82px] right-20 w-[329px] h-full overflow-hidden">
+          {/* <h1 className="text-[16px] font-inter font-medium">
           Profile Completion Status
         </h1>
 
@@ -1268,20 +1343,19 @@ const Profile: React.FC = () => {
           thumbClassName="[&::-moz-range-thumb]:-mt-[4px] [&::-webkit-slider-thumb]:-mt-[4px] [&::-webkit-slider-thumb]:hidden"
         /> */}
 
-        <ProfileDemo
-          data={{
-            ...dataOne,
-            collab: dataTwo,
-            money: dataThree,
-            ...dataFour,
-            ...dataFive,
-          }}
-          uploadedImages={formOneImages ?? []}
-          uploadedImages2={formTwoImages ?? []}
-        />
-      </section>
-    </div>
-
+          <ProfileDemo
+            data={{
+              ...dataOne,
+              collab: dataTwo,
+              money: dataThree,
+              ...dataFour,
+              ...dataFive,
+            }}
+            uploadedImages={formOneImages ?? []}
+            uploadedImages2={formTwoImages ?? []}
+          />
+        </section>
+      </div>
     </>
   );
 };
