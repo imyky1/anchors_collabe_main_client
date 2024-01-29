@@ -1,7 +1,7 @@
 import React from "react";
 import { CiGlobe } from "react-icons/ci";
 import { MdContentCopy } from "react-icons/md";
-import { ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { GiAlliedStar } from "react-icons/gi";
 import "./Dashboard.css";
 import { useAuth } from "../../../../Providers/Auth";
@@ -12,25 +12,24 @@ export const Dashboard = () => {
 
   const handleCopy = (textToCopy) => {
     navigator.clipboard.writeText(textToCopy);
-    // toast.success(
-    //       "Link Copied",
-    //       {
-    //         position: "top-center",
-    //         autoClose: 1000,
-    //       }
-    //     );
+    toast.info(
+          "Link Copied",
+          {
+            position: "top-center",
+            autoClose: 1000,
+          }
+        );
   };
 
   return (
     <>
-      <ToastContainer />
       <div className="influnecer_dashboard_contianer">
         <div className="influencer_dashboard_wrapper">
           {/* first card */}
           <div className="influncer_dashboard_featured_wrapaper">
             <div className="dashboard_left_featured_container">
-              <h1>Get Featured on Brands Discovery Dashboard</h1>
-              <h3>Only Top 5 Creators will be featured</h3>
+              <h1>Refer & Get Featured!</h1>
+              <h3>Top 5 Referrers grab the spotlight! Visible to ALL Brands on Discovery Dashboard</h3>
               <div className="dashboard_referral_link_container">
                 <h2>Referral Link</h2>
                 <div className="dashboard_referral_link">
@@ -60,7 +59,7 @@ export const Dashboard = () => {
                 <div className="right_featured_content">
                   <div className="right_featured_main_content">
                     <img
-                      src="/image 2.png"
+                      src={authState?.loggedUser?.profile}
                       alt=""
                     />
                     <div
@@ -71,7 +70,7 @@ export const Dashboard = () => {
                         justifyContent: "center",
                       }}
                     >
-                      <h1>Your Name</h1>
+                      <h1>{authState?.loggedUser?.name}</h1>
                       <h2>56K+ Followers</h2>
                     </div>
                   </div>
@@ -85,7 +84,7 @@ export const Dashboard = () => {
                   <div className="right_featured_main_content">
                     <div>
                       <h1>Collab Portfolio</h1>
-                      <h2>Collaborated with 6+ company</h2>
+                      <h2>Worked with 6+ companies</h2>
                     </div>
                   </div>
                 </div>
@@ -96,12 +95,12 @@ export const Dashboard = () => {
           {/* second card */}
           <div className="influncer_dashboard_featured_wrapaper">
             <div className="dashboard_left_featured_container">
-              <h1>Let your audience & Brands knows about you</h1>
+              <h1>Share Your Profile on LinkedIn</h1>
               <h3>
-                By adding on LinkedIn increase chances of brand collaboartion
+              More visibility, more deals. Add your public profile to LinkedIn & get seen by brands.
               </h3>
               <div className="dashboard_referral_link_container">
-                <h2>Collaboration Public Profile</h2>
+                <h2>Public Profile Link</h2>
                 <div className="dashboard_referral_link">
                   <div
                     style={{
@@ -135,7 +134,7 @@ export const Dashboard = () => {
               >
                 <div className="right_featured_main_content_2">
                   <h3>
-                    Paste Link in <br /> your LinkedIn here
+                  Add Link Here
                   </h3>
                   <img
                     className="right_featured_arrow_vector"

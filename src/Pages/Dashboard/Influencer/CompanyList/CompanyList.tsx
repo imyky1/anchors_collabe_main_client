@@ -63,13 +63,10 @@ export const Company_list: React.FC = () => {
         <div className="influence_copmany_list_header">
           <div className="influence_copmany_list_header_heading">
             <h1>
-              Share the list of company that you want to collaborate for
-              influencer marketing
+            Dream Brands? Craft Your Collab Wish List
             </h1>
             <h3>
-              It’s just a Wishlist of you that you want to collaborate but we
-              don’t promise that you will get brand deals from us but we will
-              try our best for the same
+            We can't guarantee every dream collab, but your wishlist fuels our search!
             </h3>
           </div>
           <button

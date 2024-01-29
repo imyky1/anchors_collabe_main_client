@@ -179,12 +179,17 @@ export const TagsField1: React.FC<TagsFieldProps> = ({
   setValues,
 }) => {
   const handleAddTag = (tag: string) => {
-    if (values.includes(tag)) {
-      const index = values.indexOf(tag);
-      values.splice(index, 1);
-      setValues(values);
-    } else {
-      setValues([...values, tag]);
+    if(values?.length > 0){
+      if (values?.includes(tag)) {
+        const index = values?.indexOf(tag);
+        values?.splice(index, 1);
+        setValues(values);
+      } else {
+        setValues([...values, tag]);
+      }
+    }
+    else{
+      setValues([tag])
     }
   };
 
