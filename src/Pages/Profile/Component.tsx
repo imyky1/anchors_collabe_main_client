@@ -31,6 +31,7 @@ interface PlatformCardProps {
   platformName: string;
   profileLink: string;
   methods: [];
+  paidAudience: number | null;
 }
 
 export const BrandCard: React.FC<BrandCardProps> = ({
@@ -55,8 +56,8 @@ export const BrandCard: React.FC<BrandCardProps> = ({
       />
 
       <section className="flex flex-col gap-1">
-        <span className="text-xl font-medium">{companyName}</span>
-        <p className="text-xs -mt-1">{companyUrl}</p>
+        <span className="text-xl font-medium max-w-[70%] break-words">{companyName}</span>
+        <p className="text-xs -mt-1">{companyUrl?.length > 25 ? companyUrl?.slice(0,25) + "..." : companyUrl}</p>
 
         <div className="flex items-center gap-2 text-xs text-[#616161] mt-5 flex-wrap">
           {goals?.map((e) => {
@@ -82,6 +83,7 @@ export const BrandCard: React.FC<BrandCardProps> = ({
 export const PlatformCard: React.FC<PlatformCardProps> = ({
   platformName,
   profileLink,
+  paidAudience,
   methods,
 }) => {
   return (
@@ -99,8 +101,8 @@ export const PlatformCard: React.FC<PlatformCardProps> = ({
         /> */}
 
         <section className="flex flex-col gap-1">
-          <span className="text-xl font-medium">{platformName}</span>
-          <p className="text-xs -mt-1">{profileLink}</p>
+          <span className="text-xl font-medium max-w-[70%] break-words">{platformName}</span>
+          <p className="text-xs -mt-1">{profileLink?.length > 25 ? profileLink?.slice(0,25) + "..." : profileLink}</p>
 
           <div className="flex items-center gap-2 text-xs text-[#616161] mt-5 flex-wrap">
             {methods?.map((e) => {
@@ -116,7 +118,7 @@ export const PlatformCard: React.FC<PlatformCardProps> = ({
 
       <div className="p-5 box-border w-full flex items-center justify-between relative">
         <span className="flex items-center gap-1 text-[#757575] text-xs">
-          <BsTag /> Purchased by 138 people & Increasing
+          <BsTag /> Purchased by {paidAudience} people & Increasing
         </span>
 
         <IoArrowForwardCircleOutline
@@ -179,3 +181,6 @@ export const SocialCard: React.FC<SocialCardProps> = ({ icon, bg , audience, pla
     </div>
   );
 };
+
+
+

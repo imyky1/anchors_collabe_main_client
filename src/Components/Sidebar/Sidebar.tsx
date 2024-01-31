@@ -8,6 +8,7 @@ import {
   MdOutlineKeyboardArrowDown,
   MdOutlineKeyboardArrowUp,
 } from "react-icons/md";
+import { useGeneralSettings } from "../../Providers/General";
 
 const Sidebar: React.FC = () => {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ const Sidebar: React.FC = () => {
   const [openProfileOptions, setOpenProfileOptions] = useState(true);
 
   const authState = useAuth();
+  const generalState = useGeneralSettings()
 
   return (
     <div
@@ -117,7 +119,7 @@ const Sidebar: React.FC = () => {
               }}
             >
               Personal Information
-              {/* <span className="text-[#10B981]">80%</span> */}
+             {window.location.pathname === "/influencer/build_profile" && <span className={generalState.BuildProfileCompletion.one/20 * 100 > 50 ? "text-[#10B981]" : "text-[#F59E0B]"}>{(generalState.BuildProfileCompletion.one/20 * 100).toFixed(0)}%</span>}
             </span>
             <span
               className={`cursor-pointer ${
@@ -131,7 +133,7 @@ const Sidebar: React.FC = () => {
               }}
             >
               Collab Portfolio
-              {/* <span>60%</span> */}
+             {window.location.pathname === "/influencer/build_profile" && <span className={generalState.BuildProfileCompletion.two/20 * 100 > 50 ? "text-[#10B981]" : "text-[#F59E0B]"}>{(generalState.BuildProfileCompletion.two/20 * 100).toFixed(0)}%</span>}
             </span>
             <span
               className={`cursor-pointer ${
@@ -145,7 +147,7 @@ const Sidebar: React.FC = () => {
               }}
             >
               Monetization Expertise
-              {/* <span>30%</span> */}
+             {window.location.pathname === "/influencer/build_profile" && <span className={generalState.BuildProfileCompletion.three/20 * 100 > 50 ? "text-[#10B981]" : "text-[#F59E0B]"}>{(generalState.BuildProfileCompletion.three/20 * 100).toFixed(0)}%</span>}
             </span>
             <span
               className={`cursor-pointer ${
@@ -159,7 +161,7 @@ const Sidebar: React.FC = () => {
               }}
             >
               Content Expertise
-              {/* <span>30%</span> */}
+             {window.location.pathname === "/influencer/build_profile" && <span className={generalState.BuildProfileCompletion.four/20 * 100 > 50 ? "text-[#10B981]" : "text-[#F59E0B]"}>{(generalState.BuildProfileCompletion.four/20 * 100).toFixed(0)}%</span>}
             </span>
             <span
               className={`cursor-pointer ${
@@ -173,7 +175,7 @@ const Sidebar: React.FC = () => {
               }}
             >
               Audience info
-              {/* <span>30%</span> */}
+             {window.location.pathname === "/influencer/build_profile" && <span className={generalState.BuildProfileCompletion.five/20 * 100 > 50 ? "text-[#10B981]" : "text-[#F59E0B]"}>{(generalState.BuildProfileCompletion.five/20 * 100).toFixed(0)}%</span>}
             </span>
           </section>
         )}

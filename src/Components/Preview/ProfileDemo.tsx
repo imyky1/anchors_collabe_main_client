@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import screen from "/screen.png";
 import logo from "/collabLogo.png";
 
@@ -47,18 +47,36 @@ interface ProfileDemoProps {
     platforms:[]
   },
   uploadedImages:["",""],
-  uploadedImages2:["",""]
+  uploadedImages2:["",""],
+  gotToSection:string
 }
 
 
-const ProfileDemo: React.FC<ProfileDemoProps> = ({data,uploadedImages,uploadedImages2}) => {
+
+const ProfileDemo: React.FC<ProfileDemoProps> = ({data,uploadedImages,uploadedImages2,gotToSection}) => {
+  const handleNavigationOnPage = (id: string) => {
+    if (id) {
+      const section = document.querySelector(`#${id}`);
+      if (section) {
+        section.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  };
+
+  useEffect(() => {
+    if(gotToSection){
+      handleNavigationOnPage(gotToSection)
+    }
+  }, [gotToSection])
+  
+
   return (
     <div className="mt-5 w-full relative h-full">
       <img src={screen} alt="" className="w-full h-full" />
 
       <section className="absolute w-[305px] top-2 left-3 rounded-3xl overflow-auto h-full">
         {/* header ------------ */}
-        <div className="px-2 py-3">
+        <div className="px-2 py-3" id="topdetailsection">
           <img src={logo} alt="" className="w-28" />
         </div>
 
@@ -82,10 +100,10 @@ const ProfileDemo: React.FC<ProfileDemoProps> = ({data,uploadedImages,uploadedIm
                 alt=""
                 className="w-28 h-28 rounded-full"
               />
-              <h1 className=" text-xl font-bold text-[#424242]">
+              <h1 className=" text-xl font-bold text-[#424242] max-w-[250px] text-center break-words">
                 {data.name}
               </h1>
-              <p className=" text-[16px] text-[#757575] -mt-4">
+              <p className=" text-[16px] text-[#757575] -mt-4 max-w-[250px] text-center break-words">
                 {data.tagline}
               </p>
             </div>
@@ -126,6 +144,9 @@ const ProfileDemo: React.FC<ProfileDemoProps> = ({data,uploadedImages,uploadedIm
                   <span
                     className={`text-sm text-[#757575] no-underline text-nowrap cursor-pointer hover:text-[#212121] hover:underline`}
                     key={`Nav${i}`}
+                    onClick={() => {
+                      handleNavigationOnPage(e.id);
+                    }}
                   >
                     {e.title}
                   </span>

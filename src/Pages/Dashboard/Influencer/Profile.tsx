@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { SetStateAction, useEffect, useRef, useState } from "react";
 import {
   DropDown01,
   InputField1,
@@ -22,10 +22,86 @@ import { GoPlus } from "react-icons/go";
 import "cropperjs/dist/cropper.css";
 import { Cropper, ReactCropperElement } from "react-cropper";
 import { TbEdit } from "react-icons/tb";
-import LoaderOne from "../../../Components/Loader";
 import { useGeneralSettings } from "../../../Providers/General";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+
+function countNonEmptyFields(obj: {} | []) {
+  let count = 0;
+  let totalField = 0;
+
+  function isArrayOrObject(input) {
+    if (Array.isArray(input)) {
+      return "Array";
+    } else if (typeof input === "object" && input !== null) {
+      return "Object";
+    }
+  }
+
+  function countFieldsRecursiveObj(obj: {}) {
+    for (const key in obj) {
+      totalField++;
+
+      if (isArrayOrObject(obj[key]) === "Object" && obj[key] !== null) {
+        totalField--;
+        countFieldsRecursiveObj(obj[key]);
+      }
+
+      else if (isArrayOrObject(obj[key]) === "Array" && obj[key] !== null && isArrayOrObject(obj[key][0]) === "Object") {
+        totalField--;
+        countFieldsRecursiveArr(obj[key]);
+      }
+
+      else if (obj[key] !== null && obj[key] !== "") {
+        count++;
+      }
+    }
+  }
+
+  function countFieldsRecursiveArr(arr: []) {
+    for (let index = 0; index < arr.length; index++) {
+      const elem = arr[index];
+      totalField++;
+      if (isArrayOrObject(obj) === "Object" && elem !== null) {
+        totalField--;
+        countFieldsRecursiveObj(elem);
+      } 
+
+      else if (elem !== null && elem !== "") {
+        count++;
+      }
+
+    }
+  }
+
+  if (isArrayOrObject(obj) === "Object") {
+    countFieldsRecursiveObj(obj);
+  } else if (isArrayOrObject(obj) === "Array") {
+    countFieldsRecursiveArr(obj);
+  }
+
+  return count / totalField;
+}
+
+function sumAllValues(obj) {
+  let sum = 0;
+
+  function sumValuesRecursive(obj) {
+    for (const key in obj) {
+      if (typeof obj[key] === "number") {
+        sum += obj[key];
+      }
+
+      if (typeof obj[key] === "object" && obj[key] !== null) {
+        sumValuesRecursive(obj[key]);
+      }
+    }
+  }
+
+  sumValuesRecursive(obj);
+
+  return sum;
+}
 
 interface dataOneProps {
   name: string;
@@ -82,6 +158,8 @@ interface dataFiveProps {
 interface FormOneProps {
   data: dataOneProps;
   setData: React.Dispatch<React.SetStateAction<dataOneProps>>;
+  formOneImages?: [];
+  setFormOneImages?: React.Dispatch<React.SetStateAction<[]>>;
 }
 
 interface FormTwoProps {
@@ -256,7 +334,7 @@ const FormTwo: React.FC<FormOneProps> = ({ data, setData }) => {
   };
 
   const handleChange2 = (e, field) => {
-    let newObj = data?.followers;
+    const newObj = data?.followers;
     newObj[field] = e.target.value;
     setData({ ...data, followers: newObj });
   };
@@ -757,9 +835,11 @@ const FormSeven: React.FC<FormFiveProps> = ({ data, setData }) => {
     >
       <div>
         <h3 className="text-[16px] text-[#424242] font-medium">
-        Your Audience Types:
+          Your Audience Types:
         </h3>
-        <p className="text-xs text-[#757575]">(Tell us what kind of people follow you, select up to 6)</p>
+        <p className="text-xs text-[#757575]">
+          (Tell us what kind of people follow you, select up to 6)
+        </p>
       </div>
 
       <div className="w-full rounded border border-[#E0E0E0] p-5 box-border flex flex-col gap-5">
@@ -799,7 +879,7 @@ const FormEight: React.FC<FormFiveProps> = ({ data, setData }) => {
   const handleAddGroup = () => {
     let newArr;
 
-    if(data?.platforms){
+    if (data?.platforms) {
       newArr = [
         ...data.platforms,
         {
@@ -808,16 +888,14 @@ const FormEight: React.FC<FormFiveProps> = ({ data, setData }) => {
           link: "",
         },
       ];
-    }
-
-    else{
+    } else {
       newArr = [
         {
           platform: "",
           audience: "",
           link: "",
-        }
-      ]
+        },
+      ];
     }
 
     setData((prev) => ({
@@ -832,12 +910,11 @@ const FormEight: React.FC<FormFiveProps> = ({ data, setData }) => {
       style={{ boxShadow: "0px 0px 8px 0px rgba(33, 33, 33, 0.08)" }}
     >
       <h3 className="text-[16px] text-[#424242] font-medium">
-      Where can brands find your audience?
+        Where can brands find your audience?
       </h3>
       <p className="text-xs text-[#757575] -mt-2">
-          Add all the platforms you're on
-        </p>
-      
+        Add all the platforms you're on
+      </p>
 
       <div className="bg-[#FEE2E2] rounded w-full p-5 flex flex-col gap-5 font-inter text-[#424242]">
         <h4 className="text-sm  font-medium">Sample Information</h4>
@@ -952,6 +1029,13 @@ const Profile: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const influencerState = useInfluencer();
   const generalState = useGeneralSettings();
+  const [PercentageComplition, setPercentageComplition] = useState({
+    one: 0,
+    two: 0,
+    three: 0,
+    four: 0,
+    five: 0,
+  });
   const navigate = useNavigate();
 
   // for checking the type of service we need to create --------------------------------------
@@ -959,14 +1043,13 @@ const Profile: React.FC = () => {
   const query = new URLSearchParams(search);
 
   useEffect(() => {
-      if(query.get("page")){
-        setCurrentPage(parseInt(query.get("page")))
-      }
-  }, [query])
-  
+    if (query.get("page")) {
+      setCurrentPage(parseInt(query.get("page")));
+    }
+  }, [query]);
 
   // images states --------
-  const [formOneImages, setFormOneImages] = useState([]);
+  const [formOneImages, setFormOneImages] = useState<[]>([]);
   const [formTwoImages, setFormTwoImages] = useState([]);
 
   const [dataOne, setdataOne] = useState<dataOneProps>({
@@ -1049,8 +1132,8 @@ const Profile: React.FC = () => {
   const handleSubmitFormOne = async () => {
     try {
       if (dataOne?.name?.length < 1 || dataOne?.tagline?.length < 1) {
-        toast.error("Fill the form completely",{
-          autoClose:1500
+        toast.error("Fill the form completely", {
+          autoClose: 1500,
         });
         return;
       } else {
@@ -1084,13 +1167,13 @@ const Profile: React.FC = () => {
         });
         if (response?.success) {
           // setCurrentPage(2);
-          navigate("/influencer/build_profile?page=2")
+          navigate("/influencer/build_profile?page=2");
         }
       }
     } catch (error) {
       console.log(error);
-      toast.error("Some error occured while saving the data",{
-        autoClose:2000
+      toast.error("Some error occured while saving the data", {
+        autoClose: 2000,
       });
     }
   };
@@ -1125,12 +1208,12 @@ const Profile: React.FC = () => {
       const response = await influencerState?.updateCollabInfo(data);
       if (response?.success) {
         // setCurrentPage(3);
-        navigate("/influencer/build_profile?page=3")
+        navigate("/influencer/build_profile?page=3");
       }
       // }
     } catch (error) {
-      toast.error("Some error occured while saving the data",{
-        autoClose:2000
+      toast.error("Some error occured while saving the data", {
+        autoClose: 2000,
       });
     }
   };
@@ -1144,12 +1227,12 @@ const Profile: React.FC = () => {
       const response = await influencerState?.updateMonetizationInfo(dataThree);
       if (response?.success) {
         // setCurrentPage(4);
-        navigate("/influencer/build_profile?page=4")
+        navigate("/influencer/build_profile?page=4");
       }
       // }
     } catch (error) {
-      toast.error("Some error occured while saving the data",{
-        autoClose:2000
+      toast.error("Some error occured while saving the data", {
+        autoClose: 2000,
       });
     }
   };
@@ -1163,12 +1246,12 @@ const Profile: React.FC = () => {
       const response = await influencerState?.updateContentInfo(dataFour);
       if (response?.success) {
         // setCurrentPage(5);
-        navigate("/influencer/build_profile?page=5")
+        navigate("/influencer/build_profile?page=5");
       }
       // }
     } catch (error) {
-      toast.error("Some error occured while saving the data",{
-        autoClose:2000
+      toast.error("Some error occured while saving the data", {
+        autoClose: 2000,
       });
     }
   };
@@ -1190,8 +1273,8 @@ const Profile: React.FC = () => {
       }
       // }
     } catch (error) {
-      toast.error("Some error occured while saving the data",{
-        autoClose:2000
+      toast.error("Some error occured while saving the data", {
+        autoClose: 2000,
       });
     }
   };
@@ -1200,38 +1283,76 @@ const Profile: React.FC = () => {
     generalState.setLoading(true);
     influencerState?.getPersonalInfo().then((e) => {
       generalState.setLoading(false);
-      console.log(e)
       if (e?.success) {
         setdataOne({ ...dataOne, ...e?.data });
-        setdataTwo(e?.data2?.data ?? [ {
-          companyName: "",
-          companyUrl: "",
-          companyProfile: "",
-          postLink: "",
-          goals: [],
-        }]);
-        setdataThree(e?.data3?.data ?? [
-          {
-            platformName: "",
-            profileLink: "",
-            methods: [],
-            paidAudience: null,
-          },
-        ]);
-        setdataFour(e.data4 ?? {
-          categories: [],
-          formats: [],
-        });
-        setdataFive(e.data5 ?? {...dataFive,platforms: [
-          {
-            platform: "",
-            audience: 0,
-            link: "",
-          },
-        ]});
+        setdataTwo(
+          e?.data2?.data ?? [
+            {
+              companyName: "",
+              companyUrl: "",
+              companyProfile: "",
+              postLink: "",
+              goals: [],
+            },
+          ]
+        );
+        setdataThree(
+          e?.data3?.data ?? [
+            {
+              platformName: "",
+              profileLink: "",
+              methods: [],
+              paidAudience: null,
+            },
+          ]
+        );
+        setdataFour(
+          e.data4 ?? {
+            categories: [],
+            formats: [],
+          }
+        );
+        setdataFive(
+          e.data5 ?? {
+            ...dataFive,
+            platforms: [
+              {
+                platform: "",
+                audience: 0,
+                link: "",
+              },
+            ],
+          }
+        );
       }
     });
   }, []);
+
+  useEffect(() => {
+    const cfd1 = countNonEmptyFields(dataOne)
+    const cfd2 = countNonEmptyFields(dataTwo);
+    const cfd3 = countNonEmptyFields(dataThree)
+    const cfd4 = countNonEmptyFields(dataFour)
+    const cfd5 = countNonEmptyFields(dataFive)
+
+    setPercentageComplition({
+      one: cfd1 * 20,
+      two: cfd2 * 20,
+      three: cfd3 * 20,
+      four: cfd4 * 20,
+      five: cfd5 * 20,
+    });
+
+    generalState.setBuildProfileCompletion({
+      one: cfd1 * 20,
+      two: cfd2 * 20,
+      three: cfd3 * 20,
+      four: cfd4 * 20,
+      five: cfd5 * 20,
+    })
+
+  }, [dataOne, dataTwo, dataThree,dataFour,dataFive]);
+
 
   return (
     <>
@@ -1243,7 +1364,7 @@ const Profile: React.FC = () => {
           {currentPage === 1 && (
             <>
               <h1 className="text-[16px] font-inter font-medium">
-              Build Your Profile
+                Build Your Profile
               </h1>
               <FormOne
                 data={dataOne}
@@ -1259,10 +1380,11 @@ const Profile: React.FC = () => {
             <>
               <div>
                 <h1 className="text-[16px] font-inter font-medium">
-                Collab Portfolio
+                  Collab Portfolio
                 </h1>
                 <span className="text-[#757575] font-inter text-xs -mt-1">
-                Showcase your past collaborations and impress brands with your versatility and expertise
+                  Showcase your past collaborations and impress brands with your
+                  versatility and expertise
                 </span>
               </div>
               <FormThree
@@ -1278,10 +1400,11 @@ const Profile: React.FC = () => {
             <>
               <div>
                 <h1 className="text-[16px] font-inter font-medium">
-                Showcase your Monetization Expertise
+                  Showcase your Monetization Expertise
                 </h1>
                 <span className="text-[#757575] font-inter text-xs -mt-1">
-                Demonstrate your ability to connect with and convert your followers, making you a valuable brand partner
+                  Demonstrate your ability to connect with and convert your
+                  followers, making you a valuable brand partner
                 </span>
               </div>
               <FormFour data={dataThree} setData={setdataThree} />
@@ -1292,10 +1415,11 @@ const Profile: React.FC = () => {
             <>
               <div>
                 <h1 className="text-[16px] font-inter font-medium">
-                Showcase Your Content Expertise & Style
+                  Showcase Your Content Expertise & Style
                 </h1>
                 <span className="text-[#757575] font-inter text-xs -mt-1">
-                Help us understand your voice, format, and niche to match you with ideal collaborations
+                  Help us understand your voice, format, and niche to match you
+                  with ideal collaborations
                 </span>
               </div>
               <FormFive data={dataFour} setData={setdataFour} />
@@ -1307,11 +1431,12 @@ const Profile: React.FC = () => {
             <>
               <div>
                 <h1 className="text-[16px] font-inter font-medium">
-                Your Audience & Community
+                  Your Audience & Community
                 </h1>
                 <span className="text-[#757575] font-inter text-xs -mt-1">
-                Brands are looking for creators who resonate with their target audience. 
-Share your community's demographics & platforms to attract the perfect collab matches!
+                  Brands are looking for creators who resonate with their target
+                  audience. Share your community's demographics & platforms to
+                  attract the perfect collab matches!
                 </span>
               </div>
               <FormSeven data={dataFive} setData={setdataFive} />
@@ -1329,19 +1454,21 @@ Share your community's demographics & platforms to attract the perfect collab ma
           </div>
         </section>
 
-        <section className="flex flex-col gap-3 h-screen items-start fixed top-[82px] right-20 w-[329px] h-full overflow-hidden">
-          {/* <h1 className="text-[16px] font-inter font-medium">
-          Profile Completion Status
-        </h1>
+        <section className="flex flex-col gap-3 h-screen items-start fixed top-[82px] right-20 w-[329px] h-full">
+          <h1 className="text-[16px] font-inter font-medium">
+            Profile Completion Status
+          </h1>
 
-        <Slider
-          size="lg"
-          color="deep-purple"
-          defaultValue={50}
-          placeholder="as"
-          className="h-5"
-          thumbClassName="[&::-moz-range-thumb]:-mt-[4px] [&::-webkit-slider-thumb]:-mt-[4px] [&::-webkit-slider-thumb]:hidden"
-        /> */}
+          <Slider
+            size="lg"
+            color={sumAllValues(PercentageComplition) > 50 ? "green" : "deep-orange"}
+            value={sumAllValues(PercentageComplition)}
+            placeholder="as"
+            min={0}
+            max={100}
+            className="h-5"
+            thumbClassName="[&::-moz-range-thumb]:-mt-[4px] [&::-webkit-slider-thumb]:-mt-[4px] [&::-webkit-slider-thumb]:hidden"
+          />
 
           <ProfileDemo
             data={{
@@ -1353,6 +1480,7 @@ Share your community's demographics & platforms to attract the perfect collab ma
             }}
             uploadedImages={formOneImages ?? []}
             uploadedImages2={formTwoImages ?? []}
+            gotToSection={currentPage === 2 ? "collabhistory" : currentPage === 3 ? "otherplatform" : currentPage === 4 ? "contentInfo" : currentPage === 5 ? "audience" : "topdetailsection"}
           />
         </section>
       </div>
