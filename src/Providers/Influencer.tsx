@@ -15,6 +15,7 @@ interface InfluencerContextProps {
   updateWishlist: (data: {}) => Promise<{ any }>;
   uploadInfluencerImages: (data: {}) => Promise<{ any }>;
   uploadCompanyImages: (data: {}) => Promise<{ any }>;
+  saveTempBrandData: (data: {}) => Promise<{ any }>;
   SaveUserInfo: (data: {}) => Promise<{ any }>;
   SentMessageFromSNS: (number: string) => Promise<{ any }>;
   getPersonalInfo: () => Promise<{ success: boolean; data?: {} }>;
@@ -179,6 +180,25 @@ export const InfluencerProvider: React.FC<InfluencerProviderProps> = (
     }
   };
 
+  // update personal info -----------------------
+  const saveTempBrandData = async (data: {}) => {
+    try {
+      const response = await axios.post(
+        `${host}/influencer/saveBrandData`,
+        { ...data }
+      );
+
+      // Check if the response contains the LinkedIn authorization URL
+      if (response.status !== 200) {
+        throw new Error("Error in saving the data");
+      } else {
+        return response.data;
+      }
+    } catch (error) {
+      alert("Error in saving the data, Please try again !!!");
+    }
+  };
+
   // get personal info -----------------------
   const getPersonalInfo = async () => {
     try {
@@ -325,7 +345,8 @@ export const InfluencerProvider: React.FC<InfluencerProviderProps> = (
         getBrandWishlist,
         SaveUserInfo,
         SentMessageFromSNS,
-        getInfluencerInfoFromSlug
+        getInfluencerInfoFromSlug,
+        saveTempBrandData
       }}
     >
       {props?.children}

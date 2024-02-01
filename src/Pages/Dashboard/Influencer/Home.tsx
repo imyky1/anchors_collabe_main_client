@@ -21,7 +21,7 @@ const Home: React.FC = () => {
     <>
       {!authState?.loggedUser?.earlyAccess || !authState.loggedUser.is_verified ? (
           <Routes>
-            <Route path="*" element={<ProtectedRoute navigateCondition={!authState?.loggedUser?.is_verified} toUrl={"/influencer/userinfo"}><Waitlist /></ProtectedRoute>} />
+            <Route path="/" element={<ProtectedRoute navigateCondition={!authState?.loggedUser?.is_verified} toUrl={"/influencer/userinfo"}><Waitlist /></ProtectedRoute>} />
             <Route path="/userinfo" element={<ProtectedRoute navigateCondition={authState?.loggedUser?.is_verified} toUrl={"/influencer"}><UserInfo /></ProtectedRoute>} />
             <Route path="/otp-verify" element={<ProtectedRoute navigateCondition={authState?.loggedUser?.is_verified} toUrl={"/influencer"}><OtpVerify /></ProtectedRoute>} />
           </Routes>
