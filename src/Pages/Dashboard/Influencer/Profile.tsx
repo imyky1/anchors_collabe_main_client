@@ -1326,7 +1326,7 @@ const Profile: React.FC = () => {
         );
       }
     });
-  }, []);
+  }, [currentPage]);
 
   useEffect(() => {
     const cfd1 = countNonEmptyFields(dataOne)
