@@ -123,8 +123,8 @@ const UserInfo = () => {
       <div className="info_container">
         <Navbar />
 
-        <div className="content">
-          <span
+        <div className="content mt-5">
+          {/* <span
             style={{
               display: "flex",
               gap: "10px",
@@ -137,7 +137,7 @@ const UserInfo = () => {
             className="button_type_01"
           >
             <MdCelebration size={24} /> Doors Open Feb 3rd...
-          </span>
+          </span> */}
 
           <div className="text mb-10">
             <h1>Welcome, {authState?.loggedUser?.name?.split(" ")[0]}</h1>

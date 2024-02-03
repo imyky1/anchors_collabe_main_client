@@ -1,12 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import logo from "/collabLogo.png";
 import { useAuth } from "../../Providers/Auth";
 import { useNavigate } from "react-router-dom";
 import { FaWhatsapp } from "react-icons/fa";
-import mixpanel from "mixpanel-browser"
+import mixpanel from "mixpanel-browser";
+import { useGeneralSettings } from "../../Providers/General";
+import { PiCoins } from "react-icons/pi";
 
 interface NavbarProps {
   profile: string;
+  chips?: number;
+  topCreatorChips?: number;
 }
 
 // main page navbar ----------------
@@ -56,22 +60,86 @@ export const Navbar2: React.FC = () => {
 };
 
 // dashboard navbar
-export const Navbar3: React.FC<NavbarProps> = ({ profile }) => {
+export const Navbar3: React.FC<NavbarProps> = ({
+  profile,
+  chips,
+  topCreatorChips,
+}) => {
+  const generalState = useGeneralSettings();
+
+  const [openChipsInfo, setOpenChipsInfo] = useState(false);
+
   return (
     <>
-      <div className="w-full box-border px-5 py-3 flex items-center flex-row-reverse gap-8 bg-white">
+      {openChipsInfo && (
+        <div className="w-screen h-screen fixed top-0 left-0 z-40 flex items-center justify-center bg-[#12121280]">
+
+          <div className="flex flex-col p-5 gap-5 items-center justify-center text-center w-[400px] bg-[#F5F5F5] rounded-lg font-inter text-[#757575] text-[16px]">
+          <h1 className="text-xl font-bold text-[#424242]">What is Chips</h1>
+
+          <p>
+            Top 5 Chips Earner will featured on website homepage as highly
+            recommended to brands on their dashboard
+          </p>
+          <p>
+            The more & correct information you will fill the more chips you will
+            earn
+          </p>
+
+          <button className="px-5 py-3 rounded bg-[#FF5C5C] text-sm text-[#FAFAFA]" onClick={()=>{
+            setOpenChipsInfo(false)
+          }}>Got it</button>
+          </div>
+        </div>
+      )}
+
+      <div className="w-full box-border px-5 py-3 flex items-center flex-row-reverse gap-8 bg-[#F5F5F5] relative">
         <img src={profile} alt="" className="rounded-full w-10 h-10" />
 
-        <button className="text-[#757575] items-center flex gap-1 hover:text-[#FF5C5C] p-2" onClick={()=>{
-          window.open(`https://api.whatsapp.com/send?phone=918799710137&text=Hey,%20I%20would%20like%20to%20connect%20with%20anchors%20Team`);
-          mixpanel.track("Help clicked on Navbar Collab Dashboard")
-        }}>
+        <button
+          className="text-[#757575] items-center flex gap-1 hover:text-[#FF5C5C] p-2 z-10"
+          onClick={() => {
+            window.open(
+              `https://api.whatsapp.com/send?phone=918799710137&text=Hey,%20I%20would%20like%20to%20connect%20with%20anchors%20Team`
+            );
+            mixpanel.track("Help clicked on Navbar Collab Dashboard");
+          }}
+        >
           <FaWhatsapp /> Help
         </button>
+
+        <div className="absolute left-[28%] flex items-center justify-center text-xs font-inter gap-5">
+          {/* <b>Note</b> - Currently you are using&nbsp;<b>Early Access</b> */}
+
+          <span className="bg-[#FFF] py-2 px-3 border-none rounded-lg text-[#121212] flex items-center gap-2 cursor-pointer" onClick={()=>{setOpenChipsInfo(true); mixpanel.track("Clicked the chips on Navbar in Collab")}}>
+            <PiCoins size={16} color="#FFD700" /> Your Chips Collected
+            -{" "}
+            {generalState.SidebarChipsCount.one +
+                generalState.SidebarChipsCount.two +
+                generalState.SidebarChipsCount.three +
+                generalState.SidebarChipsCount.four +
+                generalState.SidebarChipsCount.five
+              > chips ? generalState.SidebarChipsCount.one +
+              generalState.SidebarChipsCount.two +
+              generalState.SidebarChipsCount.three +
+              generalState.SidebarChipsCount.four +
+              generalState.SidebarChipsCount.five : chips }
+          </span>
+
+          <span className="bg-[#ACFFE74D] py-2 px-3 border-none rounded-md text-[#047857] flex items-center gap-2 cursor-pointer" onClick={()=>{setOpenChipsInfo(true); mixpanel.track("Clicked the chips on Navbar in Collab")}}>
+            <PiCoins size={16} color="#FFD700" /> Most Chips Collected
+            - {topCreatorChips < (generalState.SidebarChipsCount.one +
+                generalState.SidebarChipsCount.two +
+                generalState.SidebarChipsCount.three +
+                generalState.SidebarChipsCount.four +
+                generalState.SidebarChipsCount.five) ? (generalState.SidebarChipsCount.one +
+                  generalState.SidebarChipsCount.two +
+                  generalState.SidebarChipsCount.three +
+                  generalState.SidebarChipsCount.four +
+                  generalState.SidebarChipsCount.five + 50) : topCreatorChips }
+          </span>
+        </div>
       </div>
-      <p className="fixed w-screen left-0 top-6 flex items-center justify-center text-xs">
-        <b>Note</b> - Currently you are using&nbsp;<b>Early Access</b>
-      </p>
     </>
   );
 };

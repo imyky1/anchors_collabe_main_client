@@ -55,7 +55,7 @@ export const BrandCard: React.FC<BrandCardProps> = ({
         }}
       />
 
-      <section className="flex flex-col gap-1">
+      <section className="flex flex-col gap-1 w-full">
         <span className="text-xl font-medium max-w-[70%] break-words">{companyName}</span>
         <p className="text-xs -mt-1">{companyUrl?.length > 25 ? companyUrl?.slice(0,25) + "..." : companyUrl}</p>
 
@@ -100,7 +100,7 @@ export const PlatformCard: React.FC<PlatformCardProps> = ({
           className="w-10 h-10 rounded-full"
         /> */}
 
-        <section className="flex flex-col gap-1">
+        <section className="flex flex-col gap-1 w-full">
           <span className="text-xl font-medium max-w-[70%] break-words">{platformName}</span>
           <p className="text-xs -mt-1">{profileLink?.length > 25 ? profileLink?.slice(0,25) + "..." : profileLink}</p>
 

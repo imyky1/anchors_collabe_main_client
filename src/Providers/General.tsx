@@ -3,14 +3,14 @@ import { SetStateAction, createContext, useContext, useState } from "react";
 interface GeneralContextProps {
   Loading: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  BuildProfileCompletion: {
+  SidebarChipsCount: {
     one: number;
     two: number;
     three: number;
     four: number;
     five: number;
   };
-  setBuildProfileCompletion: React.Dispatch<
+  setSidebarChipsCount: React.Dispatch<
     SetStateAction<{
       one: number;
       two: number;
@@ -34,7 +34,7 @@ export const useGeneralSettings = () => {
 export const GeneralProvider: React.FC<GeneralProviderProps> = (props) => {
   const [Loading, setLoading] = useState(false);
 
-  const [BuildProfileCompletion, setBuildProfileCompletion] = useState({
+  const [SidebarChipsCount, setSidebarChipsCount] = useState({
     one: 0,
     two: 0,
     three: 0,
@@ -47,8 +47,8 @@ export const GeneralProvider: React.FC<GeneralProviderProps> = (props) => {
       value={{
         Loading,
         setLoading,
-        setBuildProfileCompletion,
-        BuildProfileCompletion,
+        SidebarChipsCount,
+        setSidebarChipsCount
       }}
     >
       {props.children}

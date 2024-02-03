@@ -69,7 +69,7 @@ const App: React.FC = () => {
               <InfluencerProvider>
                 <Routes>
                   <Route path="*" element={<Main />} />
-                  <Route
+                  {/* <Route
                     path="/influencer/activate"
                     element={
                       <ProtectedRoute
@@ -86,9 +86,9 @@ const App: React.FC = () => {
                         <Landing />
                       </ProtectedRoute>
                     }
-                  />
-                  <Route path="/influencer/rank_page" element={<RankPage />} />
-                  <Route path="/influencer/activation_page" element={<AcitvationPage />} />
+                  /> */}
+                  {/* <Route path="/influencer/rank_page" element={<RankPage />} />
+                  <Route path="/influencer/activation_page" element={<AcitvationPage />} /> */}
                   <Route path="/check" element={<Check />} />
                   <Route path="/:slug" element={<Profile />} />
                   <Route path="/dashboard" element={<Navigate to={"/influencer"} />} />

@@ -7,7 +7,6 @@ import {
   FaTelegram,
 } from "react-icons/fa";
 import { IoLogoWhatsapp } from "react-icons/io";
-import { AiFillInstagram } from "react-icons/ai";
 import { CgLockUnlock } from "react-icons/cg";
 import { BrandCard, GeneralCard, PlatformCard, SocialCard } from "./Component";
 import { Navbar2 } from "../../Components/Navbar/Navbar";
@@ -21,21 +20,30 @@ import { toast } from "react-toastify";
 const NavArray = [
   {
     title: "Collab Portfolio",
-    id: "collabhistory",
+    id: "collabportfolio",
   },
   {
-    title: "Monetising Platform",
-    id: "otherplatform",
+    title: "Monetization Avenues",
+    id: "monetization",
   },
   {
-    title: "Content Info",
-    id: "contentInfo",
+    title: "Content Category",
+    id: "contentCategory",
   },
   {
-    title: "Audience info",
-    id: "audience",
+    title: "Audience Types",
+    id: "audienceTypes",
   },
+  {
+    title: "Content Formats",
+    id: "contentFormats",
+  },
+  {
+    title: "Platform Presence",
+    id: "audiencePresence",
+  }
 ];
+
 
 const UnlockPopup = ({slug,onClose}) => {
   const [data, setdata] = useState({
@@ -241,7 +249,7 @@ const Profile: React.FC = () => {
 
             <div className="w-full px-5 md:px-10 box-border">
               <h3 className="text-[16px] font-medium text-[#424242] mb-4">
-                Social Links
+              Social Media Links
               </h3>
 
               <section className="grid grid-cols-2 md:grid-cols-3 w-full gap-4">
@@ -272,7 +280,7 @@ const Profile: React.FC = () => {
                 {/* <button className="px-5 py-3 text-[14px] text-[#424242] bg-[#F5F5F5] rounded-[250px] flex items-center gap-2 justify-center">
                   <FaLinkedinIn /> YouTube
                 </button> */}
-                {InfluData?.data?.teleLink?.length > 0 && (
+                {InfluData?.data?.telegramLink?.length > 0 && (
                   <button
                     className="px-5 py-3 text-[14px] text-[#424242] bg-[#F5F5F5] rounded-[250px] flex items-center gap-2 justify-center"
                     onClick={() => {
@@ -347,10 +355,10 @@ const Profile: React.FC = () => {
               <div
                 className="w-full p-3 box-border flex flex-col gap-5 rounded-lg"
                 style={{ boxShadow: "0px 0px 12px 0px rgba(33, 33, 33, 0.08)" }}
-                id="collabhistory"
+                id="collabportfolio"
               >
                 <h3 className="text-[16px] font-medium text-[#424242]">
-                  Collaboration History
+                Collab Portfolio
                 </h3>
 
                 <section className="w-full flex flex-col gap-2">
@@ -364,10 +372,10 @@ const Profile: React.FC = () => {
               <div
                 className="w-full p-3 box-border flex flex-col gap-5 rounded-lg"
                 style={{ boxShadow: "0px 0px 12px 0px rgba(33, 33, 33, 0.08)" }}
-                id="otherplatform"
+                id="monetization"
               >
                 <h3 className="text-[16px] font-medium text-[#424242] mb-4">
-                  On Other Platform
+                Monetization Avenues
                 </h3>
 
                 <section className="w-full flex flex-col gap-5">
@@ -379,27 +387,29 @@ const Profile: React.FC = () => {
 
               {/* Other cards ----------- */}
               <GeneralCard
-                title="Category"
+                title="Content Category"
                 tags={InfluData?.data4?.categories ?? []}
-                id="contentInfo"
+                id="contentCategory"
               />
               <GeneralCard
-                title="Type of Audience"
+                title="Audience Types"
                 tags={InfluData?.data5?.types ?? []}
+                id="audienceTypes"
               />
               <GeneralCard
-                title="Type of Content Post"
+                title="Content Formats"
                 tags={InfluData?.data4?.formats ?? []}
+                id="contentFormats"
               />
 
               {/* Where is your audience */}
               <div
                 className="w-full p-3 box-border flex flex-col gap-5 rounded-lg"
                 style={{ boxShadow: "0px 0px 12px 0px rgba(33, 33, 33, 0.08)" }}
-                id="audience"
+                id="audiencePresence"
               >
                 <h3 className="text-[16px] font-medium text-[#424242] mb-4">
-                  Where is your audience
+                Platform Presence
                 </h3>
 
                 {/* <SocialCard

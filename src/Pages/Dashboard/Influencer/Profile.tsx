@@ -1,4 +1,4 @@
-import React, { SetStateAction, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   DropDown01,
   InputField1,
@@ -6,7 +6,6 @@ import {
   TagsField1,
 } from "../../../Components/Fields";
 import { Button1 } from "../../../Components/Buttons";
-import { Slider } from "@material-tailwind/react";
 import ProfileDemo from "../../../Components/Preview/ProfileDemo";
 import { useStaticData } from "../../../Providers/Data";
 import { useInfluencer } from "../../../Providers/Influencer";
@@ -25,83 +24,6 @@ import { TbEdit } from "react-icons/tb";
 import { useGeneralSettings } from "../../../Providers/General";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-
-function countNonEmptyFields(obj: {} | []) {
-  let count = 0;
-  let totalField = 0;
-
-  function isArrayOrObject(input) {
-    if (Array.isArray(input)) {
-      return "Array";
-    } else if (typeof input === "object" && input !== null) {
-      return "Object";
-    }
-  }
-
-  function countFieldsRecursiveObj(obj: {}) {
-    for (const key in obj) {
-      totalField++;
-
-      if (isArrayOrObject(obj[key]) === "Object" && obj[key] !== null) {
-        totalField--;
-        countFieldsRecursiveObj(obj[key]);
-      }
-
-      else if (isArrayOrObject(obj[key]) === "Array" && obj[key] !== null && isArrayOrObject(obj[key][0]) === "Object") {
-        totalField--;
-        countFieldsRecursiveArr(obj[key]);
-      }
-
-      else if (obj[key] !== null && obj[key] !== "") {
-        count++;
-      }
-    }
-  }
-
-  function countFieldsRecursiveArr(arr: []) {
-    for (let index = 0; index < arr.length; index++) {
-      const elem = arr[index];
-      totalField++;
-      if (isArrayOrObject(obj) === "Object" && elem !== null) {
-        totalField--;
-        countFieldsRecursiveObj(elem);
-      } 
-
-      else if (elem !== null && elem !== "") {
-        count++;
-      }
-
-    }
-  }
-
-  if (isArrayOrObject(obj) === "Object") {
-    countFieldsRecursiveObj(obj);
-  } else if (isArrayOrObject(obj) === "Array") {
-    countFieldsRecursiveArr(obj);
-  }
-
-  return count / totalField;
-}
-
-function sumAllValues(obj) {
-  let sum = 0;
-
-  function sumValuesRecursive(obj) {
-    for (const key in obj) {
-      if (typeof obj[key] === "number") {
-        sum += obj[key];
-      }
-
-      if (typeof obj[key] === "object" && obj[key] !== null) {
-        sumValuesRecursive(obj[key]);
-      }
-    }
-  }
-
-  sumValuesRecursive(obj);
-
-  return sum;
-}
 
 interface dataOneProps {
   name: string;
@@ -149,7 +71,7 @@ interface dataFiveProps {
   platforms: [
     {
       platform: string;
-      audience: number;
+      audience: number | null;
       link: string;
     }
   ];
@@ -160,26 +82,31 @@ interface FormOneProps {
   setData: React.Dispatch<React.SetStateAction<dataOneProps>>;
   formOneImages?: [];
   setFormOneImages?: React.Dispatch<React.SetStateAction<[]>>;
+  errorArray?: [];
 }
 
 interface FormTwoProps {
   data: [dataTwoProps];
   setData: React.Dispatch<React.SetStateAction<[dataTwoProps]>>;
+  errorArray?: [];
 }
 
 interface FormThreeProps {
   data: [dataThreeProps];
   setData: React.Dispatch<React.SetStateAction<[dataThreeProps]>>;
+  errorArray?: [];
 }
 
 interface FormFourProps {
   data: dataFourProps;
   setData: React.Dispatch<React.SetStateAction<dataFourProps>>;
+  errorArray?: [];
 }
 
 interface FormFiveProps {
   data: dataFiveProps;
   setData: React.Dispatch<React.SetStateAction<dataFiveProps>>;
+  errorArray?: [];
 }
 
 const FormOne: React.FC<FormOneProps> = ({
@@ -187,6 +114,7 @@ const FormOne: React.FC<FormOneProps> = ({
   setData,
   formOneImages,
   setFormOneImages,
+  errorArray,
 }) => {
   const [openCropModal, setOpenCropModal] = useState({
     value: false,
@@ -285,6 +213,7 @@ const FormOne: React.FC<FormOneProps> = ({
           onChange={handleChange}
           name="name"
           id="name"
+          error={errorArray?.includes("name")}
         />
         <InputField1
           placeholder="Your Tagline"
@@ -292,6 +221,7 @@ const FormOne: React.FC<FormOneProps> = ({
           onChange={handleChange}
           name="tagline"
           id="tagline"
+          error={errorArray?.includes("tagline")}
         />
       </div>
 
@@ -418,6 +348,7 @@ const FormThree: React.FC<FormTwoProps> = ({
   setData,
   formTwoImages,
   setFormTwoImages,
+  errorArray,
 }) => {
   const staticData = useStaticData();
 
@@ -454,6 +385,7 @@ const FormThree: React.FC<FormTwoProps> = ({
         companyName: "",
         companyUrl: "",
         companyProfile: "",
+        postLink: "",
         goals: [],
       },
     ]);
@@ -542,6 +474,9 @@ const FormThree: React.FC<FormTwoProps> = ({
                     }
                     name="companyName"
                     id="companyName"
+                    error={errorArray?.includes(
+                      "collab" + index + "companyName"
+                    )}
                   />
 
                   <InputField1
@@ -552,6 +487,9 @@ const FormThree: React.FC<FormTwoProps> = ({
                     }
                     name="companyUrl"
                     id="companyUrl"
+                    error={errorArray?.includes(
+                      "collab" + index + "companyUrl"
+                    )}
                   />
 
                   <InputField1
@@ -562,6 +500,7 @@ const FormThree: React.FC<FormTwoProps> = ({
                     }
                     name="postLink"
                     id="postLink"
+                    error={errorArray?.includes("collab" + index + "postLink")}
                   />
                 </div>
               </section>
@@ -626,7 +565,7 @@ const FormThree: React.FC<FormTwoProps> = ({
   );
 };
 
-const FormFour: React.FC<FormThreeProps> = ({ data, setData }) => {
+const FormFour: React.FC<FormThreeProps> = ({ data, setData, errorArray }) => {
   const staticData = useStaticData();
 
   const [tagsData, setTagsData] = useState<[] | undefined>();
@@ -659,6 +598,7 @@ const FormFour: React.FC<FormThreeProps> = ({ data, setData }) => {
         platformName: "",
         profileLink: "",
         methods: [],
+        paidAudience: null,
       },
     ]);
   };
@@ -686,6 +626,9 @@ const FormFour: React.FC<FormThreeProps> = ({ data, setData }) => {
                   });
                 }}
                 id={`dorpdownplatfrom${index}`}
+                error={errorArray?.includes(
+                  "monetization" + index + "platformName"
+                )}
               />
               <InputField1
                 placeholder="Enter Your Profile Link"
@@ -695,6 +638,9 @@ const FormFour: React.FC<FormThreeProps> = ({ data, setData }) => {
                 }
                 name="profileLink"
                 id="profileLink"
+                error={errorArray?.includes(
+                  "monetization" + index + "profileLink"
+                )}
               />
               <InputField1
                 placeholder="Total Paid Audience"
@@ -705,6 +651,9 @@ const FormFour: React.FC<FormThreeProps> = ({ data, setData }) => {
                 }
                 name="paidAudience"
                 id="paidAudience"
+                error={errorArray?.includes(
+                  "monetization" + index + "paidAudience"
+                )}
               />
             </div>
 
@@ -855,7 +804,7 @@ const FormSeven: React.FC<FormFiveProps> = ({ data, setData }) => {
   );
 };
 
-const FormEight: React.FC<FormFiveProps> = ({ data, setData }) => {
+const FormEight: React.FC<FormFiveProps> = ({ data, setData, errorArray }) => {
   const staticData = useStaticData();
 
   const [platformData, setplatformData] = useState<[] | undefined>();
@@ -884,7 +833,7 @@ const FormEight: React.FC<FormFiveProps> = ({ data, setData }) => {
         ...data.platforms,
         {
           platform: "",
-          audience: "",
+          audience: null,
           link: "",
         },
       ];
@@ -952,6 +901,7 @@ const FormEight: React.FC<FormFiveProps> = ({ data, setData }) => {
                   });
                 }}
                 id={`dorpdownplatfromaudience${index}`}
+                error={errorArray?.includes("audience" + index + "platform")}
               />
               <InputField1
                 placeholder="Audience Size"
@@ -962,6 +912,7 @@ const FormEight: React.FC<FormFiveProps> = ({ data, setData }) => {
                 }
                 name="audience"
                 id="audience"
+                error={errorArray?.includes("audience" + index + "audience")}
               />
             </section>
             <InputField1
@@ -972,6 +923,7 @@ const FormEight: React.FC<FormFiveProps> = ({ data, setData }) => {
               }
               name="link"
               id="link"
+              error={errorArray?.includes("audience" + index + "link")}
             />
           </div>
         );
@@ -1029,14 +981,10 @@ const Profile: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const influencerState = useInfluencer();
   const generalState = useGeneralSettings();
-  const [PercentageComplition, setPercentageComplition] = useState({
-    one: 0,
-    two: 0,
-    three: 0,
-    four: 0,
-    five: 0,
-  });
+  const dataState = useStaticData();
   const navigate = useNavigate();
+  const [chipsData, setChipsData] = useState({});
+  const [errorArray, setErrorArray] = useState([]);
 
   // for checking the type of service we need to create --------------------------------------
   const { search } = useLocation();
@@ -1102,7 +1050,7 @@ const Profile: React.FC = () => {
     platforms: [
       {
         platform: "",
-        audience: 0,
+        audience: null,
         link: "",
       },
     ],
@@ -1131,8 +1079,21 @@ const Profile: React.FC = () => {
   // submit functions ------------------
   const handleSubmitFormOne = async () => {
     try {
-      if (dataOne?.name?.length < 1 || dataOne?.tagline?.length < 1) {
-        toast.error("Fill the form completely", {
+      if (dataOne?.name?.length < 1) {
+        setErrorArray((prev) => {
+          const newArr = [...prev, "name"];
+          return newArr;
+        });
+        toast.info("Please fill the mandatory details to continue", {
+          autoClose: 1500,
+        });
+        return;
+      } else if (dataOne?.tagline?.length < 1) {
+        setErrorArray((prev) => {
+          const newArr = [...prev, "tagline"];
+          return newArr;
+        });
+        toast.info("Please fill the mandatory details to continue", {
           autoClose: 1500,
         });
         return;
@@ -1198,19 +1159,72 @@ const Profile: React.FC = () => {
     return data;
   };
 
+  const checkValidationOfData = (data, originalObj, callback) => {
+    for (let index = 0; index < data.length; index++) {
+      const element = data[index];
+      if (element?._id) {
+        delete element?._id;
+      }
+      if (JSON.stringify(element) !== JSON.stringify(originalObj)) {
+        // checks -----------------------------
+        const res = callback(element, index);
+        console.log(res, index);
+        if (!res) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  };
+
   const handleSubmitFormTwo = async () => {
     try {
-      // if (dataOne?.name?.length < 1 || dataOne?.tagline?.length < 1) {
-      //   alert("Fill the form completely");
-      //   return;
-      // } else {
-      const data = await saveLogosCompany();
-      const response = await influencerState?.updateCollabInfo(data);
-      if (response?.success) {
-        // setCurrentPage(3);
-        navigate("/influencer/build_profile?page=3");
+      const check = checkValidationOfData(
+        dataTwo,
+        {
+          companyName: "",
+          companyUrl: "",
+          companyProfile: "",
+          postLink: "",
+          goals: [],
+        },
+        (e, index) => {
+          if (e?.companyName?.length < 1) {
+            setErrorArray((prev) => {
+              const newArr = [...prev, "collab" + index + "companyName"];
+              return newArr;
+            });
+            return false;
+          } else if (e?.companyUrl?.length < 1) {
+            setErrorArray((prev) => {
+              const newArr = [...prev, "collab" + index + "companyUrl"];
+              return newArr;
+            });
+            return false;
+          } else if (e?.postLink?.length < 1) {
+            setErrorArray((prev) => {
+              const newArr = [...prev, "collab" + index + "postLink"];
+              return newArr;
+            });
+            return false;
+          }
+          return true;
+        }
+      );
+      if (!check) {
+        toast.info("Please fill the mandatory details to continue", {
+          autoClose: 1500,
+        });
+        return;
+      } else {
+        const data = await saveLogosCompany();
+        const response = await influencerState?.updateCollabInfo(data);
+        if (response?.success) {
+          // setCurrentPage(3);
+          navigate("/influencer/build_profile?page=3");
+        }
       }
-      // }
     } catch (error) {
       toast.error("Some error occured while saving the data", {
         autoClose: 2000,
@@ -1220,16 +1234,51 @@ const Profile: React.FC = () => {
 
   const handleSubmitFormThree = async () => {
     try {
-      // if (dataOne?.name?.length < 1 || dataOne?.tagline?.length < 1) {
-      //   alert("Fill the form completely");
-      //   return;
-      // } else {
-      const response = await influencerState?.updateMonetizationInfo(dataThree);
-      if (response?.success) {
-        // setCurrentPage(4);
-        navigate("/influencer/build_profile?page=4");
+      const check = checkValidationOfData(
+        dataThree,
+        {
+          platformName: "",
+          profileLink: "",
+          methods: [],
+          paidAudience: null,
+        },
+        (e, index) => {
+          if (e?.platformName?.length < 1) {
+            setErrorArray((prev) => {
+              const newArr = [...prev, "monetization" + index + "platformName"];
+              return newArr;
+            });
+            return false;
+          } else if (e?.profileLink?.length < 1) {
+            setErrorArray((prev) => {
+              const newArr = [...prev, "monetization" + index + "profileLink"];
+              return newArr;
+            });
+            return false;
+          } else if (e?.paidAudience === null) {
+            setErrorArray((prev) => {
+              const newArr = [...prev, "monetization" + index + "paidAudience"];
+              return newArr;
+            });
+            return false;
+          }
+          return true;
+        }
+      );
+      if (!check) {
+        toast.info("Please fill the mandatory details to continue", {
+          autoClose: 1500,
+        });
+        return;
+      } else {
+        const response = await influencerState?.updateMonetizationInfo(
+          dataThree
+        );
+        if (response?.success) {
+          // setCurrentPage(4);
+          navigate("/influencer/build_profile?page=4");
+        }
       }
-      // }
     } catch (error) {
       toast.error("Some error occured while saving the data", {
         autoClose: 2000,
@@ -1239,16 +1288,11 @@ const Profile: React.FC = () => {
 
   const handleSubmitFormFour = async () => {
     try {
-      // if (dataOne?.name?.length < 1 || dataOne?.tagline?.length < 1) {
-      //   alert("Fill the form completely");
-      //   return;
-      // } else {
       const response = await influencerState?.updateContentInfo(dataFour);
       if (response?.success) {
         // setCurrentPage(5);
         navigate("/influencer/build_profile?page=5");
       }
-      // }
     } catch (error) {
       toast.error("Some error occured while saving the data", {
         autoClose: 2000,
@@ -1258,20 +1302,52 @@ const Profile: React.FC = () => {
 
   const handleSubmitFormFive = async () => {
     try {
-      // if (dataOne?.name?.length < 1 || dataOne?.tagline?.length < 1) {
-      //   alert("Fill the form completely");
-      //   return;
-      // } else {
-      const response = await influencerState?.updateAudienceInfo(dataFive);
-      if (response?.success) {
-        // setCurrentPage(5);
-        // alert("form Saved");
-        // toast.("Some error occured while saving the data",{
-        //   autoClose:2000
-        // });
-        navigate("/influencer/share_profile");
+      const check = checkValidationOfData(
+        dataFive?.platforms,
+        {
+          platform: "",
+          audience: null,
+          link: "",
+        },
+        (e, index) => {
+          if (e?.platform?.length < 1) {
+            setErrorArray((prev) => {
+              const newArr = [...prev, "audience" + index + "platform"];
+              return newArr;
+            });
+            return false;
+          } else if (e?.audience === null) {
+            setErrorArray((prev) => {
+              const newArr = [...prev, "audience" + index + "audience"];
+              return newArr;
+            });
+            return false;
+          } else if (e?.link?.length < 1) {
+            setErrorArray((prev) => {
+              const newArr = [...prev, "audience" + index + "link"];
+              return newArr;
+            });
+            return false;
+          }
+          return true;
+        }
+      );
+      if (!check) {
+        toast.info("Please fill the mandatory details to continue", {
+          autoClose: 1500,
+        });
+        return;
+      } else {
+        const response = await influencerState?.updateAudienceInfo(dataFive);
+        if (response?.success) {
+          // setCurrentPage(5);
+          // alert("form Saved");
+          // toast.("Some error occured while saving the data",{
+          //   autoClose:2000
+          // });
+          navigate("/influencer/share_profile");
+        }
       }
-      // }
     } catch (error) {
       toast.error("Some error occured while saving the data", {
         autoClose: 2000,
@@ -1280,6 +1356,7 @@ const Profile: React.FC = () => {
   };
 
   useEffect(() => {
+    setErrorArray([]);
     generalState.setLoading(true);
     influencerState?.getPersonalInfo().then((e) => {
       generalState.setLoading(false);
@@ -1318,7 +1395,7 @@ const Profile: React.FC = () => {
             platforms: [
               {
                 platform: "",
-                audience: 0,
+                audience: null,
                 link: "",
               },
             ],
@@ -1329,34 +1406,133 @@ const Profile: React.FC = () => {
   }, [currentPage]);
 
   useEffect(() => {
-    const cfd1 = countNonEmptyFields(dataOne)
-    const cfd2 = countNonEmptyFields(dataTwo);
-    const cfd3 = countNonEmptyFields(dataThree)
-    const cfd4 = countNonEmptyFields(dataFour)
-    const cfd5 = countNonEmptyFields(dataFive)
-
-    setPercentageComplition({
-      one: cfd1 * 20,
-      two: cfd2 * 20,
-      three: cfd3 * 20,
-      four: cfd4 * 20,
-      five: cfd5 * 20,
+    dataState.getDataFromType("Influencer Chips").then((e) => {
+      setChipsData(e[0]);
     });
+  }, []);
 
-    generalState.setBuildProfileCompletion({
-      one: cfd1 * 20,
-      two: cfd2 * 20,
-      three: cfd3 * 20,
-      four: cfd4 * 20,
-      five: cfd5 * 20,
-    })
+  //  real time chips changes ------------------
+  const GoThroughArray = (arr: [], stringName: string) => {
+    let chips: number = 0;
 
-  }, [dataOne, dataTwo, dataThree,dataFour,dataFive]);
+    if (arr.length > 0) {
+      if (typeof arr[0] === "object") {
+        // means the elements e=inside the array are objects ------------
 
+        for (let index = 0; index < arr.length; index++) {
+          const element = arr[index];
+          const credits = GoThroughObjects(element, stringName);
+          chips += credits;
+        }
+      } else {
+        if (arr.filter((e) => e?.length > 0)?.length > 0) {
+          if (chipsData[stringName]) {
+            chips += chipsData[stringName];
+          }
+        }
+      }
+    }
+    return chips;
+  };
+
+  const GoThroughObjects = (obj: {}, stringName: string) => {
+    let chips: number = 0;
+
+    const keysArr = Object.keys(obj || {});
+    const ValuesArr = Object.values(obj || {});
+
+    for (let index = 0; index < ValuesArr.length; index++) {
+      const element = ValuesArr[index];
+
+      // is an array ---------------
+      if (Array.isArray(element)) {
+        // console.log(keysArr[index])
+        const credits = GoThroughArray(
+          element,
+          stringName + "." + keysArr[index]
+        );
+        chips += credits;
+      }
+
+      // is an object ----------------
+      else if (typeof element === "object") {
+        const credits = GoThroughObjects(
+          element,
+          stringName + "." + keysArr[index]
+        );
+        chips += credits;
+      }
+
+      // is a string ------------------
+      else {
+        // find the value and add in the chips
+        if (element !== null && element !== "") {
+          if (chipsData[stringName + "." + keysArr[index]]) {
+            chips += chipsData[stringName + "." + keysArr[index]];
+          }
+
+          //  followers edge cases
+          else if (
+            (stringName + "." + keysArr[index]).includes("personal.followers")
+          ) {
+            chips += chipsData["social.followers"];
+          }
+
+          //  social links edge cases
+          else if (
+            [
+              "personal.linkedinLink",
+              "personal.twitterLink",
+              "personal.instaLink",
+              "personal.fbLink",
+              "personal.telegramLink",
+            ].includes(stringName + "." + keysArr[index])
+          ) {
+            chips += chipsData["social.link"];
+          }
+        }
+      }
+    }
+
+    return chips;
+  };
+
+  function CountTheChips(data: {} | [], stringName: string) {
+    let credits: number = 0;
+
+    // check is the data is objet or array
+    if (Array.isArray(data)) {
+      credits = GoThroughArray(data, stringName);
+    }
+
+    // is an object -------------
+    else {
+      credits = GoThroughObjects(data, stringName);
+    }
+
+    return credits;
+  }
+
+  useEffect(() => {
+    setErrorArray([]);
+    const cfd1 = CountTheChips(dataOne, "personal");
+    const cfd2 = CountTheChips(dataTwo, "collab");
+    const cfd3 = CountTheChips(dataThree, "monetisation");
+    const cfd4 = CountTheChips(dataFour, "content");
+    const cfd5 = CountTheChips(dataFive, "audience");
+
+    generalState?.setSidebarChipsCount({
+      one: cfd1,
+      two: cfd2,
+      three: cfd3,
+      four: cfd4,
+      five: cfd5,
+    });
+  }, [dataOne, dataTwo, dataThree, dataFour, dataFive]);
 
   return (
     <>
-      <div className="w-full px-10 py-5 box-border flex items-center justify-between  ">
+      <div className="w-full px-10 py-5 box-border flex items-center justify-between h-max ">
         <section
           className="flex flex-col gap-5 w-[40vw] relative"
           id="profileData"
@@ -1371,6 +1547,7 @@ const Profile: React.FC = () => {
                 setData={setdataOne}
                 formOneImages={formOneImages}
                 setFormOneImages={setFormOneImages}
+                errorArray={errorArray}
               />
               <FormTwo data={dataOne} setData={setdataOne} />
             </>
@@ -1392,6 +1569,7 @@ const Profile: React.FC = () => {
                 setData={setdataTwo}
                 formTwoImages={formTwoImages}
                 setFormTwoImages={setFormTwoImages}
+                errorArray={errorArray}
               />
             </>
           )}
@@ -1407,7 +1585,11 @@ const Profile: React.FC = () => {
                   followers, making you a valuable brand partner
                 </span>
               </div>
-              <FormFour data={dataThree} setData={setdataThree} />
+              <FormFour
+                data={dataThree}
+                setData={setdataThree}
+                errorArray={errorArray}
+              />
             </>
           )}
 
@@ -1440,7 +1622,11 @@ const Profile: React.FC = () => {
                 </span>
               </div>
               <FormSeven data={dataFive} setData={setdataFive} />
-              <FormEight data={dataFive} setData={setdataFive} />
+              <FormEight
+                data={dataFive}
+                setData={setdataFive}
+                errorArray={errorArray}
+              />
             </>
           )}
 
@@ -1454,21 +1640,24 @@ const Profile: React.FC = () => {
           </div>
         </section>
 
-        <section className="flex flex-col gap-3 h-screen items-start fixed top-[82px] right-20 w-[329px] h-full">
-          <h1 className="text-[16px] font-inter font-medium">
-            Profile Completion Status
-          </h1>
+        <section className="flex flex-col gap-3 h-screen items-start fixed top-[120px] right-20 w-[329px] h-[665px]">
+          <p className="flex flex-col items-center gap-0 text-sm text-[#EF4444] text-center">
+            <span className="text-[#121212]">Important Notice</span>Profiles with false information will
+            NOT be visible to brands
+          </p>
 
-          <Slider
+          {/* <Slider
             size="lg"
-            color={sumAllValues(PercentageComplition) > 50 ? "green" : "deep-orange"}
+            color={
+              sumAllValues(PercentageComplition) > 50 ? "green" : "deep-orange"
+            }
             value={sumAllValues(PercentageComplition)}
             placeholder="as"
             min={0}
             max={100}
             className="h-5"
             thumbClassName="[&::-moz-range-thumb]:-mt-[4px] [&::-webkit-slider-thumb]:-mt-[4px] [&::-webkit-slider-thumb]:hidden"
-          />
+          /> */}
 
           <ProfileDemo
             data={{
@@ -1480,7 +1669,17 @@ const Profile: React.FC = () => {
             }}
             uploadedImages={formOneImages ?? []}
             uploadedImages2={formTwoImages ?? []}
-            gotToSection={currentPage === 2 ? "collabhistory" : currentPage === 3 ? "otherplatform" : currentPage === 4 ? "contentInfo" : currentPage === 5 ? "audience" : "topdetailsection"}
+            gotToSection={
+              currentPage === 2
+                ? "collabhistory"
+                : currentPage === 3
+                ? "otherplatform"
+                : currentPage === 4
+                ? "contentInfo"
+                : currentPage === 5
+                ? "audience"
+                : "topdetailsection"
+            }
           />
         </section>
       </div>

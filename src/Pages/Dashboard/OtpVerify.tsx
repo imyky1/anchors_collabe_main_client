@@ -50,6 +50,7 @@ const OtpVerify = () => {
           // Save the number in user info ----------
           let result = await influencerState?.SaveUserInfo({
             is_verified: true,
+            status:1
           });
 
           if (result) {
@@ -79,7 +80,7 @@ const OtpVerify = () => {
     <div className="info_container">
       <Navbar />
       <div className="content">
-        <span
+        {/* <span
           style={{
             display: "flex",
             gap: "10px",
@@ -92,7 +93,7 @@ const OtpVerify = () => {
           className="button_type_01"
         >
           <MdCelebration size={24} /> Doors Open Feb 3rd...
-        </span>
+        </span> */}
 
         <div className="text">
           <h1>Welcome, {authState?.loggedUser?.name?.split(" ")[0]}</h1>

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { createContext, useContext } from "react";
+import { useGeneralSettings } from "./General";
 
 // interfaces ---------------------------
 interface InfluencerProviderProps {
@@ -34,13 +35,14 @@ export const InfluencerProvider: React.FC<InfluencerProviderProps> = (
   props
 ) => {
 
+  const generalState = useGeneralSettings()
 
   // update personal info -----------------------
   const updatePersonalInfo = async (data: {}) => {
     try {
       const response = await axios.post(
         `${host}/influencer/updatePersonalData`,
-        { ...data },
+        { ...data,chipsCredit:generalState.SidebarChipsCount.one},
         {
           headers: {
             jwtToken: localStorage.getItem("jwtToken"),
@@ -64,7 +66,7 @@ export const InfluencerProvider: React.FC<InfluencerProviderProps> = (
     try {
       const response = await axios.post(
         `${host}/influencer/updateCollabHistory`,
-        { data },
+        { data,chipsCredit:generalState.SidebarChipsCount.two },
         {
           headers: {
             jwtToken: localStorage.getItem("jwtToken"),
@@ -86,10 +88,9 @@ export const InfluencerProvider: React.FC<InfluencerProviderProps> = (
   // update personal info -----------------------
   const updateMonetizationInfo = async (data: []) => {
     try {
-      console.log(data);
       const response = await axios.post(
         `${host}/influencer/updateMonetizationHistory`,
-        { data: data },
+        { data, chipsCredit:generalState.SidebarChipsCount.three },
         {
           headers: {
             jwtToken: localStorage.getItem("jwtToken"),
@@ -113,7 +114,7 @@ export const InfluencerProvider: React.FC<InfluencerProviderProps> = (
     try {
       const response = await axios.post(
         `${host}/influencer/updateContentInfo`,
-        { ...data },
+        { ...data ,chipsCredit:generalState.SidebarChipsCount.four },
         {
           headers: {
             jwtToken: localStorage.getItem("jwtToken"),
@@ -137,7 +138,7 @@ export const InfluencerProvider: React.FC<InfluencerProviderProps> = (
     try {
       const response = await axios.post(
         `${host}/influencer/updateAudienceInfo`,
-        { ...data },
+        { ...data,chipsCredit:generalState.SidebarChipsCount.five },
         {
           headers: {
             jwtToken: localStorage.getItem("jwtToken"),

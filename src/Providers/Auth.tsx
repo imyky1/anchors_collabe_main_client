@@ -1,5 +1,11 @@
 import axios from "axios";
-import { SetStateAction, createContext, useContext, useEffect, useState } from "react";
+import {
+  SetStateAction,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 // interfaces ---------------------------
 interface AuthProviderProps {
@@ -11,22 +17,34 @@ interface AuthContextProps {
   getLinkedinDatatoLogin: (token: string) => Promise<void>;
   getUserData: () => Promise<void>;
   loggedUser: loggedUser | null;
-  setReFetchUserData:React.Dispatch<SetStateAction<boolean>>
+  setReFetchUserData: React.Dispatch<SetStateAction<boolean>>;
 }
 
-interface loggedUser{
-  name:string,
-  email:string,
-  activePlan:boolean,
-  status:number,
-  profile:string,
-  is_verified:boolean,
-  slug:string,
-  referralCode:string,
-  earlyAccess?:boolean,
-  mobile:string,
-  linkedinLink:string,
-  eaRank?:string
+interface loggedUser {
+  name: string;
+  email: string;
+  activePlan: boolean;
+  status: number;
+  profile: string;
+  is_verified: boolean;
+  slug: string;
+  referralCode: string;
+  earlyAccess?: boolean;
+  mobile: string;
+  linkedinLink: string;
+  eaRank?: string;
+  totalChips?: number;
+  featuredData?: {
+    value: boolean;
+    topCreatorChips?: number;
+  };
+  buildProfileChips?: {
+    AudienceInfo?: number | null;
+    PersonalInfo?: number | null;
+    CollabHistory?: number | null;
+    MonetizationHistory?: number | null;
+    ContentInfo?: number | null;
+  };
 }
 
 const AuthContext = createContext<AuthContextProps | null>(null);
@@ -43,7 +61,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = (props) => {
   const [reFetchUserData, setReFetchUserData] = useState(false);
 
   useEffect(() => {
-    if(localStorage.getItem("jwtToken")){
+    if (localStorage.getItem("jwtToken")) {
       getUserData();
     }
   }, [reFetchUserData]);
@@ -150,7 +168,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = (props) => {
         getLinkedinDatatoLogin,
         getUserData,
         loggedUser,
-        setReFetchUserData
+        setReFetchUserData,
       }}
     >
       {props?.children}
