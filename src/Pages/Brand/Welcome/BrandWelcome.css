@@ -1,0 +1,91 @@
+.BrandWelcomeConatianer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.BrandFormContent {
+  display: flex;
+  width: 530px;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+}
+.BrandForm_CreditsWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.BrandFormContent .BrandForm_CreditsInfo {
+  width: 207px;
+  height: 39px;
+  padding: 10px 20px 10px 20px;
+  border-radius: 154px;
+  border-radius: 154px;
+  border: 2px solid var(--gold-1, #988000);
+  color: #998A00;
+  background: #fffde9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 40px;
+  gap: 8px;
+}
+.BrandFormContent h1 {
+  font-family: Public Sans;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 28px;
+  letter-spacing: 0em;
+  text-align: center;
+  color: #424242;
+  margin-top: 20px;
+}
+.BrandFormContent h2 {
+  font-family: Public Sans;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 14px;
+  letter-spacing: 0em;
+  text-align: center;
+  color: #757575;
+  margin-bottom: 20px;
+}
+.BrandForm_CompanySize {
+  display: flex;
+  flex-direction: column;
+}
+.BrandForm_CompanySize div {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+  font-family: Inter;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 17px;
+  letter-spacing: 0em;
+  text-align: left;
+}
+.BrandForm_CompanySize div > button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 12px 8px 12px;
+  border-radius: 270px;
+  gap: 4px;
+  background-color: #eeeeee;
+  font-family: Inter;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 17px;
+  letter-spacing: 0em;
+  text-align: center;
+  cursor: pointer;
+}
+.BrandForm_CompanySize .Selected {
+  border-radius: 270px;
+  background: var(--Success-100, #d1fae5);
+  color: var(--Success-800, #065f46);
+}

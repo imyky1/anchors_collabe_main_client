@@ -14,6 +14,7 @@ interface InputFieldProps {
   id?: string;
   maxLength?: number;
   autoComplete?: string;
+  icon: any
 }
 
 interface UploadButtonProps {
@@ -58,12 +59,42 @@ export const InputField1: React.FC<InputFieldProps> = ({
   id,
   maxLength,
   autoComplete,
+  label
 }) => {
   return (
-    <div className="w-full">
+    <div className="w-full flex-col text-[14px] text-[#424242] gap-[8px]">
+      <label htmlFor={id}>{label}</label>
       <input
         placeholder={placeholder}
-        className="w-full box-border px-4 py-3 rounded font-inter text-xs bg-[#EEEEEE]"
+        className="w-full mt-[12px] box-border px-4 py-3 rounded font-inter text-xs bg-[#EEEEEE]"
+        type={type ?? "text"}
+        value={value ?? ""}
+        onChange={onChange}
+        name={name}
+        id={id}
+        maxLength={maxLength}
+        autoComplete={autoComplete}
+      />
+    </div>
+  );
+};
+export const InputField2: React.FC<InputFieldProps> = ({
+  placeholder,
+  type,
+  value,
+  onChange,
+  name,
+  id,
+  maxLength,
+  autoComplete,
+  icon
+}) => {
+  return (
+    <div className="w-full flex gap-[8px] box-border px-4 py-3 rounded font-inter text-xs bg-[#EEEEEE]">
+      {icon}
+      <input
+        placeholder={placeholder}
+        className="w-full bg-[transparent]"
         type={type ?? "text"}
         value={value ?? ""}
         onChange={onChange}

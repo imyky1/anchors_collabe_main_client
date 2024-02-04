@@ -13,13 +13,19 @@ import { useAuth } from "./Providers/Auth";
 import Logout from "./Pages/Logout";
 import ProtectedRoute from "./Helpers/ProtectedRoute";
 import { InfluencerProvider } from "./Providers/Influencer";
+import { BrandProvider } from "./Providers/Brand";
 import LoaderOne from "./Components/Loader";
 import { useGeneralSettings } from "./Providers/General";
 import { RankPage } from "./Pages/RankPage/RankPage";
+import { BrandSignUp } from "./Pages/Brand/SignUp/BrandSignUp";
+import { BrandLogin } from "./Pages/Brand/Login/BrandLogin";
+import { BrandOtpVerify } from "./Pages/Brand/OtpVerification/BrandOtpVerify";
+import { BrandWelcome } from "./Pages/Brand/Welcome/BrandWelcome";
+import { BrandProfile2 } from "./Pages/Brand/Profile2/BrandProfile2";
 import AcitvationPage from "./Pages/ActivationPage/Activation";
-import mixpanel from "mixpanel-browser"
+import mixpanel from "mixpanel-browser";
 import { ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 
 // Declare the EasebuzzCheckout property on the window object
 declare global {
@@ -29,7 +35,6 @@ declare global {
 }
 
 const App: React.FC = () => {
-
   mixpanel.init(import.meta.env.VITE_MIXPANELTOKEN, { debug: true });
 
   // Function to load Easebuzz
@@ -54,8 +59,12 @@ const App: React.FC = () => {
   const generalState = useGeneralSettings();
 
   useEffect(() => {
-    if (localStorage.getItem("jwtToken")) {
+    if (localStorage.getItem("jwtToken") && localStorage.getItem("UserType")==="Influencer") {
       authState?.getUserData();
+    }
+    else if(localStorage.getItem("jwtToken") && localStorage.getItem("UserType")==="Brand") {
+      // authState?.getUserData();
+      // console.log("brand")
     }
   }, [location]);
 
@@ -67,62 +76,82 @@ const App: React.FC = () => {
           <CouponProvider>
             <StaticDataProvider>
               <InfluencerProvider>
-                <Routes>
-                  <Route path="*" element={<Main />} />
-                  <Route
-                    path="/influencer/activate"
-                    element={
-                      <ProtectedRoute
-                        navigateCondition={
-                          !localStorage.getItem("jwtToken") ||
-                          authState?.loggedUser?.activePlan
-                        }
-                        toUrl={
-                          authState?.loggedUser?.activePlan
-                            ? "/influencer"
-                            : "/"
-                        }
-                      >
-                        <Landing />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route path="/influencer/rank_page" element={<RankPage />} />
-                  <Route path="/influencer/activation_page" element={<AcitvationPage />} />
-                  <Route path="/check" element={<Check />} />
-                  <Route path="/:slug" element={<Profile />} />
-                  <Route path="/dashboard" element={<Navigate to={"/influencer"} />} />
-                  <Route
-                    path="/influencer/*"
-                    element={
-                      <ProtectedRoute
-                        navigateCondition={!localStorage.getItem("jwtToken")}
-                        toUrl={"/"}
-                      >
-                      <Home />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="/logout"
-                    element={
-                      <ProtectedRoute
-                        navigateCondition={!localStorage.getItem("jwtToken")}
-                        toUrl={"/"}
-                      >
-                        <Logout />
-                      </ProtectedRoute>
-                    }
-                  />
-                </Routes>
+                <BrandProvider>
+                  <Routes>
+                    <Route path="*" element={<Main />} />
+                    <Route
+                      path="/influencer/activate"
+                      element={
+                        <ProtectedRoute
+                          navigateCondition={
+                            !localStorage.getItem("jwtToken") ||
+                            authState?.loggedUser?.activePlan
+                          }
+                          toUrl={
+                            authState?.loggedUser?.activePlan
+                              ? "/influencer"
+                              : "/"
+                          }
+                        >
+                          <Landing />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/influencer/rank_page"
+                      element={<RankPage />}
+                    />
+                    <Route
+                      path="/influencer/activation_page"
+                      element={<AcitvationPage />}
+                    />
+                    <Route path="/check" element={<Check />} />
+                    <Route path="/:slug" element={<Profile />} />
+                    <Route
+                      path="/dashboard"
+                      element={<Navigate to={"/influencer"} />}
+                    />
+                    <Route
+                      path="/influencer/*"
+                      element={
+                        <ProtectedRoute
+                          navigateCondition={!localStorage.getItem("jwtToken")}
+                          toUrl={"/"}
+                        >
+                          <Home />
+                        </ProtectedRoute>
+                      }
+                    />
+
+                    {/* Brand routes .............................................. */}
+                    <Route path="/Brand/SignUp" element={<BrandSignUp />} />
+                    <Route path="/Brand/Login" element={<BrandLogin />} />
+                    <Route
+                      path="/Brand/Otp-verify"
+                      element={<BrandOtpVerify />}
+                    />
+                    <Route path="/Brand/Welcome" element={<BrandWelcome />} />
+                    <Route path="/Brand/profile2" element={<BrandProfile2 />} />
+                    <Route
+                      path="/logout"
+                      element={
+                        <ProtectedRoute
+                          navigateCondition={!localStorage.getItem("jwtToken")}
+                          toUrl={"/"}
+                        >
+                          <Logout />
+                        </ProtectedRoute>
+                      }
+                    />
+                  </Routes>
+                </BrandProvider>
               </InfluencerProvider>
             </StaticDataProvider>
           </CouponProvider>
         </PaymentProvider>
       </ThemeProvider>
 
-
-      <ToastContainer position="top-center" limit={1}/>
+      <ToastContainer position="top-center" limit={1} />
     </>
   );
 };

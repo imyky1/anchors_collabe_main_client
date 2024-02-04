@@ -1,0 +1,105 @@
+import axios from "axios";
+import { createContext, useContext } from "react";
+
+const BrandContext = createContext(null);
+const host: string = import.meta.env.VITE_BACKEND_SERVER_URL;
+
+export const useBrand = () => {
+  return useContext(BrandContext);
+};
+
+export const BrandProvider = (props) => {
+  //UpdateBrandInfo
+  const UpdateBrandInfo = async (data) => {
+    try {
+      const response = await axios.post(
+        `${host}/Brand/info`,
+        { ...data },
+        {
+          headers: {
+            jwtToken: localStorage.getItem("jwtToken"),
+          },
+        }
+      );
+      if (response.status !== 200) {
+        throw new Error("Error in saving the data");
+      } else {
+        return response.data;
+      }
+    } catch (e) {
+      alert(e);
+    }
+  };
+
+  //UpdatebrandMarketing
+  const UpdateBrandMarketingInfo = async (data) => {
+    try {
+      const response = await axios.post(
+        `${host}/Brand/marketingInfo`,
+        { ...data },
+        {
+          headers: {
+            jwtToken: localStorage.getItem("jwtToken"),
+          },
+        }
+      );
+      if (response.status !== 200) {
+        throw new Error("Error in saving the data");
+      } else {
+        return response.data;
+      }
+    } catch (e) {
+      alert(e);
+    }
+  };
+  const getBrandInfo = async () => {
+    try {
+      const response = await axios.get(`${host}/Brand/info`, {
+        headers: {
+          jwtToken: localStorage.getItem("jwtToken"),
+        },
+      });
+
+      // Check if the response contains the LinkedIn authorization URL
+      if (response.status !== 200) {
+        throw new Error("Error in getting the data");
+      } else {
+        return response.data;
+      }
+    } catch (error) {
+      alert(error);
+    }
+  };
+
+  const getBrandMarketinginfo = async () => {
+    try {
+      const response = await axios.get(`${host}/influencer/marketingInfo`, {
+        headers: {
+          jwtToken: localStorage.getItem("jwtToken"),
+        },
+      });
+
+      // Check if the response contains the LinkedIn authorization URL
+      if (response.status !== 200) {
+        throw new Error("Error in getting the data");
+      } else {
+        return response.data;
+      }
+    } catch (error) {
+      alert(error);
+    }
+  };
+
+  return (
+    <BrandContext.Provider
+      value={{
+        UpdateBrandInfo,
+        UpdateBrandMarketingInfo,
+        getBrandInfo,
+        getBrandMarketinginfo,
+      }}
+    >
+        {props.children}
+    </BrandContext.Provider>
+  );
+};
