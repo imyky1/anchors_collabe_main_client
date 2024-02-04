@@ -16,20 +16,28 @@ import { FaXTwitter } from "react-icons/fa6";
 const NavArray = [
   {
     title: "Collab Portfolio",
-    id: "collabhistory",
+    id: "collabportfolio",
   },
   {
-    title: "Monetising Platform",
-    id: "otherplatform",
+    title: "Monetization Avenues",
+    id: "monetization",
   },
   {
-    title: "Content Info",
-    id: "contentInfo",
+    title: "Content Category",
+    id: "contentCategory",
   },
   {
-    title: "Audience info",
-    id: "audience",
+    title: "Audience Types",
+    id: "audienceTypes",
   },
+  {
+    title: "Content Formats",
+    id: "contentFormats",
+  },
+  {
+    title: "Platform Presence",
+    id: "audiencePresence",
+  }
 ];
 
 
@@ -77,7 +85,7 @@ const ProfileDemo: React.FC<ProfileDemoProps> = ({data,uploadedImages,uploadedIm
       <section className="absolute w-[305px] top-2 left-3 rounded-3xl overflow-auto h-full">
         {/* header ------------ */}
         <div className="px-2 py-3" id="topdetailsection">
-          <img src={logo} alt="" className="w-28" />
+          <img src={logo} alt="" className="w-20" />
         </div>
 
         {/* rest page */}
@@ -110,7 +118,7 @@ const ProfileDemo: React.FC<ProfileDemoProps> = ({data,uploadedImages,uploadedIm
 
             <div className="w-full px-3 box-border">
               <h3 className="text-[16px] font-medium text-[#424242] mb-4">
-                Social Links
+              Social Media Links
               </h3>
 
               <section className="grid grid-cols-2 w-full gap-4">
@@ -120,10 +128,7 @@ const ProfileDemo: React.FC<ProfileDemoProps> = ({data,uploadedImages,uploadedIm
                 {data?.instaLink?.length > 0 &&<button className="px-5 py-3 text-[14px] text-[#424242] bg-[#F5F5F5] rounded-[250px] flex items-center gap-2 justify-center">
                 <FaInstagram /> Instagram
                 </button>}
-                {/* <button className="px-5 py-3 text-[14px] text-[#424242] bg-[#F5F5F5] rounded-[250px] flex items-center gap-2 justify-center">
-                  <FaLinkedinIn /> YouTube
-                </button> */}
-                {data?.teleLink?.length > 0 &&<button className="px-5 py-3 text-[14px] text-[#424242] bg-[#F5F5F5] rounded-[250px] flex items-center gap-2 justify-center">
+                {data?.telegramLink?.length > 0 &&<button className="px-5 py-3 text-[14px] text-[#424242] bg-[#F5F5F5] rounded-[250px] flex items-center gap-2 justify-center">
                 <FaTelegram /> Telegram
                 </button>}
                 {data?.twitterLink?.length > 0 &&<button className="px-5 py-3 text-[14px] text-[#424242] bg-[#F5F5F5] rounded-[250px] flex items-center gap-2 justify-center">
@@ -159,10 +164,10 @@ const ProfileDemo: React.FC<ProfileDemoProps> = ({data,uploadedImages,uploadedIm
               <div
                 className="w-full p-3 box-border flex flex-col gap-5 rounded-lg"
                 style={{ boxShadow: "0px 0px 12px 0px rgba(33, 33, 33, 0.08)" }}
-                id="collabhistory"
+                id="collabportfolio"
               >
                 <h3 className="text-[16px] font-medium text-[#424242]">
-                  Collaboration History
+                Collab Portfolio
                 </h3>
 
                 <section className="w-full flex flex-col gap-2">
@@ -176,10 +181,10 @@ const ProfileDemo: React.FC<ProfileDemoProps> = ({data,uploadedImages,uploadedIm
               <div
                 className="w-full p-3 box-border flex flex-col gap-5 rounded-lg"
                 style={{ boxShadow: "0px 0px 12px 0px rgba(33, 33, 33, 0.08)" }}
-                id="otherplatform"
+                id="monetization"
               >
                 <h3 className="text-[16px] font-medium text-[#424242] mb-4">
-                  On Other Platform
+                Monetization Avenues
                 </h3>
 
                 <section className="w-full flex flex-col gap-5">
@@ -191,27 +196,29 @@ const ProfileDemo: React.FC<ProfileDemoProps> = ({data,uploadedImages,uploadedIm
 
               {/* Other cards ----------- */}
               <GeneralCard
-                title="Category"
+                title="Content Category"
                 tags={data?.categories ?? []}
-                id="contentInfo"
+                id="contentCategory"
               />
               <GeneralCard
-                title="Type of Audience"
+                title="Audience Types"
                 tags={data?.types ?? []}
+                id="audienceTypes"
               />
               <GeneralCard
-                title="Type of Content Post"
+                title="Content Formats"
                 tags={data?.formats ?? []}
+                id="contentFormats"
               />
 
               {/* Where is your audience */}
               <div
                 className="w-full p-3 box-border flex flex-col gap-5 rounded-lg"
                 style={{ boxShadow: "0px 0px 12px 0px rgba(33, 33, 33, 0.08)" }}
-                id="audience"
+                id="audiencePresence"
               >
                 <h3 className="text-[16px] font-medium text-[#424242] mb-4">
-                  Where is your audience
+                Platform Presence
                 </h3>
 
                 {

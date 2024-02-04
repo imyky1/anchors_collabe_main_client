@@ -42,6 +42,18 @@ interface loggedUser {
   mobile: string;
   linkedinLink: string;
   eaRank?: string;
+  totalChips?: number;
+  featuredData?: {
+    value: boolean;
+    topCreatorChips?: number;
+  };
+  buildProfileChips?: {
+    AudienceInfo?: number | null;
+    PersonalInfo?: number | null;
+    CollabHistory?: number | null;
+    MonetizationHistory?: number | null;
+    ContentInfo?: number | null;
+  };
 }
 
 const AuthContext = createContext<AuthContextProps | null>(null);

@@ -1,5 +1,5 @@
 import React from "react";
-import "./shareProfile.css";
+import "./ShareProfile.css";
 import { CiGlobe } from "react-icons/ci";
 import { MdContentCopy } from "react-icons/md";
 import { ToastContainer } from "react-toastify";

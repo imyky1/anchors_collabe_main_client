@@ -5,10 +5,14 @@ import { CgProfile } from "react-icons/cg";
 import { useAuth } from "../../Providers/Auth";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
+  MdOutlineContentCopy,
   MdOutlineKeyboardArrowDown,
   MdOutlineKeyboardArrowUp,
 } from "react-icons/md";
 import { useGeneralSettings } from "../../Providers/General";
+import { GiTwoCoins } from "react-icons/gi";
+import { TbCrown, TbMoodSad } from "react-icons/tb";
+import { toast } from "react-toastify";
 
 const Sidebar: React.FC = () => {
   const navigate = useNavigate();
@@ -17,11 +21,11 @@ const Sidebar: React.FC = () => {
   const [openProfileOptions, setOpenProfileOptions] = useState(true);
 
   const authState = useAuth();
-  const generalState = useGeneralSettings()
+  const generalState = useGeneralSettings();
 
   return (
     <div
-      className="flex flex-col w-[260px] min-w-[260px] p-5 box-border gap-5 font-inter h-screen z-10"
+      className="flex flex-col w-[260px] min-w-[260px] p-5 box-border gap-5 font-inter h-full z-10 bg-[#F5F5F5]"
       style={{ boxShadow: "4px 0px 8px 0px rgba(33, 33, 33, 0.08)" }}
     >
       <img
@@ -51,15 +55,42 @@ const Sidebar: React.FC = () => {
       </div>
 
       {authState?.loggedUser?.slug && (
-        <span
-          className="w-full py-2 px-3 text-[#3460DC] text-xs border border-[#3460DC] rounded-[100px] cursor-pointer"
+        <div
+          className="py-2 px-3 bg-[#ffffff6c] rounded-lg flex items-center justify-between text-[#9C9C9C] text-xs cursor-pointer"
           onClick={() => {
-            window.open(
-              `https://collab.anchors.in/${authState?.loggedUser?.slug}`
-            );
+            authState?.loggedUser?.activePlan
+              ? window.open(
+                  `https://collab.anchors.in/${authState?.loggedUser?.slug}`
+                )
+              : navigate("/influencer/payment");
           }}
         >
-          collab.anchors.in/{authState?.loggedUser?.slug}
+          collab.anchors.in/{authState?.loggedUser?.slug?.slice(0, 5) + "..."}
+          <MdOutlineContentCopy
+            className="cursor-pointer"
+            onClick={(e) => {
+              e.stopPropagation();
+              navigator.clipboard.writeText(
+                `https://collab.anchors.in/${authState?.loggedUser?.slug}`
+              );
+              toast.info("Link Copied", {
+                position: "top-center",
+                autoClose: 1000,
+              });
+            }}
+          />
+        </div>
+      )}
+
+      {/* tags ------------ */}
+      {authState?.loggedUser?.featuredData?.value &&
+      authState?.loggedUser?.activePlan ? (
+        <span className="text-[#047857] w-full px-3 flex items-center justify-center gap-1 text-xs">
+          <TbCrown size={16} /> FEATURED
+        </span>
+      ) : (
+        <span className="text-[#FF6767] w-full px-3 flex items-center justify-center gap-1 text-xs">
+          <TbMoodSad size={16} /> NOT FEATURED
         </span>
       )}
 
@@ -119,7 +150,12 @@ const Sidebar: React.FC = () => {
               }}
             >
               Personal Information
-             {window.location.pathname === "/influencer/build_profile" && <span className={generalState.BuildProfileCompletion.one/20 * 100 > 50 ? "text-[#10B981]" : "text-[#F59E0B]"}>{(generalState.BuildProfileCompletion.one/20 * 100).toFixed(0)}%</span>}
+              {window.location.pathname === "/influencer/build_profile" && (
+                <span className="flex text-xs items-center gap-2">
+                  <GiTwoCoins color="#FFD700" />{" "}
+                  {generalState.SidebarChipsCount.one}
+                </span>
+              )}
             </span>
             <span
               className={`cursor-pointer ${
@@ -133,7 +169,12 @@ const Sidebar: React.FC = () => {
               }}
             >
               Collab Portfolio
-             {window.location.pathname === "/influencer/build_profile" && <span className={generalState.BuildProfileCompletion.two/20 * 100 > 50 ? "text-[#10B981]" : "text-[#F59E0B]"}>{(generalState.BuildProfileCompletion.two/20 * 100).toFixed(0)}%</span>}
+              {window.location.pathname === "/influencer/build_profile" && (
+                <span className="flex text-xs items-center gap-2">
+                  <GiTwoCoins color="#FFD700" />{" "}
+                  {generalState.SidebarChipsCount.two}
+                </span>
+              )}
             </span>
             <span
               className={`cursor-pointer ${
@@ -147,7 +188,12 @@ const Sidebar: React.FC = () => {
               }}
             >
               Monetization Expertise
-             {window.location.pathname === "/influencer/build_profile" && <span className={generalState.BuildProfileCompletion.three/20 * 100 > 50 ? "text-[#10B981]" : "text-[#F59E0B]"}>{(generalState.BuildProfileCompletion.three/20 * 100).toFixed(0)}%</span>}
+              {window.location.pathname === "/influencer/build_profile" && (
+                <span className="flex text-xs items-center gap-2">
+                  <GiTwoCoins color="#FFD700" />{" "}
+                  {generalState.SidebarChipsCount.three}
+                </span>
+              )}
             </span>
             <span
               className={`cursor-pointer ${
@@ -161,7 +207,12 @@ const Sidebar: React.FC = () => {
               }}
             >
               Content Expertise
-             {window.location.pathname === "/influencer/build_profile" && <span className={generalState.BuildProfileCompletion.four/20 * 100 > 50 ? "text-[#10B981]" : "text-[#F59E0B]"}>{(generalState.BuildProfileCompletion.four/20 * 100).toFixed(0)}%</span>}
+              {window.location.pathname === "/influencer/build_profile" && (
+                <span className="flex text-xs items-center gap-2">
+                  <GiTwoCoins color="#FFD700" />{" "}
+                  {generalState.SidebarChipsCount.four}
+                </span>
+              )}
             </span>
             <span
               className={`cursor-pointer ${
@@ -175,7 +226,12 @@ const Sidebar: React.FC = () => {
               }}
             >
               Audience info
-             {window.location.pathname === "/influencer/build_profile" && <span className={generalState.BuildProfileCompletion.five/20 * 100 > 50 ? "text-[#10B981]" : "text-[#F59E0B]"}>{(generalState.BuildProfileCompletion.five/20 * 100).toFixed(0)}%</span>}
+              {window.location.pathname === "/influencer/build_profile" && (
+                <span className="flex text-xs items-center gap-2">
+                  <GiTwoCoins color="#FFD700" />{" "}
+                  {generalState.SidebarChipsCount.five}
+                </span>
+              )}
             </span>
           </section>
         )}

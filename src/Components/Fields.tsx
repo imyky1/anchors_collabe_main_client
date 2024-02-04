@@ -14,6 +14,7 @@ interface InputFieldProps {
   id?: string;
   maxLength?: number;
   autoComplete?: string;
+  error?:boolean
   icon: any
 }
 
@@ -47,6 +48,7 @@ interface DropdownProps {
   placeholder: string;
   name?: string;
   id?: string;
+  error?:boolean
 }
 
 // input field 1 ------
@@ -59,10 +61,12 @@ export const InputField1: React.FC<InputFieldProps> = ({
   id,
   maxLength,
   autoComplete,
+  error,
   label
+  
 }) => {
   return (
-    <div className="w-full flex-col text-[14px] text-[#424242] gap-[8px]">
+    <div className={`w-full ${error && "outline-red-500 outline" }  flex-col text-[14px] text-[#424242] gap-[8px]`}>
       <label htmlFor={id}>{label}</label>
       <input
         placeholder={placeholder}
@@ -75,6 +79,7 @@ export const InputField1: React.FC<InputFieldProps> = ({
         maxLength={maxLength}
         autoComplete={autoComplete}
       />
+      {error && <span className="font-inter text-[10px] text-red-600">This is a required field</span>}
     </div>
   );
 };
@@ -90,8 +95,7 @@ export const InputField2: React.FC<InputFieldProps> = ({
   icon
 }) => {
   return (
-    <div className="w-full flex gap-[8px] box-border px-4 py-3 rounded font-inter text-xs bg-[#EEEEEE]">
-      {icon}
+    <div className="w-full">
       <input
         placeholder={placeholder}
         className="w-full bg-[transparent]"
@@ -103,6 +107,7 @@ export const InputField2: React.FC<InputFieldProps> = ({
         maxLength={maxLength}
         autoComplete={autoComplete}
       />
+      
     </div>
   );
 };
@@ -112,7 +117,7 @@ export const UploadButton1: React.FC<UploadButtonProps> = ({ text }) => {
     <div>
       <button className="flex items-center py-[6px] px-3 gap-1 font-inter text-[10px] text-[#FF5C5C] border-[#FF5C5C] border rounded z-10">
         <GoPlus />
-        {text}
+        {text ?? ""}
       </button>
     </div>
   );
@@ -186,7 +191,7 @@ export const SocialField1: React.FC<SocialFieldProps> = ({
         type="number"
         placeholder={placeholder2}
         className="w-full px-4 py-3 bg-[#EEEEEE] rounded font-inter text-xs"
-        value={value2}
+        value={value2 ?? ""}
         onChange={onChange2}
         name={name}
         id={id}
@@ -195,7 +200,7 @@ export const SocialField1: React.FC<SocialFieldProps> = ({
         type="text"
         placeholder={placeholder1}
         className="w-full px-4 py-3 bg-[#EEEEEE] rounded font-inter text-xs"
-        value={value}
+        value={value ?? ""}
         onChange={onChange}
         name={name}
         id={id}
@@ -252,6 +257,7 @@ export const DropDown01: React.FC<DropdownProps> = ({
   id,
   values,
   selectedValue,
+  error
 }) => {
   const [OpenDropDown, setOpenDropDown] = useState(false);
   const [dropValue, setdropValue] = useState("");
@@ -287,7 +293,7 @@ export const DropDown01: React.FC<DropdownProps> = ({
       }}
     >
       <div
-        className="w-full box-border px-4 py-3 rounded bg-[#EEEEEE] relative flex items-center"
+        className={`w-full box-border px-4 py-3 rounded bg-[#EEEEEE] relative flex items-center ${error && "outline-red-500 outline" }`}
         onClick={() => {
           setOpenDropDown(!OpenDropDown);
         }}
@@ -325,6 +331,7 @@ export const DropDown01: React.FC<DropdownProps> = ({
           })}
         </div>
       )}
+       {error && <span className="font-inter text-[10px] text-red-600 -mt-3">This is a required field</span>}
     </div>
   );
 };
