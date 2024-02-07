@@ -9,12 +9,19 @@ const Logout:React.FC = () => {
 
   const logout = () => {
     localStorage.removeItem("jwtToken");
+    localStorage.removeItem("UserType");
     // mixpanel.reset();
     window.open("/","_self");
   };
 
   if (!openModel) {
-    navigate("/influencer");
+    if(localStorage.getItem("UserType")=== "Brand")
+    {
+      navigate("/Brand") 
+    }else{
+      navigate("/influencer")
+    }
+    ;
     return null;
   }
 

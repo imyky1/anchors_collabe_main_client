@@ -7,6 +7,7 @@ import {
   useState,
 } from "react";
 import { useCookies } from "react-cookie";
+import * as CompanyEmailValidator from "company-email-validator";
 
 // interfaces ---------------------------
 interface AuthProviderProps {
@@ -22,11 +23,12 @@ interface AuthContextProps {
   loggedBrand: any;
   BrandSignIn;
   BrandSignUp;
+  getBrandByEmail;
   getBrandData;
   setLoggedBrand;
   setReFetchBrandData;
   sendingOTPFeature;
-  verfiyOTP
+  verfiyOTP;
 }
 
 interface loggedUser {
@@ -171,7 +173,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = (props) => {
           if (response.data?.logout) {
             console.log("Logging Out");
             localStorage.removeItem("jwtToken");
-            localStorage.removeItem("Usertype");
+            localStorage.removeItem("UserType");
             window.open("/", "_self");
             return;
           }
@@ -187,10 +189,30 @@ export const AuthProvider: React.FC<AuthProviderProps> = (props) => {
   };
 
   //Brand
+  const getBrandByEmail = async (email) => {
+    try {
+      const response = await axios.get(`${host}/Brand/getBrandByEmail`, {
+        params: { email }, // Pass email as a parameter
+      });
+      if (response.status === 200) {
+        return response.data;
+      } else {
+        return { Error: response.data.error };
+      }
+    } catch (e) {
+      return { Error: e.response.data.error };
+    }
+  };
 
   const sendingOTPFeature = async (email) => {
-    var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-    if (emailPattern.test(email)) {
+    // var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    const emailPattern =
+      /\b[A-Za-z0-9._%+-]+@(?:gmail\.com|protonmail\.com|zoho\.com|outlook\.com|yahoo\.com|aol\.com|gmx\.com|icloud\.com|mailfence\.com|tutanota\.com|neo\.com|hubspot\.com|thunderbird\.net|titan\.com|yandex\.com|hotmail\.com|live\.com|msn\.com|fastmail\.com|mail\.com|posteo\.de|t-online\.de|bluemail\.me|hushmail\.com|rediffmail\.com|rediff\.com|redmail\.com|mailinator\.com)\b/;
+
+    if (
+      !emailPattern.test(email) ||
+      CompanyEmailValidator.isCompanyEmail(email)
+    ) {
       const response = await fetch(`${host}/email/sendOTPViaEmail`, {
         method: "POST",
         headers: {
@@ -204,35 +226,35 @@ export const AuthProvider: React.FC<AuthProviderProps> = (props) => {
       });
       const json = await response.json();
       if (json?.success) {
-        let otpcode = parseInt(json.code - 5626) * 562002;
+        let otpcode = parseInt(String(json.code - 5626)) * 562002;
         setCookie("ccoondfe", otpcode, { maxAge: 120 }); // valid for two minute
-        console.log(json)
-        return json?.success
+        return json;
+      } else {
+        return { Error: "Oops! Something went Wrong!" };
       }
     } else {
+      return { Error: "Invalid Email! Please Enter Company Mail" };
     }
   };
 
-  const verfiyOTP = async (otp,email,type) => {
+  const verfiyOTP = async (otp, email, type) => {
     if (otp?.length !== 4) {
-      alert("Enter a proper code");
+      return { Error: "Please Enter a Proper Code" };
     } else {
       let code = cookies?.ccoondfe;
       if (!code) {
-        alert("OTP was valid for 2 minute, Please retry again");
+        return { Error: "OTP was valid for 2 minute, Please retry again" };
       } else {
-        if (parseInt(otp) === parseInt(parseInt(code) / 562002)) {
-          alert("Verification was successfull");
+        if (parseInt(otp) === parseInt(String(parseInt(code) / 562002))) {
+          // alert("Verification was successfull");
           removeCookie("ccoondfe");
-          if(type === "SignUp"){
-            BrandSignUp(email)
+          if (type === "SignUp") {
+            return await BrandSignUp(email);
+          } else if (type === "Login") {
+            return await BrandSignIn(email);
           }
-          else if(type === "Login"){
-            BrandSignIn(email)
-          }
-          
-        }else{
-          alert("Invalid Otp");
+        } else {
+          return { Error: "Invalid Otp" };
         }
       }
     }
@@ -241,20 +263,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = (props) => {
   const BrandSignUp = async (email) => {
     try {
       const response = await axios.post(`${host}/Brand/SignUp`, { email });
+      console.log(response);
       if (response.status === 200) {
         if (response.data.success) {
           setLoggedBrand(response.data.email);
-          BrandSignIn(email)
+          return await BrandSignIn(email);
         } else {
-          alert(response.data.error);
-          throw new Error(response.data.error);
+          // alert(response.data.error);
+          return { Error: response.data.error };
         }
       } else {
-        alert(response.data.error);
-        throw new Error("Error in Sign Up");
+        // alert(response.data.error);
+        return { Error: response.data.error };
       }
     } catch (e) {
-      alert(e.response.data.error);
+      console.log(e.response.data.error);
+      return { Error: e.response.data.error };
     }
   };
 
@@ -270,16 +294,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = (props) => {
           localStorage.setItem("UserType", "Brand");
           window.open("/Brand/Welcome", "_self");
         } else {
-          alert(response.data.error);
-          throw new Error(response.data.error);
+          return { Error: response.data.error };
         }
       } else {
-        alert(response.data.error);
-        throw new Error("Error in login");
+        return { Error: response.data.error };
       }
     } catch (error) {
-      console.log(error.response.data.error);
-      alert(error.response.data.error);
+      return { Error: error.response.data.error };
       // window.open("/", "_self");
     }
   };
@@ -300,7 +321,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = (props) => {
           if (response.data?.logout) {
             console.log("Logging Out");
             localStorage.removeItem("jwtToken");
-            localStorage.removeItem("Usertype");
+            localStorage.removeItem("UserType");
             window.open("/", "_self");
             return;
           }
@@ -327,11 +348,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = (props) => {
         setReFetchUserData,
         loggedBrand,
         BrandSignIn,
+        getBrandByEmail,
         BrandSignUp,
         getBrandData,
         setReFetchBrandData,
         sendingOTPFeature,
-        verfiyOTP
+        setLoggedBrand,
+        verfiyOTP,
       }}
     >
       {props?.children}

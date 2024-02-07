@@ -73,22 +73,26 @@ export const Navbar3: React.FC<NavbarProps> = ({
     <>
       {openChipsInfo && (
         <div className="w-screen h-screen fixed top-0 left-0 z-40 flex items-center justify-center bg-[#12121280]">
-
           <div className="flex flex-col p-5 gap-5 items-center justify-center text-center w-[400px] bg-[#F5F5F5] rounded-lg font-inter text-[#757575] text-[16px]">
-          <h1 className="text-xl font-bold text-[#424242]">What is Chips</h1>
+            <h1 className="text-xl font-bold text-[#424242]">What is Chips</h1>
 
-          <p>
-            Top 5 Chips Earner will featured on website homepage as highly
-            recommended to brands on their dashboard
-          </p>
-          <p>
-            The more & correct information you will fill the more chips you will
-            earn
-          </p>
+            <p>
+              Top 5 chips earners will get featured on our website homepage as
+              highly recommended on brand dashboards.
+            </p>
+            <p>
+              The more authentic information you fill, the more chips you will
+              earn
+            </p>
 
-          <button className="px-5 py-3 rounded bg-[#FF5C5C] text-sm text-[#FAFAFA]" onClick={()=>{
-            setOpenChipsInfo(false)
-          }}>Got it</button>
+            <button
+              className="px-5 py-3 rounded bg-[#FF5C5C] text-sm text-[#FAFAFA]"
+              onClick={() => {
+                setOpenChipsInfo(false);
+              }}
+            >
+              Got it
+            </button>
           </div>
         </div>
       )}
@@ -111,32 +115,49 @@ export const Navbar3: React.FC<NavbarProps> = ({
         <div className="absolute left-[28%] flex items-center justify-center text-xs font-inter gap-5">
           {/* <b>Note</b> - Currently you are using&nbsp;<b>Early Access</b> */}
 
-          <span className="bg-[#FFF] py-2 px-3 border-none rounded-lg text-[#121212] flex items-center gap-2 cursor-pointer" onClick={()=>{setOpenChipsInfo(true); mixpanel.track("Clicked the chips on Navbar in Collab")}}>
-            <PiCoins size={16} color="#FFD700" /> Your Chips Collected
-            -{" "}
+          <span
+            className="bg-[#FFF] py-2 px-3 border-none rounded-lg text-[#121212] flex items-center gap-2 cursor-pointer"
+            onClick={() => {
+              setOpenChipsInfo(true);
+              mixpanel.track("Clicked the chips on Navbar in Collab");
+            }}
+          >
+            <PiCoins size={16} color="#FFD700" /> Your Chips Collected -{" "}
             {generalState.SidebarChipsCount.one +
+              generalState.SidebarChipsCount.two +
+              generalState.SidebarChipsCount.three +
+              generalState.SidebarChipsCount.four +
+              generalState.SidebarChipsCount.five >
+            chips
+              ? generalState.SidebarChipsCount.one +
                 generalState.SidebarChipsCount.two +
                 generalState.SidebarChipsCount.three +
                 generalState.SidebarChipsCount.four +
                 generalState.SidebarChipsCount.five
-              > chips ? generalState.SidebarChipsCount.one +
+              : chips}
+          </span>
+
+          <span
+            className="bg-[#ACFFE74D] py-2 px-3 border-none rounded-md text-[#047857] flex items-center gap-2 cursor-pointer"
+            onClick={() => {
+              setOpenChipsInfo(true);
+              mixpanel.track("Clicked the chips on Navbar in Collab");
+            }}
+          >
+            <PiCoins size={16} color="#FFD700" /> Most Chips Collected -{" "}
+            {topCreatorChips <
+            generalState.SidebarChipsCount.one +
               generalState.SidebarChipsCount.two +
               generalState.SidebarChipsCount.three +
               generalState.SidebarChipsCount.four +
-              generalState.SidebarChipsCount.five : chips }
-          </span>
-
-          <span className="bg-[#ACFFE74D] py-2 px-3 border-none rounded-md text-[#047857] flex items-center gap-2 cursor-pointer" onClick={()=>{setOpenChipsInfo(true); mixpanel.track("Clicked the chips on Navbar in Collab")}}>
-            <PiCoins size={16} color="#FFD700" /> Most Chips Collected
-            - {topCreatorChips < (generalState.SidebarChipsCount.one +
+              generalState.SidebarChipsCount.five
+              ? generalState.SidebarChipsCount.one +
                 generalState.SidebarChipsCount.two +
                 generalState.SidebarChipsCount.three +
                 generalState.SidebarChipsCount.four +
-                generalState.SidebarChipsCount.five) ? (generalState.SidebarChipsCount.one +
-                  generalState.SidebarChipsCount.two +
-                  generalState.SidebarChipsCount.three +
-                  generalState.SidebarChipsCount.four +
-                  generalState.SidebarChipsCount.five + 50) : topCreatorChips }
+                generalState.SidebarChipsCount.five +
+                50
+              : topCreatorChips}
           </span>
         </div>
       </div>

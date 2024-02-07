@@ -1,19 +1,19 @@
 import { CiCircleCheck } from "react-icons/ci";
 import { MdLogout } from "react-icons/md";
 import { Button1 } from "../../../Components/Buttons";
-import { InputField1 } from "../../../Components/Fields";
 import { BrandHeader } from "../SignUp/BrandSignUp";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useBrand } from "../../../Providers/Brand";
 import { useAuth } from "../../../Providers/Auth";
+import { toast } from "react-toastify";
+import mixpanel from "mixpanel-browser";
 
 export const BrandProfile2 = () => {
   const navigate = useNavigate();
-  const BrandState = useBrand()
-  const authState = useAuth()
+  const BrandState = useBrand();
+  const authState = useAuth();
   // console.log(authState?.loggedBrand)
-
 
   const [isim, Setisim] = useState("");
   const [isimCredit, setisimCredit] = useState(0);
@@ -24,49 +24,68 @@ export const BrandProfile2 = () => {
   const [credits, setCredits] = useState(0);
   const [filledFields, setFilledFields] = useState([]);
 
-  useEffect(()=>{
-    setCredits(authState?.loggedBrand?.credits)
-  },[authState])
+  useEffect(() => {
+    authState?.setReFetchBrandData((prev: any) => {
+      !prev;
+    });
+    setCredits(authState?.loggedBrand?.credits);
+  }, [authState]);
+  useEffect(() => {
+    mixpanel.track("Page visited Anchors Collab Brand Profile2");
+  }, []);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await BrandState?.getBrandInfo();
-  //       if (response && response.success === true) {
-  //         // Update state with response data
-  //         console.log(response)
-  //         Setisim
-  //         // Update filledFields based on received data
-  //         const filledFieldsFromData = Object.keys(response.data2).filter(
-  //           (key) => response.data2[key]
-  //         );
-  //         setFilledFields(filledFieldsFromData);
-  //         if (response.data1.CompanyTeamSize) {
-  //           setFilledFields((prev) => {
-  //             prev.push("teamSize");
-  //             return prev;
-  //           });
-  //         }
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   fetchData();
-  // }, [BrandState]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await BrandState?.getBrandInfo();
+        if (response && response.success === true) {
+          // Update state with response data
 
+          if (response?.data2?.isim) {
+            Setisim(response?.data2?.isim ?? "");
+            setisimCredit(10);
+          }
+          if (response?.data2?.expenseofim) {
+            Setexpenseofim(response?.data2?.expenseofim ?? "");
+            setexpenseofimCredit(20);
+          }
+          if (response?.data2?.frequencyofim) {
+            Setfrequencyofim(response?.data2?.frequencyofim ?? "");
+            setfrequencyofimCredit(10);
+          }
+
+          // Update filledFields based on received data
+          if (response?.data2) {
+            const filledFieldsFromData = Object.keys(response?.data2).filter(
+              (key) => response.data2[key]
+            );
+            setFilledFields(filledFieldsFromData);
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, [BrandState]);
 
   const handleisimSelect = (value) => {
-    if(value === "No"){
-        setCredits(authState?.loggedBrand?.credits + 10)
-    }
-    if(value === "Yes"){
+    if (value === "No") {
       if (!isimCredit) {
         setisimCredit(10);
-        setCredits(credits+10)
+        setCredits(authState?.loggedBrand?.credits + 10);
+      } else {
+        setCredits(credits - expenseofimCredit - frequencyofimCredit);
       }
-      setCredits(authState?.loggedBrand?.credits+isimCredit+expenseofimCredit+frequencyofimCredit)
-    }  
+    }
+    if (value === "Yes") {
+      if (!isimCredit) {
+        setisimCredit(10);
+        setCredits(credits + 10);
+      } else if (isim === "No") {
+        setCredits(credits + expenseofimCredit + frequencyofimCredit);
+      }
+    }
 
     Setisim(value);
     setFilledFields((prev) => {
@@ -94,8 +113,8 @@ export const BrandProfile2 = () => {
   };
   const handleexpenseofimSelect = (value) => {
     if (!expenseofimCredit) {
-      setexpenseofimCredit(10);
-      setCredits(credits + 10);
+      setexpenseofimCredit(20);
+      setCredits(credits + 20);
     }
 
     Setexpenseofim(value);
@@ -108,42 +127,57 @@ export const BrandProfile2 = () => {
     });
   };
 
-  const handleSubmit = async()=> {
-    try{
-      
+  const handleSubmit = async () => {
+    try {
       const result = await BrandState.UpdateBrandMarketingInfo({
-        isim : isim,
-        frequencyofim : frequencyofim,
-        expenseofim : expenseofim,
-        brandID : authState?.loggedBrand?.BrandId
-      })
-      if(result){
-        console.log(result)
-        navigate('/Brand/profile2')
+        isim: isim,
+        frequencyofim: isim !== "No" ? frequencyofim : "",
+        expenseofim: isim !== "No" ? expenseofim : "",
+        brandID: authState?.loggedBrand?.BrandId,
+      });
+      if (result.success) {
+        mixpanel.track("Submitted Brand Profile2 Details");
+        toast.success("Details Submitted Succesfully!", {
+          position: "top-center",
+          autoClose: 2000,
+        });
+        // authState?.setReFetchUserData((prev) => {
+        //   return !prev;
+        // });
+        navigate("/Brand/profile2");
+      } else {
+        return toast.error(result.Error, {
+          position: "top-center",
+          autoClose: 2000,
+        });
       }
-    }catch(e){
-      alert(e)
+    } catch (e) {
+      return toast.error("Something went Wrong!", {
+        position: "top-center",
+        autoClose: 2000,
+      });
     }
-    
-  }
+  };
   return (
     <>
       <div className="BrandWelcomeConatianer">
         <div style={{ maxWidth: "100%" }} className="container">
           <BrandHeader
             text={""}
-            icon={<MdLogout />}
+            icon={<MdLogout color="#757575" size={16} />}
             onClick={() => {
-              navigate("/Brand/Login");
+              navigate("/logout");
             }}
             visible={true}
+            ButtonTextColor="#757575"
+            ButtonBorderColor="#757575"
           />
         </div>
         <div className="BrandFormContent">
           <div className="BrandForm_CreditsWrapper">
             <div className="BrandForm_CreditsInfo">
               <img src="/Coin.svg" alt="" />
-              <div>{`${credits} Credits earned`}</div>
+              <div>{`${credits || 0} Credits earned`}</div>
             </div>
           </div>
 
@@ -176,13 +210,15 @@ export const BrandProfile2 = () => {
                   className={frequencyofim === "1-5" ? "Selected" : ""}
                   onClick={() => handlefrequencyofimSelect("1-5")}
                 >
-                  {frequencyofim === "1-5" ? <CiCircleCheck /> : ""}1 - 5 campaigns
+                  {frequencyofim === "1-5" ? <CiCircleCheck /> : ""}1 - 5
+                  campaigns
                 </button>
                 <button
                   className={frequencyofim === "5-10" ? "Selected" : ""}
                   onClick={() => handlefrequencyofimSelect("5-10")}
                 >
-                  {frequencyofim === "5-10" ? <CiCircleCheck /> : ""}5 - 10 campaigns
+                  {frequencyofim === "5-10" ? <CiCircleCheck /> : ""}5 - 10
+                  campaigns
                 </button>
                 <button
                   className={frequencyofim === ">10" ? "Selected" : ""}
@@ -214,19 +250,21 @@ export const BrandProfile2 = () => {
                   className={expenseofim === "50k-100k" ? "Selected" : ""}
                   onClick={() => handleexpenseofimSelect("50k-100k")}
                 >
-                  {expenseofim === "50k-100k" ? <CiCircleCheck /> : ""}50K - 1 Lakh
+                  {expenseofim === "50k-100k" ? <CiCircleCheck /> : ""}50K - 1
+                  Lakh
                 </button>
                 <button
                   className={expenseofim === ">100k" ? "Selected" : ""}
                   onClick={() => handleexpenseofimSelect(">100k")}
                 >
-                  {expenseofim === ">100k" ? <CiCircleCheck /> : ""}More than 1 Lakh
+                  {expenseofim === ">100k" ? <CiCircleCheck /> : ""}More than 1
+                  Lakh
                 </button>
               </div>
             </div>
           )}
 
-          {((isim === "No" ) ||
+          {(isim === "No" ||
             (isim === "Yes" && filledFields.includes("expenseofim"))) && (
             <div
               style={{
@@ -234,10 +272,10 @@ export const BrandProfile2 = () => {
                 justifyContent: "center",
                 alignItems: "center",
                 marginTop: "40px",
-                marginBottom:'100px'
+                marginBottom: "100px",
               }}
             >
-              <Button1 text="Save & continue →" onClick={handleSubmit}/>
+              <Button1 text="Save & continue →" onClick={handleSubmit} />
             </div>
           )}
         </div>

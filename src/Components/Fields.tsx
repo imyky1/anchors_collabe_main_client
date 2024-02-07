@@ -33,12 +33,14 @@ interface SocialFieldProps {
   name?: string;
   id?: string;
   icon;
+  error ? : boolean
 }
 
 interface TagsFieldProps {
   data: string[];
   values: string[];
   setValues: (value: string[]) => void;
+  limit?: number
 }
 
 interface DropdownProps {
@@ -95,10 +97,11 @@ export const InputField2: React.FC<InputFieldProps> = ({
   icon
 }) => {
   return (
-    <div className="w-full">
+    <div className="w-full flex gap-[4px] mt-[12px] box-border px-4 py-3 rounded font-inter text-xs bg-[#EEEEEE]">
+      {icon}
       <input
         placeholder={placeholder}
-        className="w-full bg-[transparent]"
+        className="w-full bg-[transparent] outline-none"
         type={type ?? "text"}
         value={value ?? ""}
         onChange={onChange}
@@ -133,6 +136,7 @@ export const SocialField1: React.FC<SocialFieldProps> = ({
   name,
   id,
   icon,
+  error
 }) => {
   // const [openOptions, setOpenOptions] = useState(false);
 
@@ -199,7 +203,7 @@ export const SocialField1: React.FC<SocialFieldProps> = ({
       <input
         type="text"
         placeholder={placeholder1}
-        className="w-full px-4 py-3 bg-[#EEEEEE] rounded font-inter text-xs"
+        className={`w-full ${error && "outline-red-500 outline" } px-4 py-3 bg-[#EEEEEE] rounded font-inter text-xs`}
         value={value ?? ""}
         onChange={onChange}
         name={name}
@@ -213,9 +217,11 @@ export const TagsField1: React.FC<TagsFieldProps> = ({
   data,
   values,
   setValues,
+  limit
 }) => {
   const handleAddTag = (tag: string) => {
-    if(values?.length > 0){
+
+    if(values?.length > 0 && (limit? values?.length <= limit : 1)){
       if (values?.includes(tag)) {
         const index = values?.indexOf(tag);
         values?.splice(index, 1);
@@ -224,7 +230,7 @@ export const TagsField1: React.FC<TagsFieldProps> = ({
         setValues([...values, tag]);
       }
     }
-    else{
+    else if(limit? values?.length <= limit : 1){
       setValues([tag])
     }
   };

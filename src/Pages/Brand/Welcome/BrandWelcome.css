@@ -4,6 +4,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-bottom: 50px;
 }
 .BrandFormContent {
   display: flex;
@@ -11,6 +12,7 @@
   justify-content: center;
   flex-direction: column;
   gap: 20px;
+
 }
 .BrandForm_CreditsWrapper {
   width: 100%;

@@ -8,7 +8,9 @@ export const useBrand = () => {
   return useContext(BrandContext);
 };
 
+
 export const BrandProvider = (props) => {
+
   //UpdateBrandInfo
   const UpdateBrandInfo = async (data) => {
     try {
@@ -22,12 +24,12 @@ export const BrandProvider = (props) => {
         }
       );
       if (response.status !== 200) {
-        throw new Error("Error in saving the data");
+        return { Error: response.data.error }
       } else {
         return response.data;
       }
     } catch (e) {
-      alert(e);
+      return { Error: e.response.data.error }
     }
   };
 
@@ -44,12 +46,12 @@ export const BrandProvider = (props) => {
         }
       );
       if (response.status !== 200) {
-        throw new Error("Error in saving the data");
+        return { Error: response.data.error }
       } else {
         return response.data;
       }
     } catch (e) {
-      alert(e);
+      return { Error: e.response.data.error }
     }
   };
   const getBrandInfo = async () => {
@@ -62,12 +64,12 @@ export const BrandProvider = (props) => {
 
       // Check if the response contains the LinkedIn authorization URL
       if (response.status !== 200) {
-        throw new Error("Error in getting the data");
+        return { Error: response.data.error }
       } else {
         return response.data;
       }
     } catch (error) {
-      alert(error);
+      return { Error: error.response.data.error };
     }
   };
 

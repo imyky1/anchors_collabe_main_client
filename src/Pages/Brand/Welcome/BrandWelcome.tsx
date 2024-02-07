@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import { Button1 } from "../../../Components/Buttons";
 import { useBrand } from "../../../Providers/Brand";
 import { useAuth } from "../../../Providers/Auth";
+import { toast } from "react-toastify";
+import mixpanel from "mixpanel-browser";
 
 const purposeMaterData = {
   Registration: 10,
@@ -45,6 +47,9 @@ export const BrandWelcome = () => {
   useEffect(() => {
     setCredits(authState?.loggedBrand?.credits);
   }, [authState]);
+  useEffect(() => {
+    mixpanel.track("Page visited Anchors Collab Brand Welcome Page");
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -62,13 +67,16 @@ export const BrandWelcome = () => {
             // Add other fields here based on your response structure
           }));
           // Set team size separately
-          SetTeamSize(response.data1.CompanyTeamSize);
+          SetTeamSize(response?.data1?.CompanyTeamSize);
 
           // Update filledFields based on received data
-          const filledFieldsFromData = Object.keys(response.data1).filter(
-            (key) => response.data1[key]
-          );
-          setFilledFields(filledFieldsFromData);
+          if (response?.data1) {
+            const filledFieldsFromData = Object.keys(response?.data1).filter(
+              (key) => response?.data1[key]
+            );
+            setFilledFields(filledFieldsFromData);
+          }
+
           if (response?.data1?.CompanyTeamSize) {
             setFilledFields((prev) => {
               prev.push("teamSize");
@@ -81,9 +89,7 @@ export const BrandWelcome = () => {
       }
     };
     fetchData();
-  }, [BrandState]); 
-
-
+  }, [BrandState]);
 
   const handlechange = (e) => {
     const { name, value } = e.target;
@@ -127,8 +133,17 @@ export const BrandWelcome = () => {
 
   const handleSubmit = async () => {
     try {
-      if (!data.CompanyName || !data.CompanyWebsite) {
-        return alert("Please Enter Company Name and Company Website");
+      if (!data.CompanyName) {
+        return toast.error("Please Enter Company Name", {
+          position: "top-center",
+          autoClose: 2000,
+        });
+      }
+      if (!data.CompanyWebsite) {
+        return toast.error("Please Enter Company Website URL", {
+          position: "top-center",
+          autoClose: 2000,
+        });
       }
       const result = await BrandState.UpdateBrandInfo({
         ...data,
@@ -136,11 +151,26 @@ export const BrandWelcome = () => {
         brandID: authState?.loggedBrand?.BrandId,
       });
       if (result.success) {
-        
+        mixpanel.track("Submitted Brand Welcome Page Details");
+        toast.success("Details Submitted Succesfully!", {
+          position: "top-center",
+          autoClose: 2000,
+        });
+        authState?.setReFetchUserData((prev) => {
+          return !prev;
+        });
         navigate("/Brand/profile2");
+      } else {
+        return toast.error(result.Error, {
+          position: "top-center",
+          autoClose: 2000,
+        });
       }
     } catch (e) {
-      alert(e);
+      return toast.error("Something went Wrong!", {
+        position: "top-center",
+        autoClose: 2000,
+      });
     }
   };
 
@@ -150,18 +180,20 @@ export const BrandWelcome = () => {
         <div style={{ maxWidth: "100%" }} className="container">
           <BrandHeader
             text={""}
-            icon={<MdLogout />}
+            icon={<MdLogout color="#757575" size={16} />}
             onClick={() => {
-              navigate("/Brand/Login");
+              navigate("/logout");
             }}
             visible={true}
+            ButtonTextColor="#757575"
+            ButtonBorderColor="#757575"
           />
         </div>
         <div className="BrandFormContent">
           <div className="BrandForm_CreditsWrapper">
             <div className="BrandForm_CreditsInfo">
               <img src="/Coin.svg" alt="" />
-              <div>{`${credits} Credits earned`}</div>
+              <div>{`${credits || 0} Credits earned`}</div>
             </div>
           </div>
 
@@ -176,8 +208,10 @@ export const BrandWelcome = () => {
             value={data.name}
             id="name"
             name="name"
+            icon=""
           />
-          {filledFields.includes("name") && (
+          {(filledFields.includes("name") ||
+            filledFields.includes("designation")) && (
             <InputField1
               label="Your Designation"
               placeholder="Marketing Manager"
@@ -185,20 +219,23 @@ export const BrandWelcome = () => {
               value={data.designation}
               id="designation"
               name="designation"
+              icon=""
             />
           )}
-          {filledFields.includes("name") &&
-            filledFields.includes("designation") && (
-              <InputField1
-                label="Company Name*"
-                placeholder="Boat"
-                onChange={handlechange}
-                value={data.CompanyName}
-                id="CompanyName"
-                name="CompanyName"
-              />
-            )}
-          {filledFields.includes("CompanyName") && (
+          {(filledFields.includes("designation") ||
+            filledFields.includes("CompanyName")) && (
+            <InputField1
+              label="Company Name*"
+              placeholder="Boat"
+              onChange={handlechange}
+              value={data.CompanyName}
+              id="CompanyName"
+              name="CompanyName"
+              icon=""
+            />
+          )}
+          {(filledFields.includes("CompanyName") ||
+            filledFields.includes("CompanyWebsite")) && (
             <InputField1
               label="Company Website URL*"
               placeholder="www.boatindia.com"
@@ -206,9 +243,11 @@ export const BrandWelcome = () => {
               value={data.CompanyWebsite}
               id="CompanyWebsite"
               name="CompanyWebsite"
+              icon=""
             />
           )}
-          {filledFields.includes("CompanyWebsite") && (
+          {(filledFields.includes("CompanyWebsite") ||
+            filledFields.includes("teamSize")) && (
             <div className="BrandForm_CompanySize">
               <div>Company Size</div>
               <div>

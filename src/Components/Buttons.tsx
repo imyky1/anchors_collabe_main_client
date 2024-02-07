@@ -15,10 +15,10 @@ export const Button1: React.FC<ButtonProps> = ({ text,onClick }) => {
   );
 };
 
-export const Button2 :  React.FC<ButtonProps> = ({text,onClick})=>{
+export const Button2 :  React.FC<ButtonProps> = ({text,onClick,textColor, borderColor,icon })=>{
   return (
     <div>
-      <button className="px-[20px] py-[10px] rounded bg-[transparent] border-solid border-[1px] border-[#FF5C5C] font-Public Sans text-xs text-[#FF5C5C]" onClick={onClick}>{text}</button>
+      <button className={`px-[20px] py-[10px] rounded bg-[transparent] border-solid border-[1px] border-[${borderColor || "#FF5C5C"}] font-Public Sans text-xs text-[${textColor || "#FF5C5C"}]`} onClick={onClick}>{icon}{text}</button>
     </div>
   )
 }

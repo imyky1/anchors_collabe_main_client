@@ -6,12 +6,14 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { FiEdit } from "react-icons/fi";
 import { BsFillKeyFill } from "react-icons/bs";
 import { useAuth } from "../../../Providers/Auth";
+import { toast } from "react-toastify";
+import mixpanel from "mixpanel-browser";
 
 export const BrandOtpVerify = () => {
   const [Otp, SetOtp] = useState(null);
   const navigate = useNavigate();
   const authState = useAuth();
-  console.log(authState);
+
 
   const [searchParams, setSearchParams] = useSearchParams();
   const email = searchParams.get("email");
@@ -22,12 +24,39 @@ export const BrandOtpVerify = () => {
     SetOtp(e.target.value);
   };
 
+  const handleResend = async(email)=> {
+    const result = await authState.sendingOTPFeature(email)
+      if(result.success){
+        mixpanel.track("Requested Resend Otp");
+        toast.info("Otp Sent Succesfully to your MailBox", {
+          position: "top-center",
+          autoClose: 2000,
+        });
+      }else{
+        return toast.error(result.Error, {
+          position: "top-center",
+          autoClose: 2000,
+        });
+      }
+  }
+
   const handleSubmit = async () => {
     try {
       if (!Otp) {
-        return alert("Please Enter Your Email");
+        return toast.error("Enter a proper code", {
+          position: "top-center",
+          autoClose: 2000,
+        });
       }
-      await authState.verfiyOTP(Otp,email,type);
+      const result = await authState.verfiyOTP(Otp,email,type);
+      if(result?.Error){
+        return toast.error(result?.Error, {
+          position: "top-center",
+          autoClose: 2000,
+        });
+      }else{
+        console.log(result)
+      }
     } catch (e) {
       console.log(e);
     }
@@ -53,7 +82,7 @@ export const BrandOtpVerify = () => {
               <div
                 style={{ cursor: "pointer" }}
                 onClick={() => {
-                  navigate("/Brand/Login");
+                  type === "Login" ?  navigate("/Brand/Login") : navigate("/Brand/SignUp")
                 }}
               >
                 <FiEdit size={16} />
@@ -80,7 +109,7 @@ export const BrandOtpVerify = () => {
 
           <h5 style={{ display: "flex", marginTop: "20px" }}>
             Didn't receive OTP?{" "}
-            <div style={{ color: "#FF5C5C", cursor: "pointer" }}>
+            <div onClick={()=>handleResend(email)} style={{ color: "#FF5C5C", cursor: "pointer" }}>
               Click here to resend.
             </div>
           </h5>

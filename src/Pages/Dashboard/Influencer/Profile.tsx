@@ -258,9 +258,61 @@ const FormOne: React.FC<FormOneProps> = ({
   );
 };
 
-const FormTwo: React.FC<FormOneProps> = ({ data, setData }) => {
+const FormTwo: React.FC<FormOneProps> = ({ data, setData, errorArray }) => {
+  const [linkedinValidate, SetlinkedinValidate] = useState(false);
+  const [instagramValidate, SetinstagramValidate] = useState(false);
+  const [twitterValidate, SettwitterValidate] = useState(false);
+  const [telegramValidate, SettelegramValidate] = useState(false);
+  const [facebookValidate, SetfacebookValidate] = useState(false);
   const handleChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
+
+    const instaLinkRegex =
+      /^(https?:\/\/)?(www\.)?instagram\.com\/[a-zA-Z0-9_]+\/?$/;
+    const linkedinLinkRegex =
+      /^(https?:\/\/)?(www\.)?linkedin\.com\/in\/[a-zA-Z0-9_-]+\/?$/;
+    const twitterLinkRegex =
+      /^(https?:\/\/)?(www\.)?twitter\.com\/[a-zA-Z0-9_]+\/?$/;
+    const telegramLinkRegex =
+      /^(?:|(https?:\/\/)?(|www)[.]?((t|telegram)\.me)\/)[a-zA-Z0-9_]{5,32}$/;
+    const fbLinkRegex =
+      /^(https?:\/\/)?(www\.)?facebook\.com\/[a-zA-Z0-9_\-]+\/?$/;
+
+    if (e.target.name === "linkedinLink") {
+      if (!linkedinLinkRegex.test(e.target.value) && e.target.value) {
+        SetlinkedinValidate(true);
+      } else {
+        SetlinkedinValidate(false);
+      }
+    }
+    if (e.target.name === "instaLink") {
+      if (!instaLinkRegex.test(e.target.value) && e.target.value) {
+        SetinstagramValidate(true);
+      } else {
+        SetinstagramValidate(false);
+      }
+    }
+    if (e.target.name === "telegramLink") {
+      if (!telegramLinkRegex.test(e.target.value) && e.target.value) {
+        SettelegramValidate(true);
+      } else {
+        SettelegramValidate(false);
+      }
+    }
+    if (e.target.name === "fbLink") {
+      if (!fbLinkRegex.test(e.target.value) && e.target.value) {
+        SetfacebookValidate(true);
+      } else {
+        SetfacebookValidate(false);
+      }
+    }
+    if (e.target.name === "twitterLink") {
+      if (!twitterLinkRegex.test(e.target.value) && e.target.value) {
+        SettwitterValidate(true);
+      } else {
+        SettwitterValidate(false);
+      }
+    }
   };
 
   const handleChange2 = (e, field) => {
@@ -283,6 +335,7 @@ const FormTwo: React.FC<FormOneProps> = ({ data, setData }) => {
         onChange={handleChange}
         value2={data.followers?.linkedin}
         onChange2={(e) => handleChange2(e, "linkedin")}
+        error={linkedinValidate}
       />
       <SocialField1
         placeholder1="Paste your Instagram Profile’s link"
@@ -294,6 +347,7 @@ const FormTwo: React.FC<FormOneProps> = ({ data, setData }) => {
         onChange={handleChange}
         value2={data?.followers?.insta}
         onChange2={(e) => handleChange2(e, "insta")}
+        error={instagramValidate}
       />
       <SocialField1
         placeholder1="Paste Your Telegram Profile’s Link"
@@ -305,6 +359,7 @@ const FormTwo: React.FC<FormOneProps> = ({ data, setData }) => {
         onChange={handleChange}
         value2={data?.followers?.telegram}
         onChange2={(e) => handleChange2(e, "telegram")}
+        error={telegramValidate}
       />
       <SocialField1
         placeholder1="Paste Your Facebook Profile’s Link"
@@ -316,6 +371,7 @@ const FormTwo: React.FC<FormOneProps> = ({ data, setData }) => {
         onChange={handleChange}
         value2={data?.followers.fb}
         onChange2={(e) => handleChange2(e, "fb")}
+        error={facebookValidate}
       />
       <SocialField1
         placeholder1="Paste Your Twitter Profile’s Link"
@@ -327,6 +383,7 @@ const FormTwo: React.FC<FormOneProps> = ({ data, setData }) => {
         onChange={handleChange}
         value2={data?.followers?.twitter}
         onChange2={(e) => handleChange2(e, "twitter")}
+        error={twitterValidate}
       />
       <SocialField1
         placeholder1="Paste Your Website Link"
@@ -698,6 +755,8 @@ const FormFive: React.FC<FormFourProps> = ({ data, setData }) => {
       setTagsData(e);
     });
   }, []);
+  console.log(tagsData)
+  console.log(data)
 
   return (
     <div
@@ -719,8 +778,9 @@ const FormFive: React.FC<FormFourProps> = ({ data, setData }) => {
           data={tagsData ?? []}
           values={data?.categories}
           setValues={(value: []) => {
-            setData({ ...data, categories: value });
+            data?.categories?.length < 6 && setData({ ...data, categories: value });
           }}
+          limit = {6}
         />
       </div>
     </div>
@@ -796,8 +856,9 @@ const FormSeven: React.FC<FormFiveProps> = ({ data, setData }) => {
           data={tagsData ?? []}
           values={data?.types}
           setValues={(value: []) => {
-            setData({ ...data, types: value });
+            data?.types?.length <6 && setData({ ...data, types: value });
           }}
+          limit={6}
         />
       </div>
     </div>
@@ -1549,7 +1610,11 @@ const Profile: React.FC = () => {
                 setFormOneImages={setFormOneImages}
                 errorArray={errorArray}
               />
-              <FormTwo data={dataOne} setData={setdataOne} />
+              <FormTwo
+                data={dataOne}
+                setData={setdataOne}
+                errorArray={errorArray}
+              />
             </>
           )}
 
@@ -1642,8 +1707,8 @@ const Profile: React.FC = () => {
 
         <section className="flex flex-col gap-3 h-screen items-start fixed top-[120px] right-20 w-[329px] h-[665px]">
           <p className="flex flex-col items-center gap-0 text-sm text-[#EF4444] text-center">
-            <span className="text-[#121212]">Important Notice</span>Profiles with false information will
-            NOT be visible to brands
+            <span className="text-[#121212]">Important Notice</span>Profiles
+            with false information will NOT be visible to brands
           </p>
 
           {/* <Slider
