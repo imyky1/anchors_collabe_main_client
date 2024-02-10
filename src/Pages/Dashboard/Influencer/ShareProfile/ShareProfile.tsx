@@ -10,9 +10,9 @@ export const ShareProfile = () => {
   const authState = useAuth();
 
   const handleCopy = () => {
-    let textToCopy = "You Copied me!";
+    let textToCopy =`collab.anchors.in/${authState?.loggedUser?.slug}`;
     navigator.clipboard.writeText(textToCopy);
-    toast.info("Link Copied", {
+    toast.success("Your profile Link Copied", {
       autoClose: 1000,
     });
   };
@@ -37,7 +37,7 @@ export const ShareProfile = () => {
               Your Profile Is All Set
             </h1>
             <div className="influencer_left_container_link_container">
-              <h1>Your Public for collab</h1>
+              <h1>Your public profile link</h1>
               <div className="left_container_link_div">
                 <CiGlobe />
                 <h3>collab.anchors.in/{authState?.loggedUser?.slug}</h3>

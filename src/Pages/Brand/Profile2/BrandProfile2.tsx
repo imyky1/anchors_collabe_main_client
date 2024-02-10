@@ -141,10 +141,10 @@ export const BrandProfile2 = () => {
           position: "top-center",
           autoClose: 2000,
         });
-        // authState?.setReFetchUserData((prev) => {
-        //   return !prev;
-        // });
-        navigate("/Brand/profile2");
+        authState?.setReFetchBrandData((prev) => {
+          return !prev;
+        });
+        navigate("/Brand/DashBoard");
       } else {
         return toast.error(result.Error, {
           position: "top-center",
@@ -274,6 +274,7 @@ export const BrandProfile2 = () => {
                 marginTop: "40px",
                 marginBottom: "100px",
               }}
+
             >
               <Button1 text="Save & continue →" onClick={handleSubmit} />
             </div>

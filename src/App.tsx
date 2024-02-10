@@ -18,11 +18,7 @@ import { useGeneralSettings } from "./Providers/General";
 import mixpanel from "mixpanel-browser";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { BrandLogin } from "./Pages/Brand/Login/BrandLogin";
-import { BrandOtpVerify } from "./Pages/Brand/OtpVerification/BrandOtpVerify";
-import { BrandProfile2 } from "./Pages/Brand/Profile2/BrandProfile2";
-import { BrandSignUp } from "./Pages/Brand/SignUp/BrandSignUp";
-import { BrandWelcome } from "./Pages/Brand/Welcome/BrandWelcome";
+import BrandRoutes from "./Pages/Brand/Routes/BrandRoutes";
 
 // Declare the EasebuzzCheckout property on the window object
 declare global {
@@ -119,45 +115,8 @@ const App: React.FC = () => {
                       }
                     />
                     {/* Brand routes .............................................. */}
-                    <Route
-                      path="/Brand/*"
-                      element={
-                        <ProtectedRoute
-                          navigateCondition={!localStorage.getItem("jwtToken")}
-                          toUrl={"/Brand/SignUp"}
-                        >
-                          <BrandWelcome />
-                        </ProtectedRoute>
-                      }
-                    />
-                    <Route path="/Brand/SignUp" element={<BrandSignUp />} />
-                    <Route path="/Brand/Login" element={<BrandLogin />} />
-                    <Route
-                      path="/Brand/Otp-verify"
-                      element={<BrandOtpVerify />}
-                    />
-                    <Route
-                      path="/Brand/Welcome"
-                      element={
-                        <ProtectedRoute
-                          navigateCondition={!localStorage.getItem("jwtToken")}
-                          toUrl={"/Brand/SignUp"}
-                        >
-                          <BrandWelcome />
-                        </ProtectedRoute>
-                      }
-                    />
-                    <Route
-                      path="/Brand/profile2"
-                      element={
-                        <ProtectedRoute
-                          navigateCondition={!localStorage.getItem("jwtToken")}
-                          toUrl={"/Brand/SignUp"}
-                        >
-                          <BrandProfile2 />
-                        </ProtectedRoute>
-                      }
-                    />
+                    <Route path="/Brand/*" element={<BrandRoutes />} />
+                    
                     <Route
                       path="/logout"
                       element={

@@ -12,6 +12,7 @@ import {
   SocialCard,
 } from "../../Pages/Profile/Component";
 import { FaXTwitter } from "react-icons/fa6";
+import { Link } from "react-router-dom";
 
 const NavArray = [
   {
@@ -241,7 +242,7 @@ const ProfileDemo: React.FC<ProfileDemoProps> = ({data,uploadedImages,uploadedIm
                 textSize="text-sm"
               /> */}
 
-              <div className="p-5 rounded-lg bg-[#FF8A8A] flex items-center gap-3 justify-center flex-col font-inter mb-32">
+              <div className="p-5 rounded-lg bg-[#FF8A8A] flex items-center gap-3 justify-center flex-col font-inter mb-16">
                 <p className="text-[16px] font-medium text-center">
                   Are you looking for to collaborate with me?
                 </p>
@@ -249,6 +250,13 @@ const ProfileDemo: React.FC<ProfileDemoProps> = ({data,uploadedImages,uploadedIm
                   <CgLockUnlock /> Unlock My Info
                 </button>
               </div>
+              {/* footer */}
+
+            <div className="flex items-center flex-col gap-3 font-inter mb-10">
+              <span className="text-[16px] text-[#424242]">
+                powered by : anchors.in
+              </span>
+            </div>
             </section>
           </section>
         </div>

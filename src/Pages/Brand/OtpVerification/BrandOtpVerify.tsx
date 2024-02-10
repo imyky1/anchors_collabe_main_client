@@ -14,31 +14,37 @@ export const BrandOtpVerify = () => {
   const navigate = useNavigate();
   const authState = useAuth();
 
+  if (
+    localStorage.getItem("jwtToken") &&
+    localStorage.getItem("UserType") === "Brand"
+  ) {
+    navigate("/Brand/Welcome");
+  }
 
   const [searchParams, setSearchParams] = useSearchParams();
   const email = searchParams.get("email");
-  const type = searchParams.get("type")
+  const type = searchParams.get("type");
   // console.log(email,type)
 
   const handleChange = (e: { target: { value: any } }) => {
     SetOtp(e.target.value);
   };
 
-  const handleResend = async(email)=> {
-    const result = await authState.sendingOTPFeature(email)
-      if(result.success){
-        mixpanel.track("Requested Resend Otp");
-        toast.info("Otp Sent Succesfully to your MailBox", {
-          position: "top-center",
-          autoClose: 2000,
-        });
-      }else{
-        return toast.error(result.Error, {
-          position: "top-center",
-          autoClose: 2000,
-        });
-      }
-  }
+  const handleResend = async (email) => {
+    const result = await authState.sendingOTPFeature(email);
+    if (result.success) {
+      mixpanel.track("Requested Resend Otp");
+      toast.info("Otp Sent Succesfully to your MailBox", {
+        position: "top-center",
+        autoClose: 2000,
+      });
+    } else {
+      return toast.error(result.Error, {
+        position: "top-center",
+        autoClose: 2000,
+      });
+    }
+  };
 
   const handleSubmit = async () => {
     try {
@@ -48,14 +54,14 @@ export const BrandOtpVerify = () => {
           autoClose: 2000,
         });
       }
-      const result = await authState.verfiyOTP(Otp,email,type);
-      if(result?.Error){
+      const result = await authState.verfiyOTP(Otp, email, type);
+      if (result?.Error) {
         return toast.error(result?.Error, {
           position: "top-center",
           autoClose: 2000,
         });
-      }else{
-        console.log(result)
+      } else {
+        console.log(result);
       }
     } catch (e) {
       console.log(e);
@@ -82,7 +88,9 @@ export const BrandOtpVerify = () => {
               <div
                 style={{ cursor: "pointer" }}
                 onClick={() => {
-                  type === "Login" ?  navigate("/Brand/Login") : navigate("/Brand/SignUp")
+                  type === "Login"
+                    ? navigate("/Brand/Login")
+                    : navigate("/Brand/SignUp");
                 }}
               >
                 <FiEdit size={16} />
@@ -109,7 +117,10 @@ export const BrandOtpVerify = () => {
 
           <h5 style={{ display: "flex", marginTop: "20px" }}>
             Didn't receive OTP?{" "}
-            <div onClick={()=>handleResend(email)} style={{ color: "#FF5C5C", cursor: "pointer" }}>
+            <div
+              onClick={() => handleResend(email)}
+              style={{ color: "#FF5C5C", cursor: "pointer" }}
+            >
               Click here to resend.
             </div>
           </h5>

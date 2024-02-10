@@ -47,7 +47,7 @@ const Navbar: React.FC = () => {
 // user pages navbar -----------
 export const Navbar2: React.FC = () => {
   return (
-    <div className="w-screen box-border px-4 py-3 flex items-center justify-between bg-white">
+    <div className="w-full box-border px-4 py-3 flex items-center justify-between bg-white">
       <img src={logo} alt="" className="w-20 md:w-32 cursor-pointer" />
 
       {/* <img

@@ -8,9 +8,7 @@ export const useBrand = () => {
   return useContext(BrandContext);
 };
 
-
 export const BrandProvider = (props) => {
-
   //UpdateBrandInfo
   const UpdateBrandInfo = async (data) => {
     try {
@@ -24,12 +22,12 @@ export const BrandProvider = (props) => {
         }
       );
       if (response.status !== 200) {
-        return { Error: response.data.error }
+        return { Error: response.data.error };
       } else {
         return response.data;
       }
     } catch (e) {
-      return { Error: e.response.data.error }
+      return { Error: e.response.data.error };
     }
   };
 
@@ -46,12 +44,12 @@ export const BrandProvider = (props) => {
         }
       );
       if (response.status !== 200) {
-        return { Error: response.data.error }
+        return { Error: response.data.error };
       } else {
         return response.data;
       }
     } catch (e) {
-      return { Error: e.response.data.error }
+      return { Error: e.response.data.error };
     }
   };
   const getBrandInfo = async () => {
@@ -64,7 +62,7 @@ export const BrandProvider = (props) => {
 
       // Check if the response contains the LinkedIn authorization URL
       if (response.status !== 200) {
-        return { Error: response.data.error }
+        return { Error: response.data.error };
       } else {
         return response.data;
       }
@@ -91,6 +89,49 @@ export const BrandProvider = (props) => {
       alert(error);
     }
   };
+  const getAllInfluencersData = async () => {
+    try {
+      const response = await axios.get(`${host}/Brand/getAllInfluencers`, {
+        headers: {
+          jwtToken: localStorage.getItem("jwtToken"),
+        },
+      });
+
+      // Check if the response contains the LinkedIn authorization URL
+      if (response.status !== 200) {
+        return { Error: response.data.error };
+      } else {
+        return response.data;
+      }
+    } catch (error) {
+      return { Error: error.response.data.error };
+    }
+  };
+  const getInfluncerWithCredits = async (influencerID) => {
+    try {
+      console.log(localStorage.getItem("jwtToken"));
+      console.log(influencerID);
+      const response = await axios.post(
+        `${host}/Brand/getInfluencer/${influencerID}`,
+        {},
+        {
+          headers: {
+            jwtToken: localStorage.getItem("jwtToken"),
+          },
+        }
+      );
+      console.log(response);
+
+      if (response.status !== 200) {
+        return { Error: response.data.error };
+      } else {
+        return response.data;
+      }
+    } catch (error) {
+      console.log(error);
+      return { Error: error.response.data.error };
+    }
+  };
 
   return (
     <BrandContext.Provider
@@ -99,9 +140,11 @@ export const BrandProvider = (props) => {
         UpdateBrandMarketingInfo,
         getBrandInfo,
         getBrandMarketinginfo,
+        getAllInfluencersData,
+        getInfluncerWithCredits,
       }}
     >
-        {props.children}
+      {props.children}
     </BrandContext.Provider>
   );
 };

@@ -177,7 +177,7 @@ export const InfluencerProvider: React.FC<InfluencerProviderProps> = (
         return response.data;
       }
     } catch (error) {
-      alert(error);
+      throw new Error(error);
     }
   };
 

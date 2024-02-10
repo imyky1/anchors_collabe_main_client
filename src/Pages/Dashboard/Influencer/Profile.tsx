@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   DropDown01,
   InputField1,
+  InputField2,
   SocialField1,
   TagsField1,
 } from "../../../Components/Fields";
@@ -274,7 +275,7 @@ const FormTwo: React.FC<FormOneProps> = ({ data, setData, errorArray }) => {
     const twitterLinkRegex =
       /^(https?:\/\/)?(www\.)?twitter\.com\/[a-zA-Z0-9_]+\/?$/;
     const telegramLinkRegex =
-      /^(?:|(https?:\/\/)?(|www)[.]?((t|telegram)\.me)\/)[a-zA-Z0-9_]{5,32}$/;
+      /^(https?:\/\/)?(|www)[.]?((t|telegram)\.me)\/[a-zA-Z0-9_]{5,32}$/;
     const fbLinkRegex =
       /^(https?:\/\/)?(www\.)?facebook\.com\/[a-zA-Z0-9_\-]+\/?$/;
 
@@ -326,7 +327,7 @@ const FormTwo: React.FC<FormOneProps> = ({ data, setData, errorArray }) => {
       <h1>Social Media Presence </h1>
 
       <SocialField1
-        placeholder1="Paste your LinkedIn Profile’s link"
+        placeholder1="https://www.linkedin.com/in/example_profile/"
         placeholder2="No of followers"
         icon={<FaLinkedinIn />}
         name="linkedinLink"
@@ -338,7 +339,7 @@ const FormTwo: React.FC<FormOneProps> = ({ data, setData, errorArray }) => {
         error={linkedinValidate}
       />
       <SocialField1
-        placeholder1="Paste your Instagram Profile’s link"
+        placeholder1="https://www.instagram.com/example_profile/"
         placeholder2="No of followers"
         icon={<FaInstagram />}
         name="instaLink"
@@ -350,7 +351,7 @@ const FormTwo: React.FC<FormOneProps> = ({ data, setData, errorArray }) => {
         error={instagramValidate}
       />
       <SocialField1
-        placeholder1="Paste Your Telegram Profile’s Link"
+        placeholder1="https://t.me/example_channel"
         placeholder2="No of followers"
         icon={<FaTelegram />}
         name="telegramLink"
@@ -362,7 +363,7 @@ const FormTwo: React.FC<FormOneProps> = ({ data, setData, errorArray }) => {
         error={telegramValidate}
       />
       <SocialField1
-        placeholder1="Paste Your Facebook Profile’s Link"
+        placeholder1="https://www.facebook.com/example_page/"
         placeholder2="No of followers"
         icon={<FaFacebook />}
         name="fbLink"
@@ -374,7 +375,7 @@ const FormTwo: React.FC<FormOneProps> = ({ data, setData, errorArray }) => {
         error={facebookValidate}
       />
       <SocialField1
-        placeholder1="Paste Your Twitter Profile’s Link"
+        placeholder1="https://twitter.com/example_profile"
         placeholder2="No of followers"
         icon={<FaXTwitter />}
         name="twitterLink"
@@ -386,7 +387,7 @@ const FormTwo: React.FC<FormOneProps> = ({ data, setData, errorArray }) => {
         error={twitterValidate}
       />
       <SocialField1
-        placeholder1="Paste Your Website Link"
+        placeholder1="https://www.example.com"
         placeholder2="No of Visitors"
         icon={<FaGlobe />}
         name="websiteLink"
@@ -501,7 +502,7 @@ const FormThree: React.FC<FormTwoProps> = ({
                         "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/2048px-No_image_available.svg.png"
                       }
                       alt=""
-                      className="w-16 h-16 rounded-full"
+                      className="w-16  rounded-full"
                       onError={({ currentTarget }) => {
                         currentTarget.onerror = null; // prevents looping
                         currentTarget.src =
@@ -654,8 +655,8 @@ const FormFour: React.FC<FormThreeProps> = ({ data, setData, errorArray }) => {
       {
         platformName: "",
         profileLink: "",
-        methods: [],
         paidAudience: null,
+        methods: [],
       },
     ]);
   };
@@ -755,8 +756,6 @@ const FormFive: React.FC<FormFourProps> = ({ data, setData }) => {
       setTagsData(e);
     });
   }, []);
-  console.log(tagsData)
-  console.log(data)
 
   return (
     <div
@@ -778,9 +777,10 @@ const FormFive: React.FC<FormFourProps> = ({ data, setData }) => {
           data={tagsData ?? []}
           values={data?.categories}
           setValues={(value: []) => {
-            data?.categories?.length < 6 && setData({ ...data, categories: value });
+            data?.categories?.length < 6 &&
+              setData({ ...data, categories: value });
           }}
-          limit = {6}
+          limit={6}
         />
       </div>
     </div>
@@ -856,7 +856,7 @@ const FormSeven: React.FC<FormFiveProps> = ({ data, setData }) => {
           data={tagsData ?? []}
           values={data?.types}
           setValues={(value: []) => {
-            data?.types?.length <6 && setData({ ...data, types: value });
+            data?.types?.length < 6 && setData({ ...data, types: value });
           }}
           limit={6}
         />
@@ -880,8 +880,13 @@ const FormEight: React.FC<FormFiveProps> = ({ data, setData, errorArray }) => {
     setData((prevData) => {
       const newArray = [...prevData.platforms];
       const updatedObj = newArray[index];
-      updatedObj[field] = value;
-      newArray[index] = updatedObj;
+      if (field === "audience" && value >= 0) {
+        updatedObj[field] = value;
+        newArray[index] = updatedObj;
+      }else if(field !== "audience"){
+        updatedObj[field] = value;
+        newArray[index] = updatedObj;
+      }
       return { types: data?.types, platforms: newArray };
     });
   };
@@ -947,7 +952,10 @@ const FormEight: React.FC<FormFiveProps> = ({ data, setData, errorArray }) => {
       {data?.platforms?.map((e, index) => {
         return (
           <div className="w-full rounded border border-[#E0E0E0] p-5 box-border flex flex-col gap-5">
-            <section className="w-full grid grid-cols-2 gap-5">
+            <section
+              style={{ alignItems: "baseline" }}
+              className="w-full grid grid-cols-2 gap-5"
+            >
               <DropDown01
                 placeholder="Select Platform"
                 values={platformData ?? []}
@@ -976,12 +984,13 @@ const FormEight: React.FC<FormFiveProps> = ({ data, setData, errorArray }) => {
                 error={errorArray?.includes("audience" + index + "audience")}
               />
             </section>
-            <InputField1
+            <InputField2
               placeholder="Enter Link here"
               value={e.link}
-              onChange={(e) =>
-                handleChangeData(e.target.value, index, e.target.name)
-              }
+              type="text"
+              onChange={(e) =>{
+                return handleChangeData(e.target.value, index, e.target.name)
+              }}
               name="link"
               id="link"
               error={errorArray?.includes("audience" + index + "link")}
@@ -1096,8 +1105,8 @@ const Profile: React.FC = () => {
     {
       platformName: "",
       profileLink: "",
-      methods: [],
       paidAudience: null,
+      methods: [],
     },
   ]);
 
@@ -1159,6 +1168,52 @@ const Profile: React.FC = () => {
         });
         return;
       } else {
+        const instaLinkRegex =
+          /^(https?:\/\/)?(www\.)?instagram\.com\/[a-zA-Z0-9_]+\/?$/;
+        const linkedinLinkRegex =
+          /^(https?:\/\/)?(www\.)?linkedin\.com\/in\/[a-zA-Z0-9_-]+\/?$/;
+        const twitterLinkRegex =
+          /^(https?:\/\/)?(www\.)?twitter\.com\/[a-zA-Z0-9_]+\/?$/;
+        const telegramLinkRegex =
+          /^(?:|(https?:\/\/)?(|www)[.]?((t|telegram)\.me)\/)[a-zA-Z0-9_]{5,32}$/;
+        const fbLinkRegex =
+          /^(https?:\/\/)?(www\.)?facebook\.com\/[a-zA-Z0-9_\-]+\/?$/;
+
+        if (dataOne?.instaLink && !instaLinkRegex.test(dataOne?.instaLink)) {
+          return toast.error("Please Enter proper Instagram Link", {
+            autoClose: 1500,
+          });
+        }
+        if (
+          dataOne?.linkedinLink &&
+          !linkedinLinkRegex.test(dataOne?.linkedinLink)
+        ) {
+          return toast.error("Please Enter proper Linkedin Link", {
+            autoClose: 1500,
+          });
+        }
+        if (
+          dataOne?.telegramLink &&
+          !telegramLinkRegex.test(dataOne?.telegramLink)
+        ) {
+          return toast.error("Please Enter proper Telegram Link", {
+            autoClose: 1500,
+          });
+        }
+        if (
+          dataOne?.twitterLink &&
+          !twitterLinkRegex.test(dataOne?.twitterLink)
+        ) {
+          return toast.error("Please Enter proper Twitter Link", {
+            autoClose: 1500,
+          });
+        }
+        if (dataOne?.fbLink && !fbLinkRegex.test(dataOne?.fbLink)) {
+          return toast.error("Please Enter proper Facebook Link", {
+            autoClose: 1500,
+          });
+        }
+
         let coverPhoto = dataOne.coverPhoto;
         let profile = dataOne.profile;
         if (formOneImages.length > 0) {
@@ -1221,20 +1276,27 @@ const Profile: React.FC = () => {
   };
 
   const checkValidationOfData = (data, originalObj, callback) => {
+    let newData = []; // Array to store modified data without original objects
+
     for (let index = 0; index < data.length; index++) {
       const element = data[index];
+
       if (element?._id) {
-        delete element?._id;
+        delete element._id;
       }
+      
       if (JSON.stringify(element) !== JSON.stringify(originalObj)) {
-        // checks -----------------------------
         const res = callback(element, index);
-        console.log(res, index);
         if (!res) {
           return false;
         }
+        newData.push(element);
+        // Do nothing or perform additional actions if needed
+        console.log("Element is equal to originalObj, skipping...");
       }
     }
+
+    data.splice(0, data.length, ...newData);
 
     return true;
   };
@@ -1300,8 +1362,8 @@ const Profile: React.FC = () => {
         {
           platformName: "",
           profileLink: "",
-          methods: [],
           paidAudience: null,
+          methods: [],
         },
         (e, index) => {
           if (e?.platformName?.length < 1) {
@@ -1371,7 +1433,7 @@ const Profile: React.FC = () => {
           link: "",
         },
         (e, index) => {
-          if (e?.platform?.length < 1) {
+          if (!e?.platform) {
             setErrorArray((prev) => {
               const newArr = [...prev, "audience" + index + "platform"];
               return newArr;
@@ -1423,8 +1485,20 @@ const Profile: React.FC = () => {
       generalState.setLoading(false);
       if (e?.success) {
         setdataOne({ ...dataOne, ...e?.data });
-        setdataTwo(
-          e?.data2?.data ?? [
+        if (e?.data2?.data?.length) {
+          setdataTwo(
+            e?.data2?.data ?? [
+              {
+                companyName: "",
+                companyUrl: "",
+                companyProfile: "",
+                postLink: "",
+                goals: [],
+              },
+            ]
+          );
+        } else {
+          setdataTwo([
             {
               companyName: "",
               companyUrl: "",
@@ -1432,26 +1506,53 @@ const Profile: React.FC = () => {
               postLink: "",
               goals: [],
             },
-          ]
-        );
-        setdataThree(
-          e?.data3?.data ?? [
+          ]);
+        }
+
+        if (e?.data3?.data.length) {
+          setdataThree(
+            e?.data3?.data ?? [
+              {
+                platformName: "",
+                profileLink: "",
+                paidAudience: null,
+                methods: [],
+              },
+            ]
+          );
+        } else {
+          setdataThree([
             {
               platformName: "",
               profileLink: "",
-              methods: [],
               paidAudience: null,
+              methods: [],
             },
-          ]
-        );
+          ]);
+        }
+
         setdataFour(
           e.data4 ?? {
             categories: [],
             formats: [],
           }
         );
-        setdataFive(
-          e.data5 ?? {
+
+        if (e?.data5?.platforms?.length) {
+          setdataFive(
+            e.data5 ?? {
+              ...dataFive,
+              platforms: [
+                {
+                  platform: "",
+                  audience: null,
+                  link: "",
+                },
+              ],
+            }
+          );
+        } else {
+          setdataFive({
             ...dataFive,
             platforms: [
               {
@@ -1460,8 +1561,8 @@ const Profile: React.FC = () => {
                 link: "",
               },
             ],
-          }
-        );
+          });
+        }
       }
     });
   }, [currentPage]);

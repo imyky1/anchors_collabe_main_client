@@ -76,6 +76,7 @@ export const InputField1: React.FC<InputFieldProps> = ({
         type={type ?? "text"}
         value={value ?? ""}
         onChange={onChange}
+        min={0}
         name={name}
         id={id}
         maxLength={maxLength}

@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Sidebar from "../../../Components/Sidebar/Sidebar";
 import { Navbar3 } from "../../../Components/Navbar/Navbar";
 import Profile from "./Profile";
-import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../Providers/Auth";
 import { ShareProfile } from "./ShareProfile/ShareProfile";
 import { Dashboard } from "./Dashboard/Dashboard";

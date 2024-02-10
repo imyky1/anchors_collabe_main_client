@@ -115,8 +115,9 @@ export const Show_Company_List = () => {
             </>
           ))}
         </div>
-        <div className="influencer_company_submit_button">
+        <div  className="influencer_company_submit_button">
           <button
+          style={{marginBottom:'100px'}}
             onClick={() =>
               navigate("/influencer/brands_wishlist")
             }

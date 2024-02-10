@@ -16,6 +16,8 @@ import { FaXTwitter } from "react-icons/fa6";
 import { useGeneralSettings } from "../../Providers/General";
 import mixpanel from "mixpanel-browser";
 import { toast } from "react-toastify";
+import * as CompanyEmailValidator from "company-email-validator";
+import { IoIosClose } from "react-icons/io";
 
 const NavArray = [
   {
@@ -41,11 +43,10 @@ const NavArray = [
   {
     title: "Platform Presence",
     id: "audiencePresence",
-  }
+  },
 ];
 
-
-const UnlockPopup = ({slug,onClose}) => {
+const UnlockPopup = ({ slug, onClose }) => {
   const [data, setdata] = useState({
     companyName: "",
     companyEmail: "",
@@ -53,30 +54,43 @@ const UnlockPopup = ({slug,onClose}) => {
     message: "",
   });
 
-  const influencerState = useInfluencer()
+  const influencerState = useInfluencer();
 
-  const handleChange: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (e) => {
+  const handleChange: React.ChangeEventHandler<
+    HTMLInputElement | HTMLTextAreaElement
+  > = (e) => {
     setdata({ ...data, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
-    e.preventDefault()
-    let res = await influencerState.saveTempBrandData({...data,slug})
+    const emailPattern =
+      /\b[A-Za-z0-9._%+-]+@(?:gmail\.com|protonmail\.com|zoho\.com|outlook\.com|yahoo\.com|aol\.com|gmx\.com|icloud\.com|mailfence\.com|tutanota\.com|neo\.com|hubspot\.com|thunderbird\.net|titan\.com|yandex\.com|hotmail\.com|live\.com|msn\.com|fastmail\.com|mail\.com|posteo\.de|t-online\.de|bluemail\.me|hushmail\.com|rediffmail\.com|rediff\.com|redmail\.com|mailinator\.com)\b/;
+      e.preventDefault();
+    if (
+      emailPattern.test(data.companyEmail) ||
+      !CompanyEmailValidator.isCompanyEmail(data.companyEmail)
+    ) {
+      return toast.error("Please enter company mail");
+    }
+    e.preventDefault();
+    let res = await influencerState.saveTempBrandData({ ...data, slug });
 
-    mixpanel.track("Submitted the Temp brand info")
+    mixpanel.track("Submitted the Temp brand info");
 
-    if(res?.success){
-      toast.success("Data Recorded Successfully")
-      onClose()
+    if (res?.success) {
+      toast.success("Data Recorded Successfully");
+      onClose();
     }
   };
 
   return (
-    <div className="w-screen h-screen flex items-center justify-center bg-[#fdfdfd4d] fixed top-0 left-0 z-50 font-inter">
+    <div className="w-screen h-screen flex flex-col items-center justify-center bg-[#fdfdfd4d] fixed top-0 left-0 z-50 font-inter">
+      <div onClick={()=>onClose()} className="w-[320px] flex justify-end cursor-pointer"><IoIosClose color="black" size={24}/></div>
       <form
         onSubmit={handleSubmit}
         className="bg-[#212121] p-6 flex flex-col items-center gap-4 rounded-lg w-[320px]"
       >
+        
         <h1 className="text-[16px] text-[#FAFAFA] text-center w-[80%]">
           Please fill this our team will reachout to you
         </h1>
@@ -213,7 +227,14 @@ const Profile: React.FC = () => {
 
   return (
     <>
-      {openUnlockPopup && <UnlockPopup slug={slug} onClose={()=>{setOpenUnlockPopup(false)}}/>}
+      {openUnlockPopup && (
+        <UnlockPopup
+          slug={slug}
+          onClose={() => {
+            setOpenUnlockPopup(false);
+          }}
+        />
+      )}
 
       <div className="w-screen bg-[#ada9a94f] flex flex-col items-center justify-center">
         <Navbar2 />
@@ -242,14 +263,17 @@ const Profile: React.FC = () => {
               <h1 className=" text-xl font-bold text-[#424242] uppercase">
                 {InfluData?.data?.name}
               </h1>
-              <p className=" text-[16px] text-[#757575] -mt-4">
+              <p
+                style={{ width: "90%", wordBreak: "break-word" }}
+                className=" text-[16px] text-[#757575] -mt-4"
+              >
                 {InfluData?.data?.tagline}
               </p>
             </div>
 
             <div className="w-full px-5 md:px-10 box-border">
               <h3 className="text-[16px] font-medium text-[#424242] mb-4">
-              Social Media Links
+                Social Media Links
               </h3>
 
               <section className="grid grid-cols-2 md:grid-cols-3 w-full gap-4">
@@ -358,7 +382,7 @@ const Profile: React.FC = () => {
                 id="collabportfolio"
               >
                 <h3 className="text-[16px] font-medium text-[#424242]">
-                Collab Portfolio
+                  Collab Portfolio
                 </h3>
 
                 <section className="w-full flex flex-col gap-2">
@@ -375,7 +399,7 @@ const Profile: React.FC = () => {
                 id="monetization"
               >
                 <h3 className="text-[16px] font-medium text-[#424242] mb-4">
-                Monetization Avenues
+                  Monetization Avenues
                 </h3>
 
                 <section className="w-full flex flex-col gap-5">
@@ -409,7 +433,7 @@ const Profile: React.FC = () => {
                 id="audiencePresence"
               >
                 <h3 className="text-[16px] font-medium text-[#424242] mb-4">
-                Platform Presence
+                  Platform Presence
                 </h3>
 
                 {/* <SocialCard

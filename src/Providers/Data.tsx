@@ -9,6 +9,7 @@ interface DataProviderProps {
 interface DataContextProps {
   getDataFromType: (type:string) => Promise<[]>
   getCoinValueFromField: (field:string) => Promise<string>
+  getLogoFromType : (field:string) => Promise<string>
 }
 const host: string = import.meta.env.VITE_BACKEND_SERVER_URL;
 
@@ -31,6 +32,16 @@ export const StaticDataProvider: React.FC<DataProviderProps> = (props) => {
     }
   };
 
+  const getLogoFromType = async (type: string) => {
+    const result = await axios.get(`${host}/master/getLogo?type=${type}`);
+
+    if (result.data.success) {
+      return result?.data?.data ;
+    } else {
+      alert("Error while fetching data");
+    }
+  };
+
   // route-1 .get coin value from data ---------------------
   const getCoinValueFromField = async (field: string) => {
     const result = await axios.get(`${host}/master/getCoinValueOfField?field=${field}`);
@@ -43,7 +54,7 @@ export const StaticDataProvider: React.FC<DataProviderProps> = (props) => {
   };
 
   return (
-    <StaticDataContext.Provider value={{ getDataFromType , getCoinValueFromField }}>
+    <StaticDataContext.Provider value={{ getDataFromType , getCoinValueFromField, getLogoFromType }}>
       {props?.children}
     </StaticDataContext.Provider>
   );

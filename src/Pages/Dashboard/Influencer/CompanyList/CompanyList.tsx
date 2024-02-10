@@ -5,6 +5,7 @@ import { CiViewList } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
 import { InputField1 } from "../../../../Components/Fields";
 import { useInfluencer } from "../../../../Providers/Influencer";
+import { toast } from "react-toastify";
 
 export interface WishlistProps {
   companyName: string;
@@ -13,7 +14,7 @@ export interface WishlistProps {
 
 export const Company_list: React.FC = () => {
   const navigate = useNavigate();
-  const influencerState = useInfluencer()
+  const influencerState = useInfluencer();
 
   const [data, setdata] = useState<[WishlistProps]>([
     {
@@ -43,18 +44,39 @@ export const Company_list: React.FC = () => {
   };
 
   const handleSubmit = async () => {
+    let isError = false;
     try {
-    let result = await influencerState?.updateWishlist(data)
-    if(result?.success){
-      alert("Data Saved")
+      data.map((item) => {
+        if (!item.companyName) {
+          isError = true
+          return toast.error("Please fill Company Name", { autoClose: 1500 });
+        }
+        if (!item.companyUrl) {
+          isError = true
+          return toast.error("Please fill Company URL", { autoClose: 1500 });
+        }
+      });
+      if (!isError) {
+        let result = await influencerState?.updateWishlist(data);
+        if (result?.success) {
+          setdata([
+            {
+              companyName: "",
+              companyUrl: "",
+            },
+          ]);
+          toast.success("WishList saved", { autoClose: 1500 });
+        } else {
+          toast.error("Some Error Occurred, Please try again!", {
+            autoClose: 1500,
+          });
+        }
+      }
+    } catch (error) {
+      toast.error("Some Error Occurred, Please try again!", {
+        autoClose: 1500,
+      });
     }
-
-    else{
-      alert("Data was be saved, Please try again!!!")
-    }
-  } catch (error) {
-      alert("Data was be saved, Please try again!!!")
-  }
   };
 
   return (
@@ -62,18 +84,13 @@ export const Company_list: React.FC = () => {
       <div className="influence_copmany_list_wrapper">
         <div className="influence_copmany_list_header">
           <div className="influence_copmany_list_header_heading">
-            <h1>
-            Dream Brands? Craft Your Collab Wish List
-            </h1>
+            <h1>Dream Brands? Craft Your Collab Wish List</h1>
             <h3>
-            We can't guarantee every dream collab, but your wishlist fuels our search!
+              We can't guarantee every dream collab, but your wishlist fuels our
+              search!
             </h3>
           </div>
-          <button
-            onClick={() =>
-              navigate("/influencer/view_brands_list")
-            }
-          >
+          <button onClick={() => navigate("/influencer/view_brands_list")}>
             <CiViewList size={20} /> View Brand List
           </button>
         </div>
