@@ -145,17 +145,17 @@ export const FilterCard = ({
   onClick,
 }) => {
   const handleClick = (event) => {
-    console.log(event.target);
+    // console.log(event.target);
     const targetElement = event.target;
     const rect = targetElement.getBoundingClientRect();
     const mouseXRelativeToElement = event.clientX - rect.left;
     const mouseYRelativeToElement = event.clientY - rect.top;
-    console.log(
-      "Mouse clicked relative to element at: " +
-        mouseXRelativeToElement +
-        ", " +
-        mouseYRelativeToElement
-    );
+    // console.log(
+    //   "Mouse clicked relative to element at: " +
+    //     mouseXRelativeToElement +
+    //     ", " +
+    //     mouseYRelativeToElement
+    // );
     onClick();
   };
 
@@ -316,7 +316,6 @@ export const DashBoard = () => {
   };
 
   const handleFilterSearch = () => {
-    console.log(selectedAudienceTypeFilters);
     if (
       selectedAudienceTypeFilters?.length > 0 ||
       selectedContentTypeFilters?.length > 0
@@ -339,7 +338,7 @@ export const DashBoard = () => {
     }
   };
 
-  console.log(AllInfluencers);
+  // console.log(AllInfluencers);
 
   return (
     <>

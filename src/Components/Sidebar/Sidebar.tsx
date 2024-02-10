@@ -244,7 +244,7 @@ const Sidebar: React.FC = () => {
                 navigate("/influencer/build_profile?page=6");
               }}
             >
-              Set Charges
+              Control Your Pricing
               {window.location.pathname === "/influencer/build_profile" && (
                 <span className="flex text-xs items-center gap-2">
                   <GiTwoCoins color="#FFD700" />{" "}

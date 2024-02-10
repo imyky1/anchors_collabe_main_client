@@ -109,8 +109,6 @@ export const BrandProvider = (props) => {
   };
   const getInfluncerWithCredits = async (influencerID) => {
     try {
-      console.log(localStorage.getItem("jwtToken"));
-      console.log(influencerID);
       const response = await axios.post(
         `${host}/Brand/getInfluencer/${influencerID}`,
         {},
@@ -120,8 +118,6 @@ export const BrandProvider = (props) => {
           },
         }
       );
-      console.log(response);
-
       if (response.status !== 200) {
         return { Error: response.data.error };
       } else {

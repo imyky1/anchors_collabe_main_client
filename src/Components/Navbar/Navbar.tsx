@@ -68,6 +68,7 @@ export const Navbar3: React.FC<NavbarProps> = ({
   const generalState = useGeneralSettings();
 
   const [openChipsInfo, setOpenChipsInfo] = useState(false);
+  const [MostChipsInfo, OpenMostChipsInfo] = useState(false);
 
   return (
     <>
@@ -77,18 +78,62 @@ export const Navbar3: React.FC<NavbarProps> = ({
             <h1 className="text-xl font-bold text-[#424242]">What is Chips</h1>
 
             <p>
-              Top 5 chips earners will get featured on our website homepage as
-              highly recommended on brand dashboards.
+              Chips are your currency to attract brands. Aim for 300+ chips for
+              maximum visibility.
+            </p>
+            <p className="w-[full] flex gap-1 flex-col text-start justify-start">
+              <b>To earn chips:</b>
+              <div>
+                <b>Complete your profile:</b> Accuracy matters! Every detail
+                unlocks more chips. <br />
+              </div>
+              <div>
+                <b>Share the love:</b> Invite friends & score 20 chips each!
+              </div>
             </p>
             <p>
-              The more authentic information you fill, the more chips you will
-              earn
+              Top 5 Chip earners get "Featured" for brands to see, so aim high!
             </p>
 
             <button
               className="px-5 py-3 rounded bg-[#FF5C5C] text-sm text-[#FAFAFA]"
               onClick={() => {
                 setOpenChipsInfo(false);
+              }}
+            >
+              Got it
+            </button>
+          </div>
+        </div>
+      )}
+
+      {MostChipsInfo && (
+        <div className="w-screen h-screen fixed top-0 left-0 z-40 flex items-center justify-center bg-[#12121280]">
+          <div className="flex flex-col p-5 gap-5 items-center justify-center text-center w-[400px] bg-[#F5F5F5] rounded-lg font-inter text-[#757575] text-[16px]">
+            <h1 className="text-xl font-bold text-[#424242]">What is Chips</h1>
+
+            <p>Chips are your currency to attract brands.</p>
+            <p>
+              This is the highest chips collected yet by your fellow creators.
+              Can you beat it?
+            </p>
+            <p className="flex gap-1 flex-col text-start justify-start">
+              <b>Collect more chips:</b>
+              <div>
+                <b>Build your profile (accuracy matters!)</b>
+              </div>
+              <div>
+                <b>Refer friends (both earn 20 chips!)</b>
+              </div>
+            </p>
+            <p>
+              Top 5 Chip earners get "Featured" for brands to see, so aim high!
+            </p>
+
+            <button
+              className="px-5 py-3 rounded bg-[#FF5C5C] text-sm text-[#FAFAFA]"
+              onClick={() => {
+                OpenMostChipsInfo(false);
               }}
             >
               Got it
@@ -140,7 +185,7 @@ export const Navbar3: React.FC<NavbarProps> = ({
           <span
             className="bg-[#ACFFE74D] py-2 px-3 border-none rounded-md text-[#047857] flex items-center gap-2 cursor-pointer"
             onClick={() => {
-              setOpenChipsInfo(true);
+              OpenMostChipsInfo(true);
               mixpanel.track("Clicked the chips on Navbar in Collab");
             }}
           >

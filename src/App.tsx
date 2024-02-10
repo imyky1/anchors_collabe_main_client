@@ -54,15 +54,14 @@ const App: React.FC = () => {
   useEffect(() => {
     if (
       localStorage.getItem("jwtToken") &&
-      localStorage.getItem("UserType") === "Influencer"
-    ) {
-      authState?.getUserData();
-    } else if (
-      localStorage.getItem("jwtToken") &&
       localStorage.getItem("UserType") === "Brand"
     ) {
-      // authState?.getUserData();
-      // console.log("brand")
+      authState?.getBrandData();
+    } else if (
+      localStorage.getItem("jwtToken")
+    ) {
+      authState?.getUserData();
+      console.log("brand")
     }
   }, [location]);
 

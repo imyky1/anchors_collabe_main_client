@@ -75,21 +75,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = (props) => {
   const [cookies, setCookie, removeCookie] = useCookies();
 
   useEffect(() => {
-    if (
-      localStorage.getItem("jwtToken") &&
-      localStorage.getItem("UserType") === "Influencer"
-    ) {
+    // Check UserType from localStorage and fetch data accordingly
+    const userType = localStorage.getItem("UserType");
+    if (userType === "Brand" && localStorage.getItem("jwtToken")) {
+      getBrandData();
+    } else if(localStorage.getItem("jwtToken")) {
       getUserData();
     }
-  }, [reFetchUserData]);
-  useEffect(() => {
-    if (
-      localStorage.getItem("jwtToken") &&
-      localStorage.getItem("UserType") === "Brand"
-    ) {
-      getBrandData();
-    }
-  }, [reFetchBrandData]);
+  }, [reFetchUserData, reFetchBrandData]);
 
   // open linkedin login page -----------------------
   const handleOpenLinkedin = async () => {

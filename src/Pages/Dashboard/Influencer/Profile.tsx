@@ -1061,7 +1061,7 @@ const FormNine: React.FC<FormSixProps> = ({ data, setData, errorArray }) => {
         Per-Post Pricing
       </h3>
       <p className="text-xs text-[12px] font-[400] text-[#757575] -mt-4">
-        Define a minimum & maximum price for a single sponsored LinkedIn post
+        Define a minimum & maximum price for a single sponsored LinkedIn post <br />
         Only enter a numeric value
       </p>
       <div className="flex gap-5">
@@ -1091,7 +1091,7 @@ const FormNine: React.FC<FormSixProps> = ({ data, setData, errorArray }) => {
         Monthly Post Bundles
       </h3>
       <p className="text-xs text-[12px] font-[400] text-[#757575] -mt-4">
-        Offer bundled LinkedIn posts at your desired minimum & maximum prices
+        Offer bundled LinkedIn posts at your desired minimum & maximum prices <br />
         Only enter numeric values
       </p>
       <div className="flex gap-5">
@@ -1131,7 +1131,7 @@ const FormNine: React.FC<FormSixProps> = ({ data, setData, errorArray }) => {
         Yearly Value Packages
       </h3>
       <p className=" text-[12px] font-[400] text-[#757575] -mt-4">
-        Offer bundled LinkedIn posts at your desired minimum & maximum prices
+        Offer bundled LinkedIn posts at your desired minimum & maximum prices <br />
         Only enter numeric values
       </p>
       <div className="flex gap-5">
@@ -1740,12 +1740,13 @@ const Profile: React.FC = () => {
           return toast.error("Please fill Per-post min price", {
             autoClose: 2000,
           });
-        }else if(dataSix?.PostMinPrice > dataSix?.PostMaxPrice){
+        } else if (parseInt(dataSix?.PostMinPrice) > parseInt(dataSix?.PostMaxPrice)) {
           return toast.error("Invalid Price", {
             autoClose: 2000,
           });
         }
-      } else if (
+      } 
+      if (
         dataSix?.MonthlyNumberOfPost ||
         dataSix?.MonthlyMinPrice ||
         dataSix?.MonthlyMinPrice
@@ -1762,12 +1763,14 @@ const Profile: React.FC = () => {
           return toast.error("Please fill Monthly Max price", {
             autoClose: 2000,
           });
-        }else if(dataSix?.MonthlyMinPrice > dataSix?.MonthlyMaxPrice){
+        } else if (parseInt(dataSix?.MonthlyMinPrice) > parseInt(dataSix?.MonthlyMaxPrice)) {
+          console.log(typeof dataSix?.MonthlyMinPrice)
           return toast.error("Invalid Price", {
             autoClose: 2000,
           });
         }
-      } else if (
+      } 
+      if (
         dataSix?.YearlyNumberOfPost ||
         dataSix?.YearlyMinPrice ||
         dataSix?.YearlyMinPrice
@@ -1784,23 +1787,21 @@ const Profile: React.FC = () => {
           return toast.error("Please fill Yearly Max price", {
             autoClose: 2000,
           });
-        }
-        else if(dataSix?.YearlyMinPrice > dataSix?.YearlyMaxPrice){
+        } else if (parseInt(dataSix?.YearlyMinPrice) > parseInt(dataSix?.YearlyMaxPrice)) {
           return toast.error("Invalid Price", {
             autoClose: 2000,
           });
         }
       }
-        const response = await influencerState?.updateChargesInfo(dataSix);
-        if (response?.success) {
-          // setCurrentPage(5);
-          // alert("form Saved");
-          // toast.("Some error occured while saving the data",{
-          //   autoClose:2000
-          // });
-          navigate("/influencer/share_profile");
-        }
-      
+      const response = await influencerState?.updateChargesInfo(dataSix);
+      if (response?.success) {
+        // setCurrentPage(5);
+        // alert("form Saved");
+        // toast.("Some error occured while saving the data",{
+        //   autoClose:2000
+        // });
+        navigate("/influencer/share_profile");
+      }
     } catch (error) {
       toast.error("Some error occured while saving the data", {
         autoClose: 2000,
@@ -2146,11 +2147,11 @@ const Profile: React.FC = () => {
             <>
               <div>
                 <h1 className="text-[16px] font-inter font-medium">
-                  Set Your Collab Charges
+                  Get Paid Right: Set Your Rates
                 </h1>
                 <span className="text-[#757575] font-inter text-xs -mt-1">
-                  These Charges will be displayed to the brands directly and
-                  also in your public page
+                  Set clear pricing, attract ideal brands, & get paid what
+                  you're worth
                 </span>
               </div>
               <FormNine
