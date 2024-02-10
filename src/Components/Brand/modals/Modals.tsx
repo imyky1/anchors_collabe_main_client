@@ -1,4 +1,4 @@
-import React from "react";
+import "./Modal.css";
 import { IoIosClose } from "react-icons/io";
 import { Button1, Button2, Selectbutton } from "../../Buttons";
 import { GoUnlock } from "react-icons/go";
@@ -88,20 +88,17 @@ export const Modal2 = ({ onClose, name, profile }) => {
 export const FilterOptionModal = ({ list, onClose, setfilters, filters }) => {
   const toggleFilter = (item) => {
     if (filters.includes(item)) {
-      // If item is present, remove it
       setfilters((prev) => prev.filter((filter) => filter !== item));
     } else {
-      // If item is not present, add it
       setfilters((prev) => [...prev, item]);
     }
   };
   return (
-    <div className="w-[478px] px-[20px] py-[12px]  flex flex-col items-center justify-center bg-[#FAFAFA] absolute top-[65px] rounded  z-50 font-inter">
-      <div
-        style={{ display: "flex", width: "90%", flexWrap: "wrap", gap: "12px" }}
-      >
+    <div className="FilterOptionModal">
+      <div className="filter-options">
         {list?.map((item) => (
           <Selectbutton
+            key={item}
             OnClick={() => toggleFilter(item)}
             text={item}
             value={item}
@@ -109,15 +106,23 @@ export const FilterOptionModal = ({ list, onClose, setfilters, filters }) => {
           />
         ))}
       </div>
-      <div
-        style={{
-          width: "100%",
-          display: "flex",
-          justifyContent: "flex-end",
-          marginTop: "20px",
-        }}
-      >
-        <Button1 text="Done" onClick={() => onClose()} />
+      <div className="modal-footer">
+        <Button1 text="Done" onClick={onClose} />
+      </div>
+    </div>
+  );
+};
+
+export const SideModal = ({ OnClose }) => {
+  return (
+    <div className="w-screen h-screen flex flex-col items-end justify-end bg-[#12121280] fixed top-0 left-0 z-50 font-inter">
+      <div className="bg-[#FFFFFF] p-6 flex flex-col items-center gap-4  w-[390px]  h-screen">
+        <div
+          onClick={() => OnClose()}
+          className="w-[80px] flex justify-end cursor-pointer"
+        >
+          <IoIosClose color="black" size={24} />
+        </div>
       </div>
     </div>
   );

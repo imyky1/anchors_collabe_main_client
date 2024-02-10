@@ -9,6 +9,7 @@ interface GeneralContextProps {
     three: number;
     four: number;
     five: number;
+    Six : number;
   };
   setSidebarChipsCount: React.Dispatch<
     SetStateAction<{
@@ -17,6 +18,7 @@ interface GeneralContextProps {
       three: number;
       four: number;
       five: number;
+      Six : number;
     }>
   >;
 }
@@ -40,6 +42,7 @@ export const GeneralProvider: React.FC<GeneralProviderProps> = (props) => {
     three: 0,
     four: 0,
     five: 0,
+    Six : 0
   });
 
   return (

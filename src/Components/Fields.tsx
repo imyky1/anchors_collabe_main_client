@@ -68,11 +68,11 @@ export const InputField1: React.FC<InputFieldProps> = ({
   
 }) => {
   return (
-    <div className={`w-full ${error && "outline-red-500 outline" }  flex-col text-[14px] text-[#424242] gap-[8px]`}>
+    <div className={`w-full ${error && "outline-red-500 outline" }  flex-col text-[14px] text-[#424242] gap-[12px]`}>
       <label htmlFor={id}>{label}</label>
       <input
         placeholder={placeholder}
-        className="w-full mt-[12px] box-border px-4 py-3 rounded font-inter text-xs bg-[#EEEEEE]"
+        className="w-full box-border px-4 py-3 rounded font-inter text-xs bg-[#EEEEEE]"
         type={type ?? "text"}
         value={value ?? ""}
         onChange={onChange}

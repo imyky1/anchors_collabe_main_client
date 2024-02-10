@@ -47,7 +47,7 @@ const BrandHome: React.FC = () => {
           <section className="w-full h-full flex items-start overflow-hidden">
             <Sidebar />
 
-            <section className="w-full h-full flex flex-col items-center ">
+            <section className="w-full max-w-[85%] h-full flex flex-col items-center ">
               <Navbar3
                 profile={authState?.loggedBrand?.profile}
                 credits={authState?.loggedBrand?.credits || 0}

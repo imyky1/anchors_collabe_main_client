@@ -12,8 +12,6 @@ import { useAuth } from "../../../Providers/Auth";
 
 const BrandRoutes: React.FC = () => {
   const authSate = useAuth();
-  console.log(authSate?.loggedBrand)
-  console.log(authSate?.loggedBrand?.firstTime)
 
   return (
     <Routes>

@@ -233,6 +233,25 @@ const Sidebar: React.FC = () => {
                 </span>
               )}
             </span>
+            <span
+              className={`cursor-pointer ${
+                location.search === "?page=6" &&
+                location.pathname === "/influencer/build_profile"
+                  ? "text-[#FF5C5C]"
+                  : "text-[#757575]"
+              } hover:text-[#FF5C5C] flex items-center justify-between w-full`}
+              onClick={() => {
+                navigate("/influencer/build_profile?page=6");
+              }}
+            >
+              Set Charges
+              {window.location.pathname === "/influencer/build_profile" && (
+                <span className="flex text-xs items-center gap-2">
+                  <GiTwoCoins color="#FFD700" />{" "}
+                  {generalState.SidebarChipsCount.Six}
+                </span>
+              )}
+            </span>
           </section>
         )}
 

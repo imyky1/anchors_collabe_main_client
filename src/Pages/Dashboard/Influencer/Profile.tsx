@@ -6,7 +6,12 @@ import {
   SocialField1,
   TagsField1,
 } from "../../../Components/Fields";
-import { Button1 } from "../../../Components/Buttons";
+import {
+  Button1,
+  Button2,
+  Button3,
+  Button4,
+} from "../../../Components/Buttons";
 import ProfileDemo from "../../../Components/Preview/ProfileDemo";
 import { useStaticData } from "../../../Providers/Data";
 import { useInfluencer } from "../../../Providers/Influencer";
@@ -78,6 +83,19 @@ interface dataFiveProps {
   ];
 }
 
+interface dataSixProps {
+  PostMaxPrice: Number;
+  PostMinPrice: Number;
+  MonthlyNumberOfPost: Number;
+  MonthlyMaxPrice: Number;
+  MonthlyMinPrice: Number;
+  YearlyNumberOfPost: Number;
+  YearlyMaxPrice: Number;
+  YearlyMinPrice: Number;
+  AcceptFreeBies: Boolean;
+  isNegotiable: Boolean;
+}
+
 interface FormOneProps {
   data: dataOneProps;
   setData: React.Dispatch<React.SetStateAction<dataOneProps>>;
@@ -107,6 +125,12 @@ interface FormFourProps {
 interface FormFiveProps {
   data: dataFiveProps;
   setData: React.Dispatch<React.SetStateAction<dataFiveProps>>;
+  errorArray?: [];
+}
+
+interface FormSixProps {
+  data: dataSixProps;
+  setData: React.Dispatch<React.SetStateAction<dataSixProps>>;
   errorArray?: [];
 }
 
@@ -215,6 +239,7 @@ const FormOne: React.FC<FormOneProps> = ({
           name="name"
           id="name"
           error={errorArray?.includes("name")}
+          icon={undefined}
         />
         <InputField1
           placeholder="Your Tagline"
@@ -223,6 +248,7 @@ const FormOne: React.FC<FormOneProps> = ({
           name="tagline"
           id="tagline"
           error={errorArray?.includes("tagline")}
+          icon={undefined}
         />
       </div>
 
@@ -535,6 +561,7 @@ const FormThree: React.FC<FormTwoProps> = ({
                     error={errorArray?.includes(
                       "collab" + index + "companyName"
                     )}
+                    icon={undefined}
                   />
 
                   <InputField1
@@ -548,6 +575,7 @@ const FormThree: React.FC<FormTwoProps> = ({
                     error={errorArray?.includes(
                       "collab" + index + "companyUrl"
                     )}
+                    icon={undefined}
                   />
 
                   <InputField1
@@ -559,6 +587,7 @@ const FormThree: React.FC<FormTwoProps> = ({
                     name="postLink"
                     id="postLink"
                     error={errorArray?.includes("collab" + index + "postLink")}
+                    icon={undefined}
                   />
                 </div>
               </section>
@@ -699,6 +728,7 @@ const FormFour: React.FC<FormThreeProps> = ({ data, setData, errorArray }) => {
                 error={errorArray?.includes(
                   "monetization" + index + "profileLink"
                 )}
+                icon={undefined}
               />
               <InputField1
                 placeholder="Total Paid Audience"
@@ -712,6 +742,7 @@ const FormFour: React.FC<FormThreeProps> = ({ data, setData, errorArray }) => {
                 error={errorArray?.includes(
                   "monetization" + index + "paidAudience"
                 )}
+                icon={undefined}
               />
             </div>
 
@@ -883,7 +914,7 @@ const FormEight: React.FC<FormFiveProps> = ({ data, setData, errorArray }) => {
       if (field === "audience" && value >= 0) {
         updatedObj[field] = value;
         newArray[index] = updatedObj;
-      }else if(field !== "audience"){
+      } else if (field !== "audience") {
         updatedObj[field] = value;
         newArray[index] = updatedObj;
       }
@@ -982,18 +1013,20 @@ const FormEight: React.FC<FormFiveProps> = ({ data, setData, errorArray }) => {
                 name="audience"
                 id="audience"
                 error={errorArray?.includes("audience" + index + "audience")}
+                icon={undefined}
               />
             </section>
             <InputField2
               placeholder="Enter Link here"
               value={e.link}
               type="text"
-              onChange={(e) =>{
-                return handleChangeData(e.target.value, index, e.target.name)
+              onChange={(e) => {
+                return handleChangeData(e.target.value, index, e.target.name);
               }}
               name="link"
               id="link"
               error={errorArray?.includes("audience" + index + "link")}
+              icon={undefined}
             />
           </div>
         );
@@ -1005,6 +1038,208 @@ const FormEight: React.FC<FormFiveProps> = ({ data, setData, errorArray }) => {
       >
         <GoPlus /> Add More Platform
       </button>
+    </div>
+  );
+};
+
+const FormNine: React.FC<FormSixProps> = ({ data, setData, errorArray }) => {
+  const [AcceptFreeBies, SetAcceptFreeBies] = useState(true);
+  const [isNegotiable, SetisNegotiable] = useState(false);
+
+  const handleChange = (e) => {
+    setData({ ...data, [e.target?.name]: e.target?.value });
+  };
+  useEffect(() => {
+    setData({ ...data, isNegotiable, AcceptFreeBies });
+  }, [isNegotiable, AcceptFreeBies]);
+  return (
+    <div
+      className="w-full p-5 box-border bg-white rounded-lg flex flex-col gap-5"
+      style={{ boxShadow: "0px 0px 8px 0px rgba(33, 33, 33, 0.08)" }}
+    >
+      <h3 className="text-[14px] font-[Inter] text-[#424242] font-[600]">
+        Per-Post Pricing
+      </h3>
+      <p className="text-xs text-[12px] font-[400] text-[#757575] -mt-4">
+        Define a minimum & maximum price for a single sponsored LinkedIn post
+        Only enter a numeric value
+      </p>
+      <div className="flex gap-5">
+        <InputField1
+          placeholder="Min. price in Rs."
+          value={data?.PostMinPrice}
+          onChange={handleChange}
+          name="PostMinPrice"
+          id="PostMinPrice"
+          error={false}
+          type="Number"
+          icon={undefined}
+        />
+        <InputField1
+          placeholder="Max. price in Rs."
+          value={data?.PostMaxPrice}
+          type="Number"
+          onChange={handleChange}
+          name="PostMaxPrice"
+          id="PostMaxPrice"
+          error={false}
+          icon={undefined}
+        />
+      </div>
+
+      <h3 className="text-[14px] font-[Inter] text-[#424242] font-[600]">
+        Monthly Post Bundles
+      </h3>
+      <p className="text-xs text-[12px] font-[400] text-[#757575] -mt-4">
+        Offer bundled LinkedIn posts at your desired minimum & maximum prices
+        Only enter numeric values
+      </p>
+      <div className="flex gap-5">
+        <InputField1
+          placeholder="No. of Posts/Month"
+          value={data?.MonthlyNumberOfPost}
+          onChange={handleChange}
+          type="Number"
+          name="MonthlyNumberOfPost"
+          id="MonthlyNumberOfPost"
+          error={false}
+          icon={undefined}
+        />
+        <InputField1
+          placeholder="Min. price in Rs."
+          value={data?.MonthlyMinPrice}
+          onChange={handleChange}
+          type="Number"
+          name="MonthlyMinPrice"
+          id="MonthlyMinPrice"
+          error={false}
+          icon={undefined}
+        />
+        <InputField1
+          placeholder="Max. price in Rs."
+          value={data?.MonthlyMaxPrice}
+          onChange={handleChange}
+          name="MonthlyMaxPrice"
+          id="MonthlyMaxPrice"
+          type="Number"
+          error={false}
+          icon={undefined}
+        />
+      </div>
+
+      <h3 className="text-[14px] font-[Inter] text-[#424242] font-[600]">
+        Yearly Value Packages
+      </h3>
+      <p className=" text-[12px] font-[400] text-[#757575] -mt-4">
+        Offer bundled LinkedIn posts at your desired minimum & maximum prices
+        Only enter numeric values
+      </p>
+      <div className="flex gap-5">
+        <InputField1
+          placeholder="No. of Posts/Year"
+          value={data?.YearlyNumberOfPost}
+          onChange={handleChange}
+          name="YearlyNumberOfPost"
+          type="Number"
+          id="YearlyNumberOfPost"
+          error={false}
+          icon={undefined}
+        />
+        <InputField1
+          placeholder="Min. price in Rs."
+          value={data?.YearlyMinPrice}
+          onChange={handleChange}
+          name="YearlyMinPrice"
+          type="Number"
+          id="YearlyMinPrice"
+          error={false}
+          icon={undefined}
+        />
+        <InputField1
+          placeholder="Max. price in Rs."
+          value={data?.YearlyMaxPrice}
+          onChange={handleChange}
+          type="Number"
+          name="YearlyMaxPrice"
+          id="YearlyMaxPrice"
+          error={false}
+          icon={undefined}
+        />
+      </div>
+
+      <h3 className="text-[14px] font-[Inter] text-[#424242] font-[600]">
+        Open to non-monetary offers like Free Gifts & Barters?
+      </h3>
+      <div className="flex gap-5">
+        {AcceptFreeBies ? (
+          <Button3
+            text="Yes"
+            onClick={() => SetAcceptFreeBies(true)}
+            icon={undefined}
+            rightIcon={undefined}
+          />
+        ) : (
+          <Button4
+            text="Yes"
+            onClick={() => SetAcceptFreeBies(true)}
+            icon={undefined}
+            rightIcon={undefined}
+          />
+        )}
+        {!AcceptFreeBies ? (
+          <Button3
+            text="No"
+            onClick={() => SetAcceptFreeBies(false)}
+            icon={undefined}
+            rightIcon={undefined}
+          />
+        ) : (
+          <Button4
+            text="No"
+            onClick={() => SetAcceptFreeBies(false)}
+            icon={undefined}
+            rightIcon={undefined}
+          />
+        )}
+      </div>
+
+      <h3 className="text-[14px] font-[Inter] text-[#424242] font-[600]">
+        Open to Pricing Negotiation?
+      </h3>
+      <div className="flex gap-5">
+        {isNegotiable ? (
+          <Button3
+            text="Yes"
+            onClick={() => SetisNegotiable(true)}
+            icon={undefined}
+            rightIcon={undefined}
+          />
+        ) : (
+          <Button4
+            text="Yes"
+            onClick={() => SetisNegotiable(true)}
+            icon={undefined}
+            rightIcon={undefined}
+          />
+        )}
+        {!isNegotiable ? (
+          <Button3
+            text="No"
+            onClick={() => SetisNegotiable(false)}
+            icon={undefined}
+            rightIcon={undefined}
+          />
+        ) : (
+          <Button4
+            text="No"
+            onClick={() => {
+              SetisNegotiable(false);
+            }}
+            icon={undefined}
+            rightIcon={undefined}
+          />
+        )}
+      </div>
     </div>
   );
 };
@@ -1126,6 +1361,19 @@ const Profile: React.FC = () => {
     ],
   });
 
+  const [dataSix, setdataSix] = useState<dataSixProps>({
+    PostMaxPrice: null,
+    PostMinPrice: null,
+    MonthlyNumberOfPost: null,
+    MonthlyMaxPrice: null,
+    MonthlyMinPrice: null,
+    YearlyNumberOfPost: null,
+    YearlyMaxPrice: null,
+    YearlyMinPrice: null,
+    AcceptFreeBies: true,
+    isNegotiable: false,
+  });
+
   const handleSubmit = async () => {
     generalState?.setLoading(true);
     if (currentPage === 1) {
@@ -1142,6 +1390,9 @@ const Profile: React.FC = () => {
       generalState?.setLoading(false);
     } else if (currentPage === 5) {
       await handleSubmitFormFive();
+      generalState?.setLoading(false);
+    } else if (currentPage === 6) {
+      await handleSubmitFormSix();
       generalState?.setLoading(false);
     }
   };
@@ -1284,7 +1535,7 @@ const Profile: React.FC = () => {
       if (element?._id) {
         delete element._id;
       }
-      
+
       if (JSON.stringify(element) !== JSON.stringify(originalObj)) {
         const res = callback(element, index);
         if (!res) {
@@ -1468,9 +1719,88 @@ const Profile: React.FC = () => {
           // toast.("Some error occured while saving the data",{
           //   autoClose:2000
           // });
-          navigate("/influencer/share_profile");
+          navigate("/influencer/build_profile?page=6");
         }
       }
+    } catch (error) {
+      toast.error("Some error occured while saving the data", {
+        autoClose: 2000,
+      });
+    }
+  };
+
+  const handleSubmitFormSix = async () => {
+    try {
+      if (dataSix?.PostMaxPrice || dataSix?.PostMinPrice) {
+        if (!dataSix?.PostMaxPrice) {
+          return toast.error("Please fill Per-post max price", {
+            autoClose: 2000,
+          });
+        } else if (!dataSix?.PostMinPrice) {
+          return toast.error("Please fill Per-post min price", {
+            autoClose: 2000,
+          });
+        }else if(dataSix?.PostMinPrice > dataSix?.PostMaxPrice){
+          return toast.error("Invalid Price", {
+            autoClose: 2000,
+          });
+        }
+      } else if (
+        dataSix?.MonthlyNumberOfPost ||
+        dataSix?.MonthlyMinPrice ||
+        dataSix?.MonthlyMinPrice
+      ) {
+        if (!dataSix?.MonthlyNumberOfPost) {
+          return toast.error("Please fill Monthly Number Of Post", {
+            autoClose: 2000,
+          });
+        } else if (!dataSix?.MonthlyMinPrice) {
+          return toast.error("Please fill Monthly Min price", {
+            autoClose: 2000,
+          });
+        } else if (!dataSix?.MonthlyMaxPrice) {
+          return toast.error("Please fill Monthly Max price", {
+            autoClose: 2000,
+          });
+        }else if(dataSix?.MonthlyMinPrice > dataSix?.MonthlyMaxPrice){
+          return toast.error("Invalid Price", {
+            autoClose: 2000,
+          });
+        }
+      } else if (
+        dataSix?.YearlyNumberOfPost ||
+        dataSix?.YearlyMinPrice ||
+        dataSix?.YearlyMinPrice
+      ) {
+        if (!dataSix?.YearlyNumberOfPost) {
+          return toast.error("Please fill Yearly Number Of Post", {
+            autoClose: 2000,
+          });
+        } else if (!dataSix?.YearlyMinPrice) {
+          return toast.error("Please fill Yearly Min price", {
+            autoClose: 2000,
+          });
+        } else if (!dataSix?.YearlyMaxPrice) {
+          return toast.error("Please fill Yearly Max price", {
+            autoClose: 2000,
+          });
+        }
+        else if(dataSix?.YearlyMinPrice > dataSix?.YearlyMaxPrice){
+          return toast.error("Invalid Price", {
+            autoClose: 2000,
+          });
+        }
+      }
+        const response = await influencerState?.updateChargesInfo(dataSix);
+        if (response?.success) {
+          // setCurrentPage(5);
+          // alert("form Saved");
+          // toast.("Some error occured while saving the data",{
+          //   autoClose:2000
+          // });
+          navigate("/influencer/share_profile");
+        }
+      
     } catch (error) {
       toast.error("Some error occured while saving the data", {
         autoClose: 2000,
@@ -1563,6 +1893,21 @@ const Profile: React.FC = () => {
             ],
           });
         }
+
+        setdataSix(
+          e.data6 ?? {
+            PostMaxPrice: null,
+            PostMinPrice: null,
+            MonthlyNumberOfPost: null,
+            MonthlyMaxPrice: null,
+            MonthlyMinPrice: null,
+            YearlyNumberOfPost: null,
+            YearlyMaxPrice: null,
+            YearlyMinPrice: null,
+            AcceptFreeBies: true,
+            isNegotiable: false,
+          }
+        );
       }
     });
   }, [currentPage]);
@@ -1682,6 +2027,7 @@ const Profile: React.FC = () => {
     const cfd3 = CountTheChips(dataThree, "monetisation");
     const cfd4 = CountTheChips(dataFour, "content");
     const cfd5 = CountTheChips(dataFive, "audience");
+    const cfd6 = CountTheChips(dataSix, "charges");
 
     generalState?.setSidebarChipsCount({
       one: cfd1,
@@ -1689,8 +2035,9 @@ const Profile: React.FC = () => {
       three: cfd3,
       four: cfd4,
       five: cfd5,
+      Six: cfd6,
     });
-  }, [dataOne, dataTwo, dataThree, dataFour, dataFive]);
+  }, [dataOne, dataTwo, dataThree, dataFour, dataFive, dataSix]);
 
   return (
     <>
@@ -1795,6 +2142,24 @@ const Profile: React.FC = () => {
               />
             </>
           )}
+          {currentPage === 6 && (
+            <>
+              <div>
+                <h1 className="text-[16px] font-inter font-medium">
+                  Set Your Collab Charges
+                </h1>
+                <span className="text-[#757575] font-inter text-xs -mt-1">
+                  These Charges will be displayed to the brands directly and
+                  also in your public page
+                </span>
+              </div>
+              <FormNine
+                data={dataSix}
+                setData={setdataSix}
+                errorArray={errorArray}
+              />
+            </>
+          )}
 
           <div className="w-full flex flex-row-reverse">
             <Button1
@@ -1802,6 +2167,8 @@ const Profile: React.FC = () => {
               onClick={() => {
                 handleSubmit();
               }}
+              icon={undefined}
+              rightIcon={undefined}
             />
           </div>
         </section>
@@ -1832,6 +2199,7 @@ const Profile: React.FC = () => {
               money: dataThree,
               ...dataFour,
               ...dataFive,
+              ...dataSix,
             }}
             uploadedImages={formOneImages ?? []}
             uploadedImages2={formTwoImages ?? []}

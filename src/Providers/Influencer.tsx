@@ -8,18 +8,43 @@ interface InfluencerProviderProps {
 }
 
 interface InfluencerContextProps {
-  updatePersonalInfo: (data: {}) => Promise<{ any }>;
-  updateCollabInfo: (data: []) => Promise<{ any }>;
-  updateMonetizationInfo: (data: []) => Promise<{ any }>;
-  updateContentInfo: (data: {}) => Promise<{ any }>;
-  updateAudienceInfo: (data: {}) => Promise<{ any }>;
+  updatePersonalInfo: (data: {}) => Promise<{
+    success: any; any 
+}>;
+  updateCollabInfo: (data: []) => Promise<{
+    success: any; any 
+}>;
+  updateMonetizationInfo: (data: []) => Promise<{
+    success: any; any 
+}>;
+  updateContentInfo: (data: {}) => Promise<{
+    success: any; any 
+}>;
+  updateAudienceInfo: (data: {}) => Promise<{
+    success: any; any 
+}>;
+  updateChargesInfo : (data : {}) => Promise<{
+    success : any; any
+  }>
   updateWishlist: (data: {}) => Promise<{ any }>;
-  uploadInfluencerImages: (data: {}) => Promise<{ any }>;
-  uploadCompanyImages: (data: {}) => Promise<{ any }>;
+  uploadInfluencerImages: (data: {}) => Promise<{
+    success: any;
+    result: any; any 
+}>;
+  uploadCompanyImages: (data: {}) => Promise<{
+    success: any;
+    result: any; any 
+}>;
   saveTempBrandData: (data: {}) => Promise<{ any }>;
   SaveUserInfo: (data: {}) => Promise<{ any }>;
   SentMessageFromSNS: (number: string) => Promise<{ any }>;
-  getPersonalInfo: () => Promise<{ success: boolean; data?: {} }>;
+  getPersonalInfo: () => Promise<{
+    data2: any;
+    data3: any;
+    data4: any;
+    data5: any;
+    data6: { Post: { maxPrice: number; minPrice: number; }; Monthly: { NumberOfPost: number; maxPrice: number; minPrice: number; }; Yearly: { NumberOfPost: number; maxPrice: number; minPrice: number; }; AcceptFreeBies: boolean; isNegotiable: boolean; }; success: boolean; data?: {} 
+}>;
   getInfluencerInfoFromSlug: (slug:string) => Promise<{ success: boolean; data?: {}}>;
   getBrandWishlist: () => Promise<{ success: boolean; data?: {} }>;
 }
@@ -156,6 +181,28 @@ export const InfluencerProvider: React.FC<InfluencerProviderProps> = (
       alert(error);
     }
   };
+  const updateChargesInfo = async (data : {})=>{
+    try {
+      const response = await axios.post(
+        `${host}/influencer/updateChargesInfo`,
+        { ...data,chipsCredit:generalState.SidebarChipsCount.Six },
+        {
+          headers: {
+            jwtToken: localStorage.getItem("jwtToken"),
+          },
+        }
+      );
+
+      // Check if the response contains the LinkedIn authorization URL
+      if (response.status !== 200) {
+        throw new Error("Error in saving the data");
+      } else {
+        return response.data;
+      }
+    } catch (error) {
+      alert(error);
+    }
+  }
 
   // update personal info -----------------------
   const updateWishlist = async (data: {}) => {
@@ -340,6 +387,7 @@ export const InfluencerProvider: React.FC<InfluencerProviderProps> = (
         updateMonetizationInfo,
         updateAudienceInfo,
         updateContentInfo,
+        updateChargesInfo,
         uploadInfluencerImages,
         uploadCompanyImages,
         updateWishlist,

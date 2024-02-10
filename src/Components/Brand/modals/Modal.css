@@ -1,0 +1,26 @@
+.FilterOptionModal {
+    position: absolute;
+    top: 80%; /* Position it below the parent */
+    left: 0;
+    background: #ffffff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    max-width: 75%;
+    width: auto;
+    z-index: 999; /* Ensure the modal appears above other elements */
+  }
+  
+  .filter-options {
+    display: flex;
+    width: 90%;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  
+  .modal-footer {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+  }
+  

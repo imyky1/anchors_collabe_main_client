@@ -36,7 +36,7 @@ const Sidebar: React.FC = () => {
 
   return (
     <div
-      className="flex flex-col w-[260px] min-w-[260px] p-5 box-border gap-5 font-inter h-full z-10 bg-[#F5F5F5]"
+      className="flex flex-col w-[15%] min-w-[15%] p-5 box-border gap-5 font-inter h-full z-10 bg-[#F5F5F5]"
       style={{ boxShadow: "4px 0px 8px 0px rgba(33, 33, 33, 0.08)" }}
     >
       <img

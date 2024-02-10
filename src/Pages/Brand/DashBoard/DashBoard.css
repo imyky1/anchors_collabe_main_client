@@ -121,13 +121,18 @@
   font-weight: 600;
   line-height: normal;
 }
+.DashboardFilterContainer{
+  width: 100%;
+  max-width: 100%;
+  margin-top: 20px;
+}
 .MaindashBoardFilterWrapper {
   display: flex;
   max-width: 80%;
-  /* overflow: auto; */
-  overflow-x:unset;
+  overflow-x: auto; /* Enable horizontal scrolling */
+  overflow-y: hidden; 
+  white-space: nowrap; /* Prevent filters from wrapping to new lines */
   flex-wrap: nowrap;
-  overflow-y: inherit;
   text-wrap: nowrap;
 }
 
@@ -197,6 +202,7 @@
 }
 .filterCard {
   display: flex;
+  position: relative;
   padding: 20px 12px;
   align-items: center;
   height: 60px;

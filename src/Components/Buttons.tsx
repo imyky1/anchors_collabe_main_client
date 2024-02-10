@@ -50,6 +50,42 @@ export const Button2: React.FC<ButtonProps> = ({
   );
 };
 
+export const Button3: React.FC<ButtonProps> = ({
+  text,
+  onClick,
+  icon,
+  rightIcon,
+}) => {
+  return (
+    <div>
+      <button
+        className="flex items-center gap-[8px] px-[20px] py-[12px] rounded-[200px] bg-[#FF5C5C] font-inter text-xs text-[#FFFFFF]"
+        onClick={onClick}
+      >
+        {icon} <div>{text}</div> {rightIcon}
+      </button>
+    </div>
+  );
+};
+
+export const Button4: React.FC<ButtonProps> = ({
+  text,
+  onClick,
+  icon,
+  rightIcon,
+}) => {
+  return (
+    <div>
+      <button
+        className="flex items-center gap-[8px] px-[20px] py-[12px] rounded-[200px] rounded bg-[transparent] border-solid border-[1px] border-[#BDBDBD] font-inter text-xs text-[#757575]"
+        onClick={onClick}
+      >
+        {icon} <div>{text}</div> {rightIcon}
+      </button>
+    </div>
+  );
+};
+
 export const Selectbutton = ({ item, value, text, OnClick }) => {
   return (
     <div className="BrandForm_CompanySize">

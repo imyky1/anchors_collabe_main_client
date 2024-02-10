@@ -27,7 +27,10 @@ import { FiChevronRight } from "react-icons/fi";
 import { IoDiamondOutline } from "react-icons/io5";
 
 import { Button1 } from "../../../Components/Buttons";
-import { FilterOptionModal } from "../../../Components/Brand/modals/Modals";
+import {
+  FilterOptionModal,
+  SideModal,
+} from "../../../Components/Brand/modals/Modals";
 import { Modal1, Modal2 } from "../../../Components/Brand/modals/Modals";
 
 export const TypeCard = ({ item, Objkey, borderRadius, locked }) => {
@@ -131,24 +134,38 @@ export const Contentcard = (props) => {
     </div>
   );
 };
-export const FilterCard = ({ list, item, icon, setfilters, filters }) => {
-  const [filterModal, OpenFilterModal] = useState(false);
+export const FilterCard = ({
+  list,
+  item,
+  icon,
+  setfilters,
+  filters,
+  onMouseEnter,
+  onMouseLeave,
+  onClick,
+}) => {
+  const handleClick = (event) => {
+    console.log(event.target);
+    const targetElement = event.target;
+    const rect = targetElement.getBoundingClientRect();
+    const mouseXRelativeToElement = event.clientX - rect.left;
+    const mouseYRelativeToElement = event.clientY - rect.top;
+    console.log(
+      "Mouse clicked relative to element at: " +
+        mouseXRelativeToElement +
+        ", " +
+        mouseYRelativeToElement
+    );
+    onClick();
+  };
 
   return (
     <div
-      style={{ position: "relative" }}
-      onMouseEnter={() => OpenFilterModal(true)}
-      onMouseLeave={() => OpenFilterModal(false)}
+      onClick={() => handleClick(event)}
+      // onMouseEnter={() => onMouseEnter()}
+      // onMouseLeave={()=>onMouseLeave()}
       className="filterCard"
     >
-      {filterModal && (
-        <FilterOptionModal
-          filters={filters}
-          setfilters={setfilters}
-          list={list}
-          onClose={() => OpenFilterModal(false)}
-        />
-      )}
       {icon}
       <div
         style={
@@ -173,8 +190,12 @@ export const FilterCard = ({ list, item, icon, setfilters, filters }) => {
 
 export const DashBoard = () => {
   const [AllInfluencers, SetAllInfluencers] = useState(null);
+  const [FilteredInfluencer, SetFilteredInfluencer] = useState(null);
+
   const [openModal, SetOpenModal] = useState(false);
   const [successModal, OpenSuccessModal] = useState(false);
+  const [filterModal, OpenFilterModal] = useState(false);
+  const [AdvandeModal, OpenAdvanceModal] = useState(false);
 
   const brandState = useBrand();
   const authState = useAuth();
@@ -182,6 +203,7 @@ export const DashBoard = () => {
   const staticDataState = useStaticData();
 
   //filters
+  const [List, SetList] = useState([]);
   const [Followers, setFollowers] = useState([
     "1k-5k",
     "5k-10k",
@@ -202,6 +224,10 @@ export const DashBoard = () => {
   const [AudienceType, setAudienceype] = useState([]);
 
   //selected filters
+  // Define state and setters for FilterOptionModal
+  const [selectedFilterState, setSelectedFilterState] = useState([]);
+  const [selectedFilterSetter, setSelectedFilterSetter] = useState(() => {});
+
   const [selectedFollowersFilters, setSelectedFollowersFilters] = useState([]);
   const [selectedContentTypeFilters, setSelectedContentTypeFilters] = useState(
     []
@@ -210,6 +236,7 @@ export const DashBoard = () => {
     useState([]);
   const [selectedGenderFilters, setSelectedGenderFilters] = useState([]);
 
+  //SlectedInfluenceData
   const [selectedInfluencerCoins, setSelectedInfluencerCoins] = useState(0);
   const [selectedInfluencerName, setSelectedInfluencerName] = useState("");
   const [selectedInfluencerprofile, setSelectedInfluencerProfile] =
@@ -218,13 +245,14 @@ export const DashBoard = () => {
 
   useEffect(() => {
     async function getAllInfluencers() {
-      generalState?.setLoading(true)
+      generalState?.setLoading(true);
       const result = await brandState?.getAllInfluencersData();
       if (result?.success) {
         SetAllInfluencers(result?.AllInfluencers);
-        generalState?.setLoading(false)
+        SetFilteredInfluencer(result?.AllInfluencers);
+        generalState?.setLoading(false);
       } else {
-        generalState?.setLoading(false)
+        generalState?.setLoading(false);
         alert(result?.error);
       }
     }
@@ -237,12 +265,31 @@ export const DashBoard = () => {
         "Audience Category"
       );
       if (result) {
-        setAudienceype(result);
+        setAudienceype(result2);
       }
     }
     getAllInfluencers();
     getAllFilters();
   }, []);
+  useEffect(() => {
+    setSelectedFilterState(selectedFollowersFilters);
+  }, [selectedFollowersFilters]);
+  useEffect(() => {
+    setSelectedFilterState(selectedContentTypeFilters);
+  }, [selectedContentTypeFilters]);
+  useEffect(() => {
+    setSelectedFilterState(selectedAudienceTypeFilters);
+  }, [selectedAudienceTypeFilters]);
+  useEffect(() => {
+    setSelectedFilterState(selectedGenderFilters);
+  }, [selectedGenderFilters]);
+
+  const handleFilterCardClick = (filterList, filters, setFilterFunction) => {
+    SetList(filterList);
+    setSelectedFilterState(filters);
+    setSelectedFilterSetter(() => setFilterFunction);
+    OpenFilterModal(true);
+  };
 
   const handleUnlockButtonClick = (coins, name, profile, id) => {
     setSelectedInfluencerCoins(coins);
@@ -268,17 +315,51 @@ export const DashBoard = () => {
     }
   };
 
+  const handleFilterSearch = () => {
+    console.log(selectedAudienceTypeFilters);
+    if (
+      selectedAudienceTypeFilters?.length > 0 ||
+      selectedContentTypeFilters?.length > 0
+    ) {
+      const filteredInfluencers = AllInfluencers.filter((influencer) => {
+        // Check if any selected filter is included in AudienceCategory or AudienceData
+        const matchesAudience = influencer?.AudienceCategory?.some((category) =>
+          selectedAudienceTypeFilters.includes(category)
+        );
+        // Check if any selected filter is included in ContentCategory
+        const matchesContent = influencer?.ContentCategory?.some((category) =>
+          selectedContentTypeFilters.includes(category)
+        );
+        // Return true if either audience or content matches
+        return matchesAudience || matchesContent;
+      });
+      SetFilteredInfluencer(filteredInfluencers);
+    } else {
+      SetFilteredInfluencer(AllInfluencers);
+    }
+  };
+
   console.log(AllInfluencers);
 
   return (
     <>
+      {AdvandeModal && <SideModal OnClose={() => OpenAdvanceModal(false)} />}
       <div className="brandDashBoardContainer">
         <h1>Discover Influencer</h1>
-        <div style={{ marginTop: "20px" }} className="DashboardFilterContainer">
-          <div style={{ display: "flex",width:'100%' }}>
+        <div className="DashboardFilterContainer">
+          <div style={{ display: "flex", width: "100%", position: "relative" }}>
             <div className="MaindashBoardFilterWrapper">
               <FilterCard
                 list={Followers}
+                onClick={() =>
+                  handleFilterCardClick(
+                    Followers,
+                    selectedFollowersFilters,
+                    setSelectedFollowersFilters
+                  )
+                }
+                onMouseEnter={() => OpenFilterModal(true)}
+                onMouseLeave={() => OpenFilterModal(false)}
                 filters={selectedFollowersFilters}
                 setfilters={setSelectedFollowersFilters}
                 item={"Followers"}
@@ -286,6 +367,15 @@ export const DashBoard = () => {
               />
               <FilterCard
                 list={ContentType}
+                onClick={() =>
+                  handleFilterCardClick(
+                    ContentType,
+                    selectedContentTypeFilters,
+                    setSelectedContentTypeFilters
+                  )
+                }
+                onMouseEnter={() => OpenFilterModal(true)}
+                onMouseLeave={() => OpenFilterModal(false)}
                 filters={selectedContentTypeFilters}
                 setfilters={setSelectedContentTypeFilters}
                 item={"Content Type"}
@@ -293,28 +383,77 @@ export const DashBoard = () => {
               />
               <FilterCard
                 item={"Audience Type"}
+                onClick={() =>
+                  handleFilterCardClick(
+                    AudienceType,
+                    selectedAudienceTypeFilters,
+                    setSelectedAudienceTypeFilters
+                  )
+                }
                 filters={selectedAudienceTypeFilters}
                 list={AudienceType}
                 setfilters={setSelectedAudienceTypeFilters}
                 icon={<HiOutlineUserGroup />}
+                onMouseEnter={() => OpenFilterModal(true)}
+                onMouseLeave={() => OpenFilterModal(false)}
               />
-              <FilterCard item={"Collaborated with brands"} icon={""} />
+              <FilterCard
+                filters={""}
+                list={""}
+                setfilters={""}
+                item={"Collaborated with brands"}
+                onClick={() =>
+                  handleFilterCardClick(
+                    ContentType,
+                    selectedContentTypeFilters,
+                    setSelectedContentTypeFilters
+                  )
+                }
+                onMouseEnter={() => OpenFilterModal(true)}
+                onMouseLeave={() => OpenFilterModal(false)}
+                icon={""}
+              />
               <FilterCard
                 filters={selectedGenderFilters}
                 list={Gender}
                 setfilters={setSelectedGenderFilters}
+                onClick={() =>
+                  handleFilterCardClick(
+                    Gender,
+                    selectedGenderFilters,
+                    setSelectedGenderFilters
+                  )
+                }
+                onMouseLeave={() => OpenFilterModal(false)}
                 item={"Gender"}
                 icon={<BsGenderFemale />}
+                onMouseEnter={() => OpenFilterModal(true)}
               />
               {/* <FilterCard item={"Gender"} icon={<BsGenderFemale />} />
               <FilterCard item={"Gender"} icon={<BsGenderFemale />} />
               <FilterCard item={"Gender"} icon={<BsGenderFemale />} /> */}
             </div>
+
+            {filterModal && (
+              <FilterOptionModal
+                filters={selectedFilterState}
+                setfilters={selectedFilterSetter}
+                list={List}
+                onClose={() => OpenFilterModal(false)}
+              />
+            )}
+
             <div className="FilterSearchWrapper">
-              <Button1 text="Search" />
+              <Button1
+                onClick={() => handleFilterSearch()}
+                icon={""}
+                rightIcon={""}
+                text="Search"
+              />
             </div>
           </div>
           <div
+            onClick={() => OpenAdvanceModal(true)}
             style={{
               width: "100%",
               display: "flex",
@@ -327,9 +466,9 @@ export const DashBoard = () => {
             </button>
           </div>
         </div>
-        <h2>List of creators ({AllInfluencers?.length}) </h2>
+        <h2>List of creators ({FilteredInfluencer?.length}) </h2>
         <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-          {AllInfluencers?.map((influencer, index) => (
+          {FilteredInfluencer?.map((influencer, index) => (
             <div key={index} className="creatorcard">
               {openModal && (
                 <Modal1
