@@ -8,6 +8,10 @@ import { ScreenAlert } from "../../SmallScreenAlert/ScreenAlert";
 import { useBrand } from "../../../Providers/Brand";
 
 import mixpanel from "mixpanel-browser";
+import { CreditHistory } from "../DashBoard/CreditsHistory/CreditHistory";
+import { PurchaseCredits } from "../DashBoard/PurchaseCredits/PurchaseCredits";
+import { UnlockedCreators } from "../DashBoard/UnlockedCreators/UnlockedCreators";
+import { UnlockedCreatorFull } from "../DashBoard/UnlockedCreators/UnlockedCreatorFull";
 
 const BrandHome: React.FC = () => {
   const authState = useAuth();
@@ -56,7 +60,11 @@ const BrandHome: React.FC = () => {
               <div className="bg-[#EEE] w-full h-screen overflow-x-hidden overflow-y-auto">
                 <Routes>
                   <Route path="*" element={<DashBoard />} />
-                  <Route path="/dashboard" element={<DashBoard />} />
+                  <Route path="/DashBoard" element={<DashBoard />} />
+                  <Route path="/DashBoard/CreditsHistory" element={<CreditHistory />}/>
+                  <Route path="/DashBoard/PurchaseCredits" element={<PurchaseCredits/>}/>
+                  <Route path="/DashBoard/UnlockedInfluencer" element={<UnlockedCreators />} />
+                  <Route path="/DashBoard/UnlockedInfluencer/Details" element={<UnlockedCreatorFull />} />
                 </Routes>
               </div>
             </section>

@@ -12,7 +12,7 @@
   
   .filter-options {
     display: flex;
-    width: 90%;
+    width: 100%;
     flex-wrap: wrap;
     gap: 12px;
   }

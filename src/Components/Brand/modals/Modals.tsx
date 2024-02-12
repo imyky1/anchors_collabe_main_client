@@ -6,7 +6,7 @@ import { RxLightningBolt } from "react-icons/rx";
 import { IoMdInformationCircleOutline } from "react-icons/io";
 import { IoMdArrowForward } from "react-icons/io";
 
-export const Modal1 = ({ onClose, credits, coins, onBuy }) => {
+export const Modal1 = ({ onClose, credits, coins, onBuy, OnClick }) => {
   return (
     <div className="w-screen h-screen flex flex-col items-center justify-center bg-[#12121280] fixed top-0 left-0 z-50 font-inter">
       <div
@@ -29,8 +29,13 @@ export const Modal1 = ({ onClose, credits, coins, onBuy }) => {
           Credits required for Unlock : <b>{coins}</b>
         </div>
         {parseInt(credits) >= parseInt(coins) ? (
-          <div onClick={() => onBuy()} className="mt-[20px]">
-            <Button1 icon={<GoUnlock size={16} />} text="Unlock Now" />
+          <div className="mt-[20px]">
+            <Button1
+              icon={<GoUnlock size={16} />}
+              text="Unlock Now"
+              onClick={() => onBuy()}
+              rightIcon={undefined}
+            />
           </div>
         ) : (
           <>
@@ -38,8 +43,10 @@ export const Modal1 = ({ onClose, credits, coins, onBuy }) => {
               Insufficient Credits <IoMdInformationCircleOutline />
             </div>
             <Button2
+              onClick={() => OnClick()}
               icon={<RxLightningBolt size={16} />}
               text="Recharge Credits"
+              rightIcon={undefined}
             />
           </>
         )}
@@ -78,6 +85,10 @@ export const Modal2 = ({ onClose, name, profile }) => {
           <Button1
             rightIcon={<IoMdArrowForward size={16} />}
             text="Check Profile"
+            onClick={function (): void {
+              throw new Error("Function not implemented.");
+            }}
+            icon={undefined}
           />
         </div>
       </div>
@@ -85,7 +96,27 @@ export const Modal2 = ({ onClose, name, profile }) => {
   );
 };
 
+import { useRef, useEffect } from "react";
+
 export const FilterOptionModal = ({ list, onClose, setfilters, filters }) => {
+  const modalRef = useRef(null);
+
+  // Add an event listener to handle clicks outside the modal
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        onClose(); // Call the onClose function if clicked outside the modal
+      }
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [onClose]);
+
   const toggleFilter = (item) => {
     if (filters.includes(item)) {
       setfilters((prev) => prev.filter((filter) => filter !== item));
@@ -93,8 +124,9 @@ export const FilterOptionModal = ({ list, onClose, setfilters, filters }) => {
       setfilters((prev) => [...prev, item]);
     }
   };
+
   return (
-    <div className="FilterOptionModal">
+    <div className="FilterOptionModal" ref={modalRef}>
       <div className="filter-options">
         {list?.map((item) => (
           <Selectbutton
@@ -105,9 +137,6 @@ export const FilterOptionModal = ({ list, onClose, setfilters, filters }) => {
             item={filters?.includes(item) ? item : ""}
           />
         ))}
-      </div>
-      <div className="modal-footer">
-        <Button1 text="Done" onClick={onClose} />
       </div>
     </div>
   );

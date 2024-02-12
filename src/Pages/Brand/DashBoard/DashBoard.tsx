@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import "./DashBoard.css";
 
@@ -33,7 +34,14 @@ import {
 } from "../../../Components/Brand/modals/Modals";
 import { Modal1, Modal2 } from "../../../Components/Brand/modals/Modals";
 
-export const TypeCard = ({ item, Objkey, borderRadius, locked }) => {
+export const TypeCard = ({
+  item,
+  Objkey,
+  borderRadius,
+  locked,
+  LinkObjKey,
+  subItem,
+}) => {
   const staticDataState = useStaticData();
   const [AudiencePlatformLogo, setAudiencePlatformLogo] = useState("");
   const [PlatformLogo, setPlatformLogo] = useState("");
@@ -68,7 +76,7 @@ export const TypeCard = ({ item, Objkey, borderRadius, locked }) => {
       }}
       className="typeWrapper"
     >
-      {Objkey === "platform" ? (
+      {Objkey === "audience" ? (
         <img
           style={{ width: "24px", height: "24px", borderRadius: "50%" }}
           src={AudiencePlatformLogo}
@@ -87,12 +95,22 @@ export const TypeCard = ({ item, Objkey, borderRadius, locked }) => {
         ""
       )}
 
-      {Objkey ? (
-        <h1>{item?.[Objkey]?.slice(0, 27)}</h1>
-      ) : (
-        <h1>{item?.slice(0, 27)}</h1>
-      )}
+      <div className="flex-col">
+        {Objkey ? (
+          <h1>{item?.[Objkey]?.slice(0, 27)}</h1>
+        ) : (
+          <h1>{item?.slice(0, 27)}</h1>
+        )}
+        {subItem && `${subItem}`}
+      </div>
       <div
+        onClick={
+          !locked
+            ? LinkObjKey
+              ? () => window.open(`${item?.[LinkObjKey]}`)
+              : () => console.log("")
+            : () => alert("profile is locked!")
+        }
         style={{ cursor: "pointer", display: borderRadius ? "none" : "flex" }}
       >
         {locked ? (
@@ -124,9 +142,11 @@ export const Contentcard = (props) => {
           return (
             <TypeCard
               item={item}
+              subItem={props.subItem}
               Objkey={props?.Objkey}
               borderRadius={props?.borderRadius}
               locked={props?.locked}
+              LinkObjKey={props?.LinkObjKey}
             />
           );
         })}
@@ -189,6 +209,7 @@ export const FilterCard = ({
 };
 
 export const DashBoard = () => {
+  const navigate = useNavigate();
   const [AllInfluencers, SetAllInfluencers] = useState(null);
   const [FilteredInfluencer, SetFilteredInfluencer] = useState(null);
 
@@ -210,29 +231,30 @@ export const DashBoard = () => {
     "10k-15k",
     "15k-20k",
     "20k-30k",
-    "30K-50K",
+    "30k-50k",
     "50k-100k",
-    "100k-500k",
-    "500k-1M",
-    "1M-10M",
-    "10M-50M",
-    "50M-100M",
-    "More than 100M",
+    "More than 100k",
   ]);
   const [Gender, setGender] = useState(["Male", "Female", "Other"]);
+  const [collaboratedWithBrand, SetCollaboratedWithBrand] = useState([
+    "Yes",
+    "No",
+  ]);
   const [ContentType, setContenType] = useState([]);
   const [AudienceType, setAudienceype] = useState([]);
 
-  //selected filters
-  // Define state and setters for FilterOptionModal
+  //state and setters for FilterOptionModal
   const [selectedFilterState, setSelectedFilterState] = useState([]);
   const [selectedFilterSetter, setSelectedFilterSetter] = useState(() => {});
 
+  //selected filters
   const [selectedFollowersFilters, setSelectedFollowersFilters] = useState([]);
   const [selectedContentTypeFilters, setSelectedContentTypeFilters] = useState(
     []
   );
   const [selectedAudienceTypeFilters, setSelectedAudienceTypeFilters] =
+    useState([]);
+  const [selectedCollaboratedWithBrand, setSelectedCollaboratedWithBrand] =
     useState([]);
   const [selectedGenderFilters, setSelectedGenderFilters] = useState([]);
 
@@ -283,6 +305,21 @@ export const DashBoard = () => {
   useEffect(() => {
     setSelectedFilterState(selectedGenderFilters);
   }, [selectedGenderFilters]);
+  useEffect(() => {
+    setSelectedFilterState(selectedCollaboratedWithBrand);
+  }, [selectedCollaboratedWithBrand]);
+
+  const convertToReadableFormat = (number) => {
+    if (Math.abs(number) >= 1000000000) {
+      return (number / 1000000000).toFixed(1) + "B";
+    } else if (Math.abs(number) >= 1000000) {
+      return (number / 1000000).toFixed(1) + "M";
+    } else if (Math.abs(number) >= 1000) {
+      return (number / 1000).toFixed(1) + "K";
+    } else {
+      return number.toString();
+    }
+  };
 
   const handleFilterCardClick = (filterList, filters, setFilterFunction) => {
     SetList(filterList);
@@ -318,7 +355,9 @@ export const DashBoard = () => {
   const handleFilterSearch = () => {
     if (
       selectedAudienceTypeFilters?.length > 0 ||
-      selectedContentTypeFilters?.length > 0
+      selectedContentTypeFilters?.length > 0 ||
+      selectedCollaboratedWithBrand?.length > 0 ||
+      selectedFollowersFilters?.length > 0
     ) {
       const filteredInfluencers = AllInfluencers.filter((influencer) => {
         // Check if any selected filter is included in AudienceCategory or AudienceData
@@ -329,8 +368,30 @@ export const DashBoard = () => {
         const matchesContent = influencer?.ContentCategory?.some((category) =>
           selectedContentTypeFilters.includes(category)
         );
-        // Return true if either audience or content matches
-        return matchesAudience || matchesContent;
+        // Check if the influencer matches the selected followers filter
+        const matchesFollowers = checkFollowersFilter(
+          influencer?.influencerData?.LinkedInFollowers
+        );
+        // Check if the influencer matches the selected collaboration filter
+        let matchesbrands = false;
+        if (
+          selectedCollaboratedWithBrand?.includes("Yes") &&
+          selectedCollaboratedWithBrand?.includes("No")
+        ) {
+          matchesbrands =
+            influencer?.collabData?.length > 0 ||
+            influencer?.collabData?.length === 0 ||
+            !influencer?.collabData;
+        } else if (selectedCollaboratedWithBrand?.includes("No")) {
+          matchesbrands =
+            influencer?.collabData?.length === 0 || !influencer?.collabData;
+        } else if (selectedCollaboratedWithBrand?.includes("Yes")) {
+          matchesbrands = influencer?.collabData?.length > 0;
+        }
+        // Return true if either audience, content, followers, or brands matches
+        return (
+          matchesAudience || matchesContent || matchesFollowers || matchesbrands
+        );
       });
       SetFilteredInfluencer(filteredInfluencers);
     } else {
@@ -338,7 +399,40 @@ export const DashBoard = () => {
     }
   };
 
-  // console.log(AllInfluencers);
+  const checkFollowersFilter = (followersCount) => {
+    if (!followersCount) return false;
+    for (let i = 0; i < selectedFollowersFilters.length; i++) {
+      const range = selectedFollowersFilters[i];
+      if (range === "More than 100k") {
+        if (followersCount >= 100000) {
+          return true;
+        }
+      } else {
+        let [minStr, maxStr] = range.split("-");
+        let min = parseFollowersCount(minStr);
+        let max = parseFollowersCount(maxStr);
+
+        if (followersCount >= min && followersCount <= max) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  };
+
+  // Function to parse the follower count with 'k' and 'M'
+  const parseFollowersCount = (val) => {
+    if (val.includes("k")) {
+      return parseFloat(val.replace("k", "")) * 1000;
+    } else if (val.includes("M")) {
+      return parseFloat(val.replace("M", "")) * 1000000;
+    } else {
+      return parseFloat(val);
+    }
+  };
+
+  console.log(AllInfluencers);
 
   return (
     <>
@@ -397,15 +491,15 @@ export const DashBoard = () => {
                 onMouseLeave={() => OpenFilterModal(false)}
               />
               <FilterCard
-                filters={""}
-                list={""}
-                setfilters={""}
+                filters={selectedCollaboratedWithBrand}
+                list={collaboratedWithBrand}
+                setfilters={SetCollaboratedWithBrand}
                 item={"Collaborated with brands"}
                 onClick={() =>
                   handleFilterCardClick(
-                    ContentType,
-                    selectedContentTypeFilters,
-                    setSelectedContentTypeFilters
+                    collaboratedWithBrand,
+                    selectedCollaboratedWithBrand,
+                    setSelectedCollaboratedWithBrand
                   )
                 }
                 onMouseEnter={() => OpenFilterModal(true)}
@@ -452,7 +546,6 @@ export const DashBoard = () => {
             </div>
           </div>
           <div
-            onClick={() => OpenAdvanceModal(true)}
             style={{
               width: "100%",
               display: "flex",
@@ -460,7 +553,10 @@ export const DashBoard = () => {
               marginTop: "20px",
             }}
           >
-            <button className="AdvanceFilter">
+            <button
+              onClick={() => OpenAdvanceModal(true)}
+              className="AdvanceFilter"
+            >
               <IoDiamondOutline /> Advance filter
             </button>
           </div>
@@ -477,6 +573,7 @@ export const DashBoard = () => {
                     return SetOpenModal(false);
                   }}
                   onBuy={() => handleBuyClick()}
+                  OnClick={() => navigate("/Brand/DashBoard/PurchaseCredits")}
                 />
               )}
               {successModal && (
@@ -548,7 +645,20 @@ export const DashBoard = () => {
                     marginTop: "90px",
                   }}
                 >
-                  <button className="LinkedinButton">
+                  <button
+                    onClick={
+                      influencer?.is_unlocked
+                        ? () => navigate("/")
+                        : () =>
+                            handleUnlockButtonClick(
+                              influencer?.influencerData?.total_coins || 0,
+                              influencer?.influencerData?.name,
+                              influencer?.influencerData?.profile,
+                              influencer?.influencerData?._id
+                            )
+                    }
+                    className="LinkedinButton"
+                  >
                     <div
                       style={{
                         display: "flex",
@@ -557,12 +667,20 @@ export const DashBoard = () => {
                       }}
                     >
                       <FaLinkedin />
-                      51K Followers
+                      {convertToReadableFormat(
+                        parseInt(influencer?.influencerData?.LinkedInFollowers)
+                      )}{" "}
+                      Followers
                     </div>
-                    <div style={{ display: "flex", gap: "4px" }}>
-                      <GoUnlock />
-                      <FiChevronRight />
-                    </div>
+                    {influencer?.is_unlocked ? (
+                      <div style={{ display: "flex", gap: "4px" }}>
+                        <FiChevronRight />
+                      </div>
+                    ) : (
+                      <div style={{ display: "flex", gap: "4px" }}>
+                        <GoUnlock />
+                      </div>
+                    )}
                   </button>
                   {influencer?.is_unlocked ? (
                     <button
@@ -599,6 +717,7 @@ export const DashBoard = () => {
                     number={influencer?.collabData?.length}
                     type={influencer?.collabData}
                     Objkey="companyName"
+                    LinkObjKey="postLink"
                     locked={!influencer?.is_unlocked}
                   />
                 )}
@@ -609,6 +728,7 @@ export const DashBoard = () => {
                     number={influencer?.MonetizedData?.length}
                     type={influencer?.MonetizedData}
                     Objkey="platformName"
+                    LinkObjKey="profileLink"
                     locked={!influencer?.is_unlocked}
                   />
                 )}
@@ -627,7 +747,9 @@ export const DashBoard = () => {
                     heading={"Audience Presence"}
                     number={influencer?.AudienceData?.length}
                     type={influencer?.AudienceData}
-                    Objkey="platform"
+                    Objkey="audience"
+                    LinkObjKey="link"
+                    subItem="User"
                     locked={!influencer?.is_unlocked}
                   />
                 )}

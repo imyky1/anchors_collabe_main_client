@@ -1764,7 +1764,6 @@ const Profile: React.FC = () => {
             autoClose: 2000,
           });
         } else if (parseInt(dataSix?.MonthlyMinPrice) > parseInt(dataSix?.MonthlyMaxPrice)) {
-          console.log(typeof dataSix?.MonthlyMinPrice)
           return toast.error("Invalid Price", {
             autoClose: 2000,
           });

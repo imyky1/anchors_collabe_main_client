@@ -128,6 +128,59 @@ export const BrandProvider = (props) => {
       return { Error: error.response.data.error };
     }
   };
+  const getUnlockedInfluencers = async () => {
+    try {
+      const response = await axios.get(`${host}/Brand/getUnlockedInfluencers`, {
+        headers: {
+          jwtToken: localStorage.getItem("jwtToken"),
+        },
+      });
+      if (response.status !== 200) {
+        return { Error: response.data.error };
+      } else {
+        return response.data;
+      }
+    } catch (e) {
+      return { Error: e.response.data.error };
+    }
+  };
+  const getCreditsHistory = async () => {
+    try {
+      const response = await axios.get(`${host}/Brand/getCreditsHistory`, {
+        headers: {
+          jwtToken: localStorage.getItem("jwtToken"),
+        },
+      });
+      if (response.status !== 200) {
+        return { Error: response.data.error };
+      } else {
+        return response.data;
+      }
+    } catch (e) {
+      return { Error: e.response.data.error };
+    }
+  };
+  const getInfluencerPersonalInfo = async (InfluencerID: string) => {
+    try {
+      const response = await axios.get(
+        `${host}/Brand/getInfluencerPersonalData/${InfluencerID}`,
+        {
+          headers: {
+            jwtToken: localStorage.getItem("jwtToken"),
+          },
+        }
+      );
+
+      // Check if the response contains the LinkedIn authorization URL
+      if (response.status !== 200) {
+        return { Error: response.data.error };
+      } else {
+        return response.data;
+      }
+    } catch (e) {
+      return { Error: e.response.data.error };
+    }
+  };
 
   return (
     <BrandContext.Provider
@@ -138,6 +191,9 @@ export const BrandProvider = (props) => {
         getBrandMarketinginfo,
         getAllInfluencersData,
         getInfluncerWithCredits,
+        getUnlockedInfluencers,
+        getCreditsHistory,
+        getInfluencerPersonalInfo,
       }}
     >
       {props.children}

@@ -70,26 +70,26 @@ const Sidebar: React.FC = () => {
       <section className="flex flex-col items-start gap-2 mt-[70px]">
         <span
           className={`text-sm font-medium ${
-            location.pathname === "/Brand/dashboard" ||
-            location.pathname === "/Brand"
+            location.pathname === "/Brand/DashBoard" ||
+            location.pathname === "/Brand/"
               ? "text-[#FAFAFA] bg-[#FF5C5C]"
               : "text-[#424242] bg-transparent"
           }  w-full py-[6px] px-3 hover:bg-[#FF5C5C] hover:text-[#FAFAFA] rounded-md cursor-pointer flex items-center gap-2`}
-        //   onClick={() => {
-        //     navigate("/influencer/dashboard");
-        //   }}
+          onClick={() => {
+            navigate("/Brand/DashBoard");
+          }}
         >
           <PiSquaresFourLight size={18} /> Dashboard
         </span>
         <span
           className={`text-sm font-medium ${
-            location.pathname === "/influencer/build_profile"
+            location.pathname === "/Brand/DashBoard/UnlockedInfluencer"
               ? "text-[#FAFAFA] bg-[#FF5C5C]"
               : "text-[#424242] bg-transparent"
           } w-full py-[6px] relative px-3 hover:bg-[#FF5C5C] hover:text-[#FAFAFA] rounded-md cursor-pointer flex items-center gap-2`}
-        //   onClick={() => {
-        //     navigate("/influencer/build_profile");
-        //   }}
+          onClick={() => {
+            navigate("/Brand/DashBoard/UnlockedInfluencer");
+          }}
         >
           <CgProfile size={18} /> Unlocked Creators
           
@@ -98,14 +98,13 @@ const Sidebar: React.FC = () => {
 
         <span
           className={`text-sm font-medium ${
-            location.pathname === "/influencer/brands_wishlist" ||
-            location.pathname === "/influencer/view_brands_list"
+            location.pathname === "/Brand/DashBoard/CreditsHistory" 
               ? "text-[#FAFAFA] bg-[#FF5C5C]"
               : "text-[#424242] bg-transparent"
           } w-full py-[6px] px-3 hover:bg-[#FF5C5C] hover:text-[#FAFAFA] rounded-md cursor-pointer flex items-center gap-2`}
-        //   onClick={() => {
-        //     navigate("/influencer/brands_wishlist");
-        //   }}
+          onClick={() => {
+            navigate("/Brand/DashBoard/CreditsHistory");
+          }}
         >
           <PiSquaresFourLight size={18} /> Credits History
         </span>

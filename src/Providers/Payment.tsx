@@ -25,7 +25,12 @@ interface PaymentContextProps {
   updateInfluencerOrder: (
     orderId: string,
     paymentData: { any }
-  ) => Promise<{ any }>;
+  ) => Promise<{
+    success: any;
+    any;
+  }>;
+  createBrandEasebuzzOrder;
+  updateBrandOrder;
 }
 
 const PaymentContext = createContext<PaymentContextProps | null>(null);
@@ -106,6 +111,73 @@ export const PaymentProvider: React.FC<paymentProviderProps> = (props) => {
     }
   };
 
+  // route-3
+  const createBrandEasebuzzOrder = async (
+    paymentInfo: string,
+    amount: string,
+    userName: string,
+    userEmail: string,
+    subject: string,
+    expireOn: number,
+    userPhone?: string,
+    couponName?: string
+  ) => {
+    const result = await axios.post(
+      `${host}/brand/order/createOrder`,
+      {
+        paymentInfo,
+        amount,
+        userName,
+        userEmail,
+        userPhone,
+        couponName,
+        subject,
+        expireOn,
+      },
+      {
+        headers: {
+          jwtToken: localStorage.getItem("jwtToken"),
+        },
+      }
+    );
+
+    if (result.status !== 200) {
+      throw new Error(
+        "Some Error occured in placing order, Please try again !!!"
+      );
+    } else {
+      if (result.data.success) {
+        return result.data;
+      } else {
+        throw new Error(result.data?.error);
+      }
+    }
+  };
+
+  // route-2 . update influencer order ---------------------
+  const updateBrandOrder = async (orderId: string, paymentData: { any }) => {
+    const result = await axios.post(
+      `${host}/brand/order/updateAndVerify`,
+      {
+        orderId,
+        paymentData,
+      },
+      {
+        headers: {
+          jwtToken: localStorage.getItem("jwtToken"),
+        },
+      }
+    );
+
+    if (result.status !== 200) {
+      throw new Error(
+        "Some Error occured in placing order, Please try again !!!"
+      );
+    } else {
+      return result.data;
+    }
+  };
+
   // route-2 . get easebuzzs ---------------------
   const getEaseBuzz = async () => {
     const result = await axios.get(`${host}/payment/getEaseBuzz`);
@@ -119,6 +191,8 @@ export const PaymentProvider: React.FC<paymentProviderProps> = (props) => {
         createInfluencerEasebuzzOrder,
         getEaseBuzz,
         updateInfluencerOrder,
+        createBrandEasebuzzOrder,
+        updateBrandOrder,
       }}
     >
       {props?.children}

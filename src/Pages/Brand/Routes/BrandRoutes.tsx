@@ -66,7 +66,7 @@ const BrandRoutes: React.FC = () => {
             <ProtectedRoute
               navigateCondition={
                 !localStorage.getItem("jwtToken") ||
-                localStorage.getItem("UserType") === "Influencer"
+                localStorage.getItem("UserType") !== "Brand"
               }
               toUrl={"/Brand/SignUp"}
             >
