@@ -49,7 +49,6 @@ export const UnlockedCreatorFull = () => {
     async function getInfluencerPersonalInfo() {
       const result = await brandState?.getInfluencerPersonalInfo(InfluencerID);
       if (result.success) {
-
         result?.unlockedInfo && SetUnlockedInfo(result?.unlockedInfo);
         result?.data && SetInfluencerInfo(result?.data);
         result?.data2 && SetInfluencerCollabInfo(result?.data2);
@@ -58,7 +57,7 @@ export const UnlockedCreatorFull = () => {
         result?.data5 && SetInfluencerAudienceInfo(result?.data5);
       } else {
         toast.error(result?.Error, { autoClose: 1500 });
-        navigate('/Brand/DashBoard/UnlockedInfluencer')
+        navigate("/Brand/DashBoard/UnlockedInfluencer");
       }
     }
     getInfluencerPersonalInfo();
@@ -99,7 +98,7 @@ export const UnlockedCreatorFull = () => {
             <div className="flex gap-[16px] items-center justify-center ">
               <img
                 className="w-[80px] h-[80px] rounded-[50%] "
-                src={InfluencerInfo?.profile}
+                src={InfluencerInfo?.profile || "/user.png"}
                 alt=""
               />
               <div>
@@ -116,11 +115,12 @@ export const UnlockedCreatorFull = () => {
             <div className="flex flex-col gap-[12px]">
               <p className="flex gap-[8px] text-[#424242] text-[16px] ">
                 {" "}
-                <CiMail color="#FF5C5C" size={24} /> {InfluencerInfo?.email}
+                <CiMail color="#FF5C5C" size={24} />{" "}
+                {InfluencerInfo?.email || "Not Available"}
               </p>
               <p className="flex gap-[8px] text-[#424242] text-[16px] ">
                 <IoCallOutline color="#FF5C5C" size={24} />{" "}
-                {InfluencerInfo?.mobile}
+                {InfluencerInfo?.mobile || "Not Available"}
               </p>
             </div>
             <div className="flex flex-col gap-[12px]">
@@ -139,152 +139,165 @@ export const UnlockedCreatorFull = () => {
 
           {/* creator collab experience */}
           {InfluencerCollabInfo && (
-            <TableCard
-              heading={"Collab Experience"}
-              length={InfluencerCollabInfo?.data?.length}
-              headers={[
-                "S. No. ",
-                "Company Name",
-                "Website",
-                "Post Link",
-                "Goals",
-              ]}
-              rows={InfluencerCollabInfo?.data?.map((item, index) => [
-                index + 1, // S.No.
-                item?.companyName,
-                <div
+            <>
+              <TableCard
+                heading={"Collab Experience"}
+                length={InfluencerCollabInfo?.data?.length}
+                headers={[
+                  "S. No. ",
+                  "Company Name",
+                  "Website",
+                  "Post Link",
+                  "Goals",
+                ]}
+                rows={InfluencerCollabInfo?.data?.map((item, index) => [
+                  index + 1, // S.No.
+                  `${item?.companyName || 'Not Available'}`,
+                  <div
                   onClick={() => {
-                    window.open(`${item?.companyUrl}`);
+                    if (!/^https?:\/\//i.test(item?.companyUrl)) {
+                      const companyUrl = "https://" + item?.companyUrl;
+                      return window.open(companyUrl, "_blank");
+                    }
+
+                    window.open(item?.companyUrl, "_blank");
                   }}
-                  className="text-[#6183E4] cursor-pointer"
-                >
-                  {item?.companyUrl}
-                </div>,
-                <div
-                onClick={() => {
-                  if (!/^https?:\/\//i.test(item?.postLink)) {
-                    const postLink = "https://" + item?.postLink;
-                    return window.open(postLink, "_blank");
-                  }
+                    className="text-[#6183E4] cursor-pointer"
+                  >
+                    {item?.companyUrl || 'Not Available'}
+                  </div>,
+                  <div
+                    onClick={() => {
+                      if (!/^https?:\/\//i.test(item?.postLink)) {
+                        const postLink = "https://" + item?.postLink;
+                        return window.open(postLink, "_blank");
+                      }
 
-                  window.open(item?.postLink, "_blank");
-                }}
-                  className="text-[#6183E4] cursor-pointer"
-                >
-                  {item?.postLink}
-                </div>,
+                      window.open(item?.postLink, "_blank");
+                    }}
+                    className="text-[#6183E4] cursor-pointer"
+                  >
+                    {`${item?.postLink?.slice(0,20)}...`}
+                  </div>,
 
-                <div className="flex gap-[4px] ">
-                  {item?.goals?.map((item) => (
-                    <div className="flex px-[12px] py-[4px] rounded-[198px] bg-[#D1FAE5] align-center justify-center">
-                      {item}
-                    </div>
-                  ))}
-                </div>,
-              ])}
-            />
+                  <div className="flex items-center justify-center">
+                    {item?.goals?.map((item) => (
+                      <div className="flex px-[12px] mr-[4px] py-[4px] rounded-[198px] bg-[#D1FAE5] align-center justify-center">
+                        {item}
+                      </div>
+                    ))}
+                  </div>,
+                ])}
+              />
+              <div className="w-[95%] h-[1px] bg-[#EEEEEE]"></div>
+            </>
           )}
-
-          <div className="w-[95%] h-[1px] bg-[#EEEEEE]"></div>
 
           {/* creator Monetization Avenues*/}
           {InfluencerMonetizationInfo && (
-            <TableCard
-              heading={"Monetization Avenues"}
-              length={InfluencerMonetizationInfo?.data?.length}
-              headers={[
-                "S. No. ",
-                "Company Name",
-                "Profile Link",
-                "Services",
-                "Paid audience",
-              ]}
-              rows={InfluencerMonetizationInfo?.data?.map((item, index) => [
-                index + 1,
-                item?.platformName,
-                <div
-                onClick={() => {
-                  if (!/^https?:\/\//i.test(item?.profileLink)) {
-                    const profileLink = "https://" + item?.profileLink;
-                    return window.open(profileLink, "_blank");
-                  }
+            <>
+              <TableCard
+                heading={"Monetization Avenues"}
+                length={InfluencerMonetizationInfo?.data?.length}
+                headers={[
+                  "S. No. ",
+                  "Company Name",
+                  "Profile Link",
+                  "Services",
+                  "Paid audience",
+                ]}
+                rows={InfluencerMonetizationInfo?.data?.map((item, index) => [
+                  index + 1,
+                  item?.platformName || 'Not Available',
+                  <div
+                    onClick={() => {
+                      if (!/^https?:\/\//i.test(item?.profileLink)) {
+                        const profileLink = "https://" + item?.profileLink;
+                        return window.open(profileLink, "_blank");
+                      }
 
-                  window.open(item?.profileLink, "_blank");
-                }}
-                  className="text-[#6183E4] cursor-pointer"
-                >
-                  {item?.profileLink}
-                </div>,
-                <div>
-                  {item?.methods?.map((item) => (
-                    <div className="flex px-[12px] py-[4px] rounded-[198px] bg-[#D1FAE5] align-center justify-center">
-                      {item}
-                    </div>
-                  ))}
-                </div>,
-                ,
-                item?.paidAudience,
-              ])}
-            />
+                      window.open(item?.profileLink, "_blank");
+                    }}
+                    className="text-[#6183E4] cursor-pointer"
+                  >
+                    {`${item?.profileLink?.slice(0,20)}...` || 'Not Available'}
+                  </div>,
+                  <div>
+                    {item?.methods?.map((item) => (
+                      <div className="flex px-[12px] mr-[4px] py-[4px] rounded-[198px] bg-[#D1FAE5] align-center justify-center">
+                        {item}
+                      </div>
+                    ))}
+                  </div>,
+                  ,
+                  item?.paidAudience || 'Not Available',
+                ])}
+              />
+              <div className="w-[95%] h-[1px] bg-[#EEEEEE]"></div>
+            </>
           )}
-
-          <div className="w-[95%] h-[1px] bg-[#EEEEEE]"></div>
 
           {/* Content category */}
           <div className="w-full flex-col flex items-center justify-between gap-[20px] px-[40px]">
             {InfluencerContentInfo && (
-              <Contentcard
-                icon={<PiSquaresFourLight color="#424242" size={18} />}
-                heading={"Content category"}
-                number={InfluencerContentInfo?.categories?.length}
-                type={InfluencerContentInfo?.categories}
-                borderRadius={"198px"}
-              />
+              <>
+                <Contentcard
+                  icon={<PiSquaresFourLight color="#424242" size={18} />}
+                  heading={"Content category"}
+                  number={InfluencerContentInfo?.categories?.length}
+                  type={InfluencerContentInfo?.categories}
+                  borderRadius={"198px"}
+                />
+                <div className="w-[95%] h-[1px] bg-[#EEEEEE]"></div>
+              </>
             )}
           </div>
-
-          <div className="w-[95%] h-[1px] bg-[#EEEEEE]"></div>
 
           {/* Audience category */}
           <div className="w-full flex-col flex items-center justify-between gap-[20px] px-[40px]">
-            <Contentcard
-              icon={<PiSquaresFourLight color="#424242" size={18} />}
-              heading={"Audience category"}
-              number={InfluencerAudienceInfo?.types?.length}
-              type={InfluencerAudienceInfo?.types}
-              borderRadius={"198px"}
-            />
+            {InfluencerAudienceInfo?.types?.length > 0 && (
+              <>
+                <Contentcard
+                  icon={<PiSquaresFourLight color="#424242" size={18} />}
+                  heading={"Audience category"}
+                  number={InfluencerAudienceInfo?.types?.length}
+                  type={InfluencerAudienceInfo?.types}
+                  borderRadius={"198px"}
+                />
+                <div className="w-[95%] h-[1px] bg-[#EEEEEE]"></div>
+              </>
+            )}
           </div>
 
-          <div className="w-[95%] h-[1px] bg-[#EEEEEE]"></div>
-
           {/* Audience Presence */}
-          <TableCard
-            heading={"Audience Presence"}
-            length={InfluencerAudienceInfo?.platforms?.reduce(
-              (total, platform) => total + platform.audience,
-              0
-            )}
-            headers={["S. No. ", "Platform Names", "No. of users", "Link"]}
-            rows={InfluencerAudienceInfo?.platforms?.map((item, index) => [
-              index + 1,
-              item?.platform,
-              item?.audience,
-              <div
-                onClick={() => {
-                  if (!/^https?:\/\//i.test(item?.link)) {
-                    const link = "https://" + item?.link;
-                    return window.open(link, "_blank");
-                  }
+          {InfluencerAudienceInfo?.platforms?.length > 0 && (
+            <TableCard
+              heading={"Audience Presence"}
+              length={InfluencerAudienceInfo?.platforms?.reduce(
+                (total, platform) => total + platform.audience,
+                0
+              )}
+              headers={["S. No. ", "Platform Names", "No. of users", "Link"]}
+              rows={InfluencerAudienceInfo?.platforms?.map((item, index) => [
+                index + 1,
+                item?.platform || 'Not Available',
+                item?.audience || 'Not Available',
+                <div
+                  onClick={() => {
+                    if (!/^https?:\/\//i.test(item?.link)) {
+                      const link = "https://" + item?.link;
+                      return window.open(link, "_blank");
+                    }
 
-                  window.open(item?.link, "_blank");
-                }}
-                className="text-[#6183E4] cursor-pointer"
-              >
-                {item?.link}
-              </div>,
-            ])}
-          />
+                    window.open(item?.link, "_blank");
+                  }}
+                  className="text-[#6183E4] cursor-pointer"
+                >
+                  {`${item?.link?.slice(0,25)}...` || 'Not Available'}
+                </div>,
+              ])}
+            />
+          )}
         </div>
       </div>
     </div>

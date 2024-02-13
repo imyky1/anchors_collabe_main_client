@@ -12,6 +12,7 @@ import { CreditHistory } from "../DashBoard/CreditsHistory/CreditHistory";
 import { PurchaseCredits } from "../DashBoard/PurchaseCredits/PurchaseCredits";
 import { UnlockedCreators } from "../DashBoard/UnlockedCreators/UnlockedCreators";
 import { UnlockedCreatorFull } from "../DashBoard/UnlockedCreators/UnlockedCreatorFull";
+import { PurchaseCreditsSucess } from "../DashBoard/PurchaseCredits/PurchaseCreditsSucess";
 
 const BrandHome: React.FC = () => {
   const authState = useAuth();
@@ -63,6 +64,7 @@ const BrandHome: React.FC = () => {
                   <Route path="/DashBoard" element={<DashBoard />} />
                   <Route path="/DashBoard/CreditsHistory" element={<CreditHistory />}/>
                   <Route path="/DashBoard/PurchaseCredits" element={<PurchaseCredits/>}/>
+                  <Route path="/DashBoard/PurchaseCredits/Success" element={<PurchaseCreditsSucess/>}/>
                   <Route path="/DashBoard/UnlockedInfluencer" element={<UnlockedCreators />} />
                   <Route path="/DashBoard/UnlockedInfluencer/Details" element={<UnlockedCreatorFull />} />
                 </Routes>

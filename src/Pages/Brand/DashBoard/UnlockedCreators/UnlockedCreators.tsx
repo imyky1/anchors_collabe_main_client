@@ -27,6 +27,7 @@ export const UnlockedCreators = () => {
     }
     getUnlockedInfluencers();
   }, []);
+  console.log(unlockedInfluencer)
 
   return (
     <div className="w-full h-full">
@@ -45,16 +46,31 @@ export const UnlockedCreators = () => {
           ]}
           rows={unlockedInfluencer.map((influencer, index) => [
             index + 1, // S.No.
-            <div style={{ display: "flex", gap: "12px" }}>
+            <div className="flex">
               <img
-                style={{ width: "24px", height: "24px", borderRadius: "50%" }}
-                src={influencer?.influencer?.profile}
+                style={{ width: "24px", height: "24px", borderRadius: "50%" , marginRight:'12px'}}
+                src={influencer?.influencer?.profile || "/user.png"}
                 alt=""
               />{" "}
-              {influencer?.influencer?.name || "NA"}
+              {influencer?.influencer?.name || "Not Available"}
             </div>, // Influencer name
-            influencer?.influencer?.linkedinLink || "NA", // LinkedIn profile
-            influencer?.influencer?.mobile || "NA", // Contact number
+            <div
+              onClick={() => {
+                if (
+                  !/^https?:\/\//i.test(influencer?.influencer?.linkedinLink)
+                ) {
+                  const postLink =
+                    "https://" + influencer?.influencer?.linkedinLink;
+                  return window.open(postLink, "_blank");
+                }
+
+                window.open(influencer?.influencer?.linkedinLink, "_blank");
+              }}
+              className={`text-[${influencer?.influencer?.linkedinLink ? '#6183E4' : ''}] cursor-pointer"`}
+            >
+              {influencer?.influencer?.linkedinLink ? `${influencer?.influencer?.linkedinLink?.slice(0,25)}...` : "Not Available"}
+            </div>, // LinkedIn profile
+            influencer?.influencer?.mobile || "Not Available", // Contact number
             influencer?.influencer?.email || "NA", // Email
             <button
               onClick={() =>

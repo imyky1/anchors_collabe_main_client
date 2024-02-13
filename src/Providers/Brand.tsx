@@ -89,13 +89,14 @@ export const BrandProvider = (props) => {
       alert(error);
     }
   };
-  const getAllInfluencersData = async () => {
+  const getAllInfluencersData = async (startIndex, limit) => {
     try {
-      const response = await axios.get(`${host}/Brand/getAllInfluencers`, {
+      const response = await axios.get(`${host}/Brand/getAllInfluencers?startIndex=${startIndex}&limit=${limit}`, {
         headers: {
           jwtToken: localStorage.getItem("jwtToken"),
         },
       });
+      console.log(response)
 
       // Check if the response contains the LinkedIn authorization URL
       if (response.status !== 200) {

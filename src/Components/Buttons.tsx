@@ -7,6 +7,9 @@ interface ButtonProps {
   onClick: () => void;
   icon;
   rightIcon;
+  background,
+  textColor
+  borderColor
 }
 
 // input field 1 ------
@@ -73,11 +76,13 @@ export const Button4: React.FC<ButtonProps> = ({
   onClick,
   icon,
   rightIcon,
+  background,
+  textColor
 }) => {
   return (
     <div>
       <button
-        className="flex items-center gap-[8px] px-[20px] py-[12px] rounded-[200px] rounded bg-[transparent] border-solid border-[1px] border-[#BDBDBD] font-inter text-xs text-[#757575]"
+        className={`flex items-center gap-[8px] px-[20px] py-[12px] rounded-[200px] rounded bg-[${background ||'transparent'}] border-solid border-[1px] border-[#BDBDBD] font-inter text-xs text-[${textColor ||'#757575 '}]`}
         onClick={onClick}
       >
         {icon} <div>{text}</div> {rightIcon}

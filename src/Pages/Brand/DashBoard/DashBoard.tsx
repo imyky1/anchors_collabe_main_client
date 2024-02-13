@@ -33,6 +33,7 @@ import {
   SideModal,
 } from "../../../Components/Brand/modals/Modals";
 import { Modal1, Modal2 } from "../../../Components/Brand/modals/Modals";
+import axios from "axios";
 
 export const TypeCard = ({
   item,
@@ -212,6 +213,7 @@ export const DashBoard = () => {
   const navigate = useNavigate();
   const [AllInfluencers, SetAllInfluencers] = useState(null);
   const [FilteredInfluencer, SetFilteredInfluencer] = useState(null);
+  const [numFetchedInfluencers, setNumFetchedInfluencers] = useState(10);
 
   const [openModal, SetOpenModal] = useState(false);
   const [successModal, OpenSuccessModal] = useState(false);
@@ -268,13 +270,14 @@ export const DashBoard = () => {
   useEffect(() => {
     async function getAllInfluencers() {
       generalState?.setLoading(true);
-      const result = await brandState?.getAllInfluencersData();
+      const result = await brandState?.getAllInfluencersData(0,0);
       if (result?.success) {
         SetAllInfluencers(result?.AllInfluencers);
         SetFilteredInfluencer(result?.AllInfluencers);
         generalState?.setLoading(false);
       } else {
         generalState?.setLoading(false);
+        console.log(result)
         alert(result?.error);
       }
     }
@@ -432,6 +435,21 @@ export const DashBoard = () => {
     }
   };
 
+  const handleViewMore = async () => {
+    const newInfluencers = await brandState?.getAllInfluencersData(numFetchedInfluencers,10);
+    console.log(newInfluencers)
+    if (newInfluencers.success) {
+      SetAllInfluencers([
+        ...AllInfluencers,
+        ...newInfluencers.AllInfluencers,
+      ]);
+      SetFilteredInfluencer([...FilteredInfluencer, ...newInfluencers.AllInfluencers,])
+      setNumFetchedInfluencers(numFetchedInfluencers + 10);
+    } else {
+      alert(newInfluencers.error);
+    }
+  };
+
   console.log(AllInfluencers);
 
   return (
@@ -440,7 +458,14 @@ export const DashBoard = () => {
       <div className="brandDashBoardContainer">
         <h1>Discover Influencer</h1>
         <div className="DashboardFilterContainer">
-          <div style={{ display: "flex", width: "100%", position: "relative" }}>
+          <div
+            style={{
+              display: "flex",
+              width: "100%",
+              flexGrow: 1,
+              position: "relative",
+            }}
+          >
             <div className="MaindashBoardFilterWrapper">
               <FilterCard
                 list={Followers}
@@ -542,6 +567,9 @@ export const DashBoard = () => {
                 icon={""}
                 rightIcon={""}
                 text="Search"
+                background={undefined}
+                textColor={undefined}
+                borderColor={undefined}
               />
             </div>
           </div>
@@ -554,7 +582,8 @@ export const DashBoard = () => {
             }}
           >
             <button
-              onClick={() => OpenAdvanceModal(true)}
+              style={{ cursor: "not-allowed" }}
+              // onClick={() => OpenAdvanceModal(true)}
               className="AdvanceFilter"
             >
               <IoDiamondOutline /> Advance filter
@@ -578,6 +607,11 @@ export const DashBoard = () => {
               )}
               {successModal && (
                 <Modal2
+                  onClick={() =>
+                    navigate(
+                      `Brand/DashBoard/UnlockedInfluencer/Details/${selectedInfluencerID}`
+                    )
+                  }
                   onClose={() => {
                     return OpenSuccessModal(false);
                   }}
@@ -593,7 +627,7 @@ export const DashBoard = () => {
                   style={{
                     filter: !influencer?.is_unlocked ? "blur(4px)" : "",
                   }}
-                  src={influencer?.influencerData?.profile}
+                  src={influencer?.influencerData?.profile || "/user.png"}
                   alt=""
                 />
                 <div className="creatorinfowrapper">
@@ -766,6 +800,18 @@ export const DashBoard = () => {
             </div>
           ))}
         </div>
+        <div className="w-full flex justify-center align-center mt-[30px] mb-[30px]">
+        <Button1
+          onClick={handleViewMore}
+          text="View More"
+          icon={undefined}
+          rightIcon={undefined}
+          background={undefined}
+          textColor={undefined}
+          borderColor={undefined}
+        />
+        </div>
+        
       </div>
     </>
   );

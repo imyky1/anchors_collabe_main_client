@@ -1,9 +1,15 @@
-import React from "react";
+import { useState } from "react";
 import "./Table.css"; // import CSS file for styling
 import { IoIosArrowDown } from "react-icons/io";
+import "react-tooltip/dist/react-tooltip.css";
+import { Tooltip as ReactTooltip } from "react-tooltip";
+
+
 
 export const Table1 = ({ headers, rows, cellStyles }) => {
+  
   return (
+    
     <div className="table-container">
       <table>
         <thead>
@@ -14,28 +20,39 @@ export const Table1 = ({ headers, rows, cellStyles }) => {
           </tr>
         </thead>
         <tbody>
-          {rows?.map((row, index) => (
-            <tr key={index}>
+          {rows?.map((row, rowIndex) => (
+            <tr key={rowIndex}>
               {row.map((cell, cellIndex) => {
-                console.log(cell?.props?.children);
+                const isCellArray = Array.isArray(cell?.props?.children);
                 return (
                   <td
                     key={cellIndex}
                     style={cellStyles ? cellStyles(cellIndex, cell) : {}}
                   >
-                    {Array.isArray(cell?.props?.children) &&
-                    cell?.props?.children?.length > 2 ? (
-                      <div className="flex items-center gap-[4px]">
-                        {cell?.props?.children[0]}
-                        {cell?.props?.children[1]}
-                        {cell?.props?.children[2]}
-                        {cell?.props?.children?.length > 3 &&
-                          `+${cell?.props?.children?.length - 3}`}
+                    {isCellArray ? (
+                      <div className="flex items-center justify-center relative">
+                        {cell?.props?.children
+                          ?.slice(0, 3)
+                          .map((element, index) => (
+                            <div key={index}>{element}</div>
+                          ))}
                         {cell?.props?.children?.length > 3 && (
-                          <div style={{cursor:'pointer'}}>
-                            <IoIosArrowDown />
-                          </div>
+                          <div
+                          style={{ cursor: "pointer", display:'flex',justifyContent:'center', alignItems:'center' }}
+                          data-tooltip-content={cell?.props?.children
+                            ?.slice(3)
+                            .map((divElement) => divElement.props.children) // Extract text content of the div
+                            .join(', ')} // Convert array to string
+                          data-tooltip-id={`tooltip-${rowIndex}-${cellIndex}`}
+                        >
+                          {`+ ${cell?.props?.children?.length-3}` }
+                          <IoIosArrowDown />
+                        </div>
                         )}
+                        
+                        <ReactTooltip   id={`tooltip-${rowIndex}-${cellIndex}`} 
+                          className="tooltip-class" 
+                           />
                       </div>
                     ) : (
                       cell
@@ -50,3 +67,4 @@ export const Table1 = ({ headers, rows, cellStyles }) => {
     </div>
   );
 };
+

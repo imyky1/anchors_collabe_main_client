@@ -8,7 +8,7 @@ import { IoMdArrowForward } from "react-icons/io";
 
 export const Modal1 = ({ onClose, credits, coins, onBuy, OnClick }) => {
   return (
-    <div className="w-screen h-screen flex flex-col items-center justify-center bg-[#12121280] fixed top-0 left-0 z-50 font-inter">
+    <div className="w-screen h-screen flex flex-col items-center justify-center bg-[#12121210] fixed top-0 left-0 z-50 font-inter">
       <div
         onClick={() => onClose()}
         className="w-[480px] flex justify-end cursor-pointer"
@@ -35,6 +35,9 @@ export const Modal1 = ({ onClose, credits, coins, onBuy, OnClick }) => {
               text="Unlock Now"
               onClick={() => onBuy()}
               rightIcon={undefined}
+              background={undefined}
+              textColor={undefined}
+              borderColor={undefined}
             />
           </div>
         ) : (
@@ -47,6 +50,9 @@ export const Modal1 = ({ onClose, credits, coins, onBuy, OnClick }) => {
               icon={<RxLightningBolt size={16} />}
               text="Recharge Credits"
               rightIcon={undefined}
+              background={undefined}
+              textColor={undefined}
+              borderColor={undefined}
             />
           </>
         )}
@@ -55,9 +61,9 @@ export const Modal1 = ({ onClose, credits, coins, onBuy, OnClick }) => {
   );
 };
 
-export const Modal2 = ({ onClose, name, profile }) => {
+export const Modal2 = ({onClick, onClose, name, profile }) => {
   return (
-    <div className="w-screen h-screen flex flex-col items-center justify-center bg-[#12121280] fixed top-0 left-0 z-50 font-inter">
+    <div className="w-screen h-screen flex flex-col items-center justify-center bg-[#12121210] fixed top-0 left-0 z-50 font-inter">
       <div
         onClick={() => onClose()}
         className="w-[480px] flex justify-end cursor-pointer"
@@ -85,10 +91,11 @@ export const Modal2 = ({ onClose, name, profile }) => {
           <Button1
             rightIcon={<IoMdArrowForward size={16} />}
             text="Check Profile"
-            onClick={function (): void {
-              throw new Error("Function not implemented.");
-            }}
+            onClick={()=>onClick()}
             icon={undefined}
+            background={undefined}
+            textColor={undefined}
+            borderColor={undefined}
           />
         </div>
       </div>
